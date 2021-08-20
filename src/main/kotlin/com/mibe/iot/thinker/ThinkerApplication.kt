@@ -7,5 +7,5 @@ import org.springframework.boot.runApplication
 class ThinkerApplication
 
 fun main(args: Array<String>) {
-	runApplication<ThinkerApplication>(*args)
+    runApplication<ThinkerApplication>(*args)
 }

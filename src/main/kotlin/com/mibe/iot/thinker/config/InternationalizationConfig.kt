@@ -13,31 +13,30 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 @Configuration
 class InternationalizationConfig : WebMvcConfigurer {
 
-	/**
-	 * HttpHeaderLocaleResolver resolves locale from HTTP request header
-	 */
-	@Bean
-	fun localeResolver(): LocaleContextResolver = HttpHeaderLocaleResolver()
+    /**
+     * HttpHeaderLocaleResolver resolves locale from HTTP request header
+     */
+    @Bean
+    fun localeResolver(): LocaleContextResolver = HttpHeaderLocaleResolver()
 
-	/**
-	 * Creates bean of message source
-	 */
-	@Bean
-	fun messageSource(
-		@Value("\${messages.folderPath}") folderPath: String,
-		@Value("\${messages.file.common}") bundleName: String,
-		@Value("\${messages.encoding}") encoding: String
-	): MessageSource =
-		ReloadableResourceBundleMessageSource().apply {
-			setBasename("$folderPath/$bundleName")
-			setDefaultEncoding(encoding)
-		}
+    /**
+     * Creates bean of message source
+     */
+    @Bean
+    fun messageSource(
+        @Value("\${messages.folderPath}") folderPath: String,
+        @Value("\${messages.file.common}") bundleName: String,
+        @Value("\${messages.encoding}") encoding: String
+    ): MessageSource =
+        ReloadableResourceBundleMessageSource().apply {
+            setBasename("$folderPath/$bundleName")
+            setDefaultEncoding(encoding)
+        }
 
-	/**
-	 * Configures message source for validation error messages
-	 */
-	@Bean
-	fun localValidatorFactoryBean(messageSource: MessageSource): LocalValidatorFactoryBean =
-		LocalValidatorFactoryBean().apply { setValidationMessageSource(messageSource) }
-
+    /**
+     * Configures message source for validation error messages
+     */
+    @Bean
+    fun localValidatorFactoryBean(messageSource: MessageSource): LocalValidatorFactoryBean =
+        LocalValidatorFactoryBean().apply { setValidationMessageSource(messageSource) }
 }
