@@ -1,18 +1,24 @@
 package com.mibe.iot.thinker
 
-import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
+import com.mibe.iot.thinker.service.locale.ResourceBundleMessageService
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.core.spec.style.FreeSpec
+import io.mockk.every
+import io.mockk.mockk
 import org.springframework.context.MessageSource
+import org.springframework.context.NoSuchMessageException
 
-@SpringBootTest
-class ThinkerApplicationTests {
-
-    @Autowired
-    lateinit var messageSource: MessageSource
-
-    @Test
-    fun contextLoads() {
-        println(messageSource.toString())
+class ThinkerApplicationTests : FreeSpec({
+    "with mocked message source" - {
+        val messageSource = mockk<MessageSource>(relaxed = true)
+        val service = ResourceBundleMessageService(messageSource)
+        "service.getMessage" - {
+            "when no message found" - {
+                every { messageSource.getMessage(any(), any(), any()) } throws NoSuchMessageException("")
+                "throws NoSuchMessageFound" - {
+                    shouldThrow<NoSuchMessageException> { service.getMessage("any") }
+                }
+            }
+        }
     }
-}
+})
