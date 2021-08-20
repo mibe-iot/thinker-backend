@@ -1,0 +1,6 @@
+messages:
+  folderPath: classpath:messages
+  encoding: UTF-8
+  file:
+    common: messages
+    errors: errorMessages
