@@ -1,6 +1,6 @@
 package com.mibe.iot.thinker.config
 
-import com.mibe.iot.thinker.service.locale.HttpHeaderLocaleResolver
+import com.mibe.iot.thinker.message.application.HttpHeaderLocaleResolver
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.MessageSource
 import org.springframework.context.annotation.Bean
@@ -22,10 +22,24 @@ class InternationalizationConfig : WebMvcConfigurer {
     /**
      * Creates bean of message source
      */
-    @Bean
+    @Bean(name = ["messageSource"])
     fun messageSource(
         @Value("\${messages.folderPath}") folderPath: String,
         @Value("\${messages.file.common}") bundleName: String,
+        @Value("\${messages.encoding}") encoding: String
+    ): MessageSource =
+        ReloadableResourceBundleMessageSource().apply {
+            setBasename("$folderPath/$bundleName")
+            setDefaultEncoding(encoding)
+        }
+
+    /**
+     * Creates bean of error message source
+     */
+    @Bean(name = ["errorMessageSource"])
+    fun errorMessageSource(
+        @Value("\${messages.folderPath}") folderPath: String,
+        @Value("\${messages.file.error}") bundleName: String,
         @Value("\${messages.encoding}") encoding: String
     ): MessageSource =
         ReloadableResourceBundleMessageSource().apply {
