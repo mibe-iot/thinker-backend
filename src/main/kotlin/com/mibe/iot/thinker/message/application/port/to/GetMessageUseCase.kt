@@ -1,8 +1,8 @@
-package com.mibe.iot.thinker.service.locale
+package com.mibe.iot.thinker.message.application.port.to
 
 import java.util.*
 
-interface MessageService {
+interface GetMessageUseCase {
 
     fun getMessage(
         messageKey: String,
