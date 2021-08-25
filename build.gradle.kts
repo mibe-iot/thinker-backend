@@ -17,11 +17,15 @@ repositories {
 
 val kotestVersion = "4.6.1"
 val mockkVersion = "1.12.0"
+val embeddedMongodbVersion = "3.0.0"
+val hateoasVersion = "1.3.3"
+val webmvcVersion = "5.3.9"
 
 dependencies {
 
-    implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
-    implementation("org.springframework.boot:spring-boot-starter-hateoas")
+    implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
+    implementation("org.springframework.hateoas:spring-hateoas:$hateoasVersion")
+    implementation("org.springframework:spring-webmvc:$webmvcVersion")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
@@ -29,6 +33,9 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
+
+//    implementation("de.flapdoodle.embed:de.flapdoodle.embed.mongo:$embeddedMongodbVersion")
+
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.projectreactor:reactor-test")

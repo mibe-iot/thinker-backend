@@ -11,7 +11,6 @@ import java.util.*
 
 class HttpHeaderLocaleResolverTest : FreeSpec({
     val resolver = HttpHeaderLocaleResolver()
-
     "resolveLocaleContext()" - {
         "with mocked exchange" - {
             val exchange = mockk<ServerWebExchange>()

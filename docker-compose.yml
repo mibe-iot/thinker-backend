@@ -1,0 +1,14 @@
+services:
+#  app:
+#    build: .
+#    command: java -jar thinker-backend.jar
+#    ports:
+#      - "8080:8080"
+#    links:
+#      - mongo
+  mongo:
+    image: mongo
+    restart: always
+    env_file: .env
+    ports:
+      - "27017:27017"
