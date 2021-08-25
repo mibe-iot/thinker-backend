@@ -20,22 +20,30 @@ val mockkVersion = "1.12.0"
 val embeddedMongodbVersion = "3.0.0"
 val hateoasVersion = "1.3.3"
 val webmvcVersion = "5.3.9"
+val konformVersion = "0.3.0"
 
 dependencies {
 
+    // Spring
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
     implementation("org.springframework.hateoas:spring-hateoas:$hateoasVersion")
     implementation("org.springframework:spring-webmvc:$webmvcVersion")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
+
+    // JSON
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+
+    // Kotlin
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
 
-//    implementation("de.flapdoodle.embed:de.flapdoodle.embed.mongo:$embeddedMongodbVersion")
+    // Konform
+    implementation("io.konform:konform:$konformVersion")
 
+    // Test
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.projectreactor:reactor-test")

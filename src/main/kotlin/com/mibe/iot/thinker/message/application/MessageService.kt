@@ -25,4 +25,13 @@ class MessageService
     override fun getErrorMessage(messageKey: String, locale: Locale, vararg messageParameters: Any): String {
         return errorMessageSource.getMessage(messageKey, messageParameters, locale)
     }
+
+    override fun getErrorMessageOrDefault(
+        messageKey: String,
+        defaultMessage: String,
+        locale: Locale,
+        vararg messageParameters: Any
+    ): String {
+        return errorMessageSource.getMessage(messageKey, messageParameters, defaultMessage, locale)!!
+    }
 }

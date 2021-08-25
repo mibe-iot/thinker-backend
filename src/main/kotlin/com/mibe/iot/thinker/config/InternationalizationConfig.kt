@@ -6,18 +6,11 @@ import org.springframework.context.MessageSource
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.support.ReloadableResourceBundleMessageSource
-import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean
+import org.springframework.web.reactive.config.DelegatingWebFluxConfiguration
 import org.springframework.web.server.i18n.LocaleContextResolver
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
 @Configuration
-class InternationalizationConfig : WebMvcConfigurer {
-
-    /**
-     * HttpHeaderLocaleResolver resolves locale from HTTP request header
-     */
-    @Bean
-    fun localeResolver(): LocaleContextResolver = HttpHeaderLocaleResolver()
+class InternationalizationConfig : DelegatingWebFluxConfiguration() {
 
     /**
      * Creates bean of message source
@@ -47,10 +40,5 @@ class InternationalizationConfig : WebMvcConfigurer {
             setDefaultEncoding(encoding)
         }
 
-    /**
-     * Configures message source for validation error messages
-     */
-    @Bean
-    fun localValidatorFactoryBean(messageSource: MessageSource): LocalValidatorFactoryBean =
-        LocalValidatorFactoryBean().apply { setValidationMessageSource(messageSource) }
+    override fun localeContextResolver(): LocaleContextResolver = HttpHeaderLocaleResolver()
 }
