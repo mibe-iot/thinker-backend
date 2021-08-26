@@ -30,4 +30,12 @@ class DevicePersistenceAdapter
             Mono.just(it.toDevice())
         }
     }
+
+    override fun existsWithId(id: String): Mono<Boolean> {
+        return deviceRepository.existsById(id)
+    }
+
+    override fun existsWithName(name: String): Mono<Boolean> {
+        return deviceRepository.existsByName(name)
+    }
 }

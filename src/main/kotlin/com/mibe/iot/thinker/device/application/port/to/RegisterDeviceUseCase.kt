@@ -11,8 +11,8 @@ interface RegisterDeviceUseCase {
      * Will register new device to persistent storage. Similar to save operation, but register operation should not let to
      * save same device twice.
      *
-     * @param device [Mono] of the [Device] to save
+     * @param deviceMono [Mono] of the [Device] to save
      * @return [Mono] of the registered [Device]
      */
-    fun registerDevice(device: Mono<Device>): Mono<Device>
+    fun registerDevice(deviceMono: Mono<Device>): Mono<Device>
 }

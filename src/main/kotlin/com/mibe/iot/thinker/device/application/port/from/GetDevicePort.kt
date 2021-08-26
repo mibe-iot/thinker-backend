@@ -8,4 +8,6 @@ import reactor.core.publisher.Mono
  */
 interface GetDevicePort {
     fun getDevice(id: String): Mono<Device>
+    fun existsWithId(id: String): Mono<Boolean>
+    fun existsWithName(name: String): Mono<Boolean>
 }

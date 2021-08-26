@@ -1,5 +1,6 @@
 package com.mibe.iot.thinker.device.adapter.to.web
 
+import com.mibe.iot.thinker.device.application.port.to.exception.DeviceAlreadyExistsException
 import com.mibe.iot.thinker.device.application.port.to.exception.DeviceNotFoundException
 import com.mibe.iot.thinker.message.application.MessageService
 import com.mibe.iot.thinker.web.error.ErrorData
@@ -23,6 +24,16 @@ class DeviceControllerAdvice @Autowired constructor(
             messageService.getErrorMessage(DEVICE_NOT_FOUND, locale, exception.id),
             DEVICE_NOT_FOUND,
             HttpStatus.NOT_FOUND
+        )
+    }
+
+    @ExceptionHandler(DeviceAlreadyExistsException::class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    fun handleDeviceAlreadyExists(exception: DeviceAlreadyExistsException, locale: Locale): ErrorData {
+        return exception.mapExceptionToErrorData(
+            messageService.getErrorMessage(DEVICE_NAME_ALREADY_EXISTS, locale, exception.name),
+            DEVICE_NAME_ALREADY_EXISTS,
+            HttpStatus.CONFLICT
         )
     }
 }

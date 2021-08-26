@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 import reactor.core.publisher.Mono
-import java.lang.IllegalArgumentException
 
 @RestController
 @RequestMapping("/api/devices")
@@ -27,6 +26,7 @@ class DeviceController
 ) {
 
     @PostMapping("")
+    @ResponseStatus(HttpStatus.CREATED)
     fun saveDevice(@RequestBody device: Mono<Device>): Mono<Device> {
         return registerDeviceUseCase.registerDevice(device)
     }

@@ -32,9 +32,15 @@ class DefaultErrorHandlingAdvice
     @ExceptionHandler(ValidationException::class)
     fun handleValidationError(ex: ValidationException, locale: Locale): List<ValidationErrorModel> {
         return ex.errors.map { error ->
+            val messageAndParameters = error.message.split("|||")
+            val messageKey = messageAndParameters[0]
+            val messageParameters = messageAndParameters.drop(1)
             ValidationErrorModel(
                 error.dataPath,
-                messageService.getErrorMessageOrDefault(error.message, error.message, locale = locale)
+                messageService.getErrorMessageOrDefault(
+                    messageKey, messageKey, locale = locale, *messageParameters.toTypedArray()
+                )
+
             )
         }
     }
