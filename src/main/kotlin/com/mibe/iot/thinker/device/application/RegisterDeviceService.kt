@@ -9,14 +9,20 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono
 
+/**
+ * Register device service
+ *
+ * @property updateDevicePort any implementation of [UpdateDevicePort]
+ * @constructor Create Register device service
+ */
 @Service
 class RegisterDeviceService @Autowired constructor(
     private val updateDevicePort: UpdateDevicePort
 ) : RegisterDeviceUseCase {
 
     /**
-     * Validates device and passes it to UpdateDevicePort.
-     * @return Device with updated info such given id
+     * Validates device and passes it to the [UpdateDevicePort].
+     * @return [Device] with updated info such given id
      */
     override fun registerDevice(device: Mono<Device>): Mono<Device> {
         return device.map {
