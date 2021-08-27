@@ -6,6 +6,7 @@ import com.mibe.iot.thinker.device.application.port.to.exception.DeviceNotFoundE
 import com.mibe.iot.thinker.device.domain.Device
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 
 /**
@@ -28,5 +29,14 @@ class GetDeviceService @Autowired constructor(
      */
     override fun getDevice(id: String): Mono<Device> {
         return getDevicePort.getDevice(id).switchIfEmpty(Mono.error(DeviceNotFoundException(id)))
+    }
+
+    /**
+     * Get all devices by calling [GetDevicePort.getAllDevices]
+     *
+     * @return [Flux] of all persisted [Device]s
+     */
+    override fun getAllDevices(): Flux<Device> {
+        return getDevicePort.getAllDevices()
     }
 }

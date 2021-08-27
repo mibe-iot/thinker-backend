@@ -35,15 +35,19 @@ class DeviceController
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
-    fun saveDevice(@RequestBody device: Mono<Device>): Mono<Device> {
-        return registerDeviceUseCase.registerDevice(device)
-    }
+    fun saveDevice(@RequestBody device: Mono<Device>) = registerDeviceUseCase.registerDevice(device)
+
+    @GetMapping("")
+    @ResponseStatus(HttpStatus.OK)
+    fun getAllDevices() = getDeviceUseCase.getAllDevices()
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    fun getDevice(@PathVariable id: String): Mono<Device> {
-        return getDeviceUseCase.getDevice(id)
-    }
+    fun getDevice(@PathVariable id: String) = getDeviceUseCase.getDevice(id)
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun deleteDevice(@PathVariable id: String) = deleteDeviceUseCase.deleteDevice(id)
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
@@ -56,11 +60,5 @@ class DeviceController
         }.flatMap {
             updateDeviceUseCase.updateDevice(Mono.just(it))
         }
-    }
-
-    @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteDevice(@PathVariable id: String): Mono<Void> {
-        return deleteDeviceUseCase.deleteDevice(id)
     }
 }

@@ -8,6 +8,7 @@ import com.mibe.iot.thinker.device.application.port.from.UpdateDevicePort
 import com.mibe.iot.thinker.device.domain.Device
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
+import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.toMono
 
@@ -20,6 +21,10 @@ class DevicePersistenceAdapter
     override fun updateDevice(device: Mono<Device>): Mono<Device> {
         return device.flatMap { deviceRepository.save(it.toDeviceEntity()) }
             .flatMap { it.toDevice().toMono() }
+    }
+
+    override fun getAllDevices(): Flux<Device> {
+        return deviceRepository.findAll().flatMap { entity -> entity.toDevice().toMono() }
     }
 
     override fun deleteDevice(id: String): Mono<Void> {
