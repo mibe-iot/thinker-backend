@@ -47,6 +47,7 @@ class DefaultErrorHandlingAdvice
 
     /**
      * Handles any exception, collects info about it and returns internationalized message to user
+     *
      * @param exception any Exception subclass
      * @param locale Locale resolved by LocaleResolver
      */

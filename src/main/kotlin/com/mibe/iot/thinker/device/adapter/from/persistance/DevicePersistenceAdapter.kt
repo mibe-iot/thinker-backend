@@ -9,6 +9,7 @@ import com.mibe.iot.thinker.device.domain.Device
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Mono
+import reactor.kotlin.core.publisher.toMono
 
 @Component
 class DevicePersistenceAdapter
@@ -17,8 +18,8 @@ class DevicePersistenceAdapter
 ) : UpdateDevicePort, GetDevicePort, DeleteDevicePort {
 
     override fun updateDevice(device: Mono<Device>): Mono<Device> {
-        val updatedDeviceEntity = device.flatMap { deviceRepository.save(it.toDeviceEntity()) }
-        return updatedDeviceEntity.flatMap { Mono.just(it.toDevice()) }
+        return device.flatMap { deviceRepository.save(it.toDeviceEntity()) }
+            .flatMap { it.toDevice().toMono() }
     }
 
     override fun deleteDevice(id: String): Mono<Void> {
