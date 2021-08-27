@@ -7,5 +7,6 @@ data class Device(
     var id: String?,
     val name: String,
     val description: String,
-    val ip: String?
+    val ip: String?,
+    var actions: Set<DeviceAction> = setOf()
 )

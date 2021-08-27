@@ -4,7 +4,6 @@ import com.mibe.iot.thinker.device.domain.Device
 import io.konform.validation.Validation
 import io.konform.validation.jsonschema.maxLength
 import io.konform.validation.jsonschema.minLength
-import io.konform.validation.jsonschema.pattern
 
 const val DEVICE_NAME_MIN_LENGTH = 4
 const val DEVICE_NAME_LENGTH = 256
@@ -19,7 +18,6 @@ val validateNewDevice = Validation<Device> {
         maxLength(DEVICE_DESCRIPTION_LENGTH) hint "validation.device.description.length|||$DEVICE_DESCRIPTION_LENGTH"
     }
     Device::ip ifPresent {
-        pattern("(?:[0-9]{1,3}\\.){3}[0-9]{1,3}") hint "validation.device.ip"
     }
 }
 

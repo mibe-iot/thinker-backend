@@ -35,7 +35,7 @@ class UpdateDeviceService @Autowired constructor(
             getDevicePort.getDevice(updates.id)
                 .flatMap { device ->
                     Mono.just(device.receiveUpdates(updates))
-                }.flatMap {
+                }.log().flatMap {
                     mapToErrorMonoIfInvalid(it, validateDevice)
                 }.flatMap {
                     updateDevicePort.updateDevice(Mono.just(it))
