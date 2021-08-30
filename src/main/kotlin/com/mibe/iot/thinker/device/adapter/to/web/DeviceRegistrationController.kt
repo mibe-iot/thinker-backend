@@ -3,7 +3,7 @@ package com.mibe.iot.thinker.device.adapter.to.web
 import com.mibe.iot.thinker.device.adapter.to.web.dto.DeviceDto
 import com.mibe.iot.thinker.device.adapter.to.web.dto.RegistrationResultDto
 import com.mibe.iot.thinker.device.adapter.to.web.dto.toDeviceUpdates
-import com.mibe.iot.thinker.device.adapter.to.web.exception.CantResolveIpAddressException
+import com.mibe.iot.thinker.device.adapter.to.web.exception.CantResolveMacAddressException
 import com.mibe.iot.thinker.device.application.port.to.RegisterDeviceUseCase
 import com.mibe.iot.thinker.device.application.port.to.UpdateDeviceUseCase
 import com.mibe.iot.thinker.device.domain.Device
@@ -38,7 +38,7 @@ class DeviceRegistrationController
         exchange: ServerWebExchange
     ): Mono<RegistrationResultDto> {
         return deviceDto.flatMap { dto ->
-            val clientIp = exchange.request.remoteAddress?.address?.hostAddress ?: throw CantResolveIpAddressException()
+            val clientIp = exchange.request.remoteAddress?.address?.hostAddress ?: throw CantResolveMacAddressException()
             dto.apply {
                 this.id = id
                 this.ip = clientIp
