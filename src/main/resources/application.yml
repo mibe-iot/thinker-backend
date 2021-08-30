@@ -3,4 +3,13 @@ messages:
   encoding: UTF-8
   file:
     common: messages
-    errors: errorMessages
+    error: errorMessages
+
+spring:
+  data:
+    mongodb:
+      host: 127.0.0.1
+      port: 27017
+      database: mps-db
+      username: root
+      password: root
