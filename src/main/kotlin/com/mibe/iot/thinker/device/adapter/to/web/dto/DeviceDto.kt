@@ -10,7 +10,7 @@ data class DeviceDto(
     val name: String?,
     val description: String?,
     @JsonIgnore
-    var ip: String?,
+    var mac: String?,
     val actions: Set<DeviceAction>?
 )
 
@@ -18,6 +18,6 @@ fun DeviceDto.toDeviceUpdates() = DeviceUpdates(
     id!!,
     name,
     description,
-    ip,
+    mac,
     actions
 )

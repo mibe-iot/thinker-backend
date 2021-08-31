@@ -5,5 +5,5 @@ import org.springframework.web.bind.annotation.ControllerAdvice
 @ControllerAdvice
 class DeviceRegistrationControllerAdvice {
 
-//    fun handleCantResolveMacAddress(): Nothing = TODO()
+    fun handleCantResolveMacAddress(): Nothing = TODO()
 }

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ServerWebExchange
 import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.toMono
+import java.net.NetworkInterface
 
 @RestController
 @RequestMapping("/api/devices")
@@ -32,16 +33,20 @@ class DeviceRegistrationController
     fun preRegisterDevice(@RequestBody device: Mono<Device>) = registerDeviceUseCase.registerDevice(device)
 
     @PostMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
     fun finishRegistration(
         @PathVariable id: String,
         @RequestBody deviceDto: Mono<DeviceDto>,
         exchange: ServerWebExchange
     ): Mono<RegistrationResultDto> {
         return deviceDto.flatMap { dto ->
-            val clientIp = exchange.request.remoteAddress?.address?.hostAddress ?: throw CantResolveMacAddressException()
+            val clientIp =
+                exchange.request.remoteAddress?.address ?: throw CantResolveMacAddressException()
+            val mac =
+                NetworkInterface.getByInetAddress(clientIp).hardwareAddress ?: "" // TODO
             dto.apply {
                 this.id = id
-                this.ip = clientIp
+                this.mac = mac.toString()
             }.toDeviceUpdates().toMono()
         }.log().flatMap { updates ->
             updateDeviceUseCase.updateDevice(updates.toMono())
