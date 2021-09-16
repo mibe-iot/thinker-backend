@@ -3,7 +3,7 @@ package com.mibe.iot.thinker.device.adapter.to.web.model.assembler
 import com.mibe.iot.thinker.device.adapter.to.web.DeviceController
 import com.mibe.iot.thinker.device.adapter.to.web.dto.DeviceDto
 import com.mibe.iot.thinker.device.adapter.to.web.model.DeviceModel
-import com.mibe.iot.thinker.device.application.port.to.exception.InvalidDeviceIdException
+import com.mibe.iot.thinker.device.adapter.to.web.model.assembler.exception.InvalidDeviceIdException
 import com.mibe.iot.thinker.device.domain.Device
 import com.mibe.iot.thinker.device.domain.DeviceAction
 import org.springframework.hateoas.IanaLinkRelations

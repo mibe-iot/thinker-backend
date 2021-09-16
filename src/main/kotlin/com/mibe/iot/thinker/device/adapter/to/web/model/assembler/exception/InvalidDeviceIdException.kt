@@ -1,4 +1,4 @@
-package com.mibe.iot.thinker.device.application.port.to.exception
+package com.mibe.iot.thinker.device.adapter.to.web.model.assembler.exception
 
 import com.mibe.iot.thinker.web.error.InternationalizedException
 
