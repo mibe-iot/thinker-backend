@@ -4,7 +4,7 @@ data class DeviceUpdates(
     val id: String,
     val name: String?,
     val description: String?,
-    var ip: String?,
+    var mac: String?,
     val actions: Set<DeviceAction>?
 )
 
@@ -12,6 +12,6 @@ fun Device.receiveUpdates(deviceUpdates: DeviceUpdates) = Device(
     id,
     deviceUpdates.name ?: name,
     deviceUpdates.description ?: description,
-    deviceUpdates.ip ?: ip,
+    deviceUpdates.mac ?: mac,
     deviceUpdates.actions ?: actions
 )

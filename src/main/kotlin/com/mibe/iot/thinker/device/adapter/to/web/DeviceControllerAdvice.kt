@@ -4,7 +4,7 @@ import com.mibe.iot.thinker.device.application.port.to.exception.DeviceAlreadyEx
 import com.mibe.iot.thinker.device.application.port.to.exception.DeviceNotFoundException
 import com.mibe.iot.thinker.message.application.MessageService
 import com.mibe.iot.thinker.web.error.ErrorData
-import com.mibe.iot.thinker.web.error.mapExceptionToErrorData
+import com.mibe.iot.thinker.web.error.toErrorData
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -20,8 +20,8 @@ class DeviceControllerAdvice @Autowired constructor(
     @ExceptionHandler(DeviceNotFoundException::class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     fun handleDeviceNotFound(exception: DeviceNotFoundException, locale: Locale): ErrorData {
-        return exception.mapExceptionToErrorData(
-            messageService.getErrorMessage(DEVICE_NOT_FOUND, locale, exception.id),
+        return exception.toErrorData(
+            messageService.getErrorMessage(DEVICE_NOT_FOUND, locale, exception.deviceId),
             DEVICE_NOT_FOUND,
             HttpStatus.NOT_FOUND
         )
@@ -30,8 +30,8 @@ class DeviceControllerAdvice @Autowired constructor(
     @ExceptionHandler(DeviceAlreadyExistsException::class)
     @ResponseStatus(HttpStatus.CONFLICT)
     fun handleDeviceAlreadyExists(exception: DeviceAlreadyExistsException, locale: Locale): ErrorData {
-        return exception.mapExceptionToErrorData(
-            messageService.getErrorMessage(DEVICE_NAME_ALREADY_EXISTS, locale, exception.name),
+        return exception.toErrorData(
+            messageService.getErrorMessage(DEVICE_NAME_ALREADY_EXISTS, locale, exception.deviceName),
             DEVICE_NAME_ALREADY_EXISTS,
             HttpStatus.CONFLICT
         )

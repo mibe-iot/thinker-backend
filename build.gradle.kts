@@ -35,6 +35,10 @@ dependencies {
     // JSON
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
+    // Logging
+    implementation("io.github.microutils:kotlin-logging:2.0.11")
+    testImplementation("org.slf4j:slf4j-simple:1.7.32")
+
     // Kotlin
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")

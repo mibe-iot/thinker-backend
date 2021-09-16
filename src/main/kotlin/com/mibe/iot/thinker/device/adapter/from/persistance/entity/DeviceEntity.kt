@@ -18,7 +18,7 @@ fun Device.toDeviceEntity() = DeviceEntity(
     id,
     name,
     description,
-    ip,
+    mac,
     actions.map { it.toDeviceActionEntity() }.toSet()
 )
 
