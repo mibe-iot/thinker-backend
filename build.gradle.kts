@@ -30,7 +30,11 @@ dependencies {
     implementation("org.springframework:spring-webmvc:$webmvcVersion")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
+    implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
+
+    // Cache
+    implementation("io.github.reactivecircus.cache4k:cache4k:0.3.0")
 
     // JSON
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
