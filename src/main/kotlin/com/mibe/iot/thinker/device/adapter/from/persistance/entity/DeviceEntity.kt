@@ -4,25 +4,28 @@ import com.mibe.iot.thinker.device.domain.Device
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
 
-@Document("device")
+@Document("devices")
 class DeviceEntity(
     @Id
     var id: String?,
     val name: String,
     val description: String,
-    val ip: String?
+    val ip: String?,
+    val actions: Set<DeviceActionEntity>
 )
 
 fun Device.toDeviceEntity() = DeviceEntity(
     id,
     name,
     description,
-    ip
+    mac,
+    actions.map { it.toDeviceActionEntity() }.toSet()
 )
 
 fun DeviceEntity.toDevice() = Device(
     id,
     name,
     description,
-    ip
+    ip,
+    actions.map { it.toDeviceAction() }.toSet()
 )
