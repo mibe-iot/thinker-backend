@@ -9,7 +9,7 @@ plugins {
 
 group = "com.mibe.iot"
 version = "0.0.1-SNAPSHOT"
-java.sourceCompatibility = JavaVersion.VERSION_11
+java.sourceCompatibility = JavaVersion.VERSION_1_8
 
 repositories {
     mavenCentral()
@@ -32,8 +32,15 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
 
+    // Cache
+    implementation("io.github.reactivecircus.cache4k:cache4k:0.3.0")
+
     // JSON
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+
+    // Logging
+    implementation("io.github.microutils:kotlin-logging:2.0.11")
+    testImplementation("org.slf4j:slf4j-simple:1.7.32")
 
     // Kotlin
     implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -58,7 +65,7 @@ dependencies {
 tasks.withType<KotlinCompile> {
     kotlinOptions {
         freeCompilerArgs = listOf("-Xjsr305=strict")
-        jvmTarget = "11"
+        jvmTarget = "1.8"
     }
 }
 
