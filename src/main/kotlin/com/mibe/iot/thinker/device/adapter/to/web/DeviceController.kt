@@ -23,7 +23,9 @@ import reactor.kotlin.core.publisher.toMono
 
 @RestController
 @RequestMapping("/api/devices")
-class DeviceController
+class
+
+DeviceController
 @Autowired constructor(
     private val updateDeviceUseCase: UpdateDeviceUseCase,
     private val getDeviceUseCase: GetDeviceUseCase,

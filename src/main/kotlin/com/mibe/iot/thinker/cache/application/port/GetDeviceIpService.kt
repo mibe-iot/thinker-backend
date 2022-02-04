@@ -20,6 +20,6 @@ class GetDeviceIpService @Autowired constructor(
     }
 
     private fun resolveIpFromMac(mac: String?): IpAddress {
-
+        TODO()
     }
 }
