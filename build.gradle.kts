@@ -8,11 +8,12 @@ plugins {
 }
 
 group = "com.mibe.iot"
-version = "0.0.1-SNAPSHOT"
+version = "0.1"
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 
 repositories {
     mavenCentral()
+    maven { url = uri("https://jitpack.io") }
 }
 
 val kotestVersion = "4.6.1"
@@ -21,6 +22,8 @@ val embeddedMongodbVersion = "3.0.0"
 val hateoasVersion = "1.3.3"
 val webmvcVersion = "5.3.9"
 val konformVersion = "0.3.0"
+val blessedVersion = "0.40"
+val logbackVersion = "1.2.10"
 
 dependencies {
 
@@ -40,6 +43,8 @@ dependencies {
 
     // Logging
     implementation("io.github.microutils:kotlin-logging:2.0.11")
+    implementation("ch.qos.logback:logback-core:$logbackVersion")
+    implementation("ch.qos.logback:logback-classic:$logbackVersion")
     testImplementation("org.slf4j:slf4j-simple:1.7.32")
 
     // Kotlin
@@ -50,6 +55,9 @@ dependencies {
     // Validation
     implementation("io.konform:konform:$konformVersion")
     implementation("org.springframework.boot:spring-boot-starter-validation")
+
+    //BLE
+    implementation("com.github.weliem.blessed-bluez:blessed:$blessedVersion")
 
     // Test
     developmentOnly("org.springframework.boot:spring-boot-devtools")
