@@ -8,8 +8,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.map
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicInteger
 import javax.annotation.PostConstruct
 
 
@@ -19,22 +21,32 @@ class DeviceDiscoveryHandler
     private val bleCentralCallback: BleCentralCallback
 ) : GetDiscoveredDevicePort, ControlDeviceDiscoveryPort {
 
+    @Value("\${thinker.ble.rssiThreshold:-130}")
+    private lateinit var rssiThreshold: String
+
     private lateinit var central: BluetoothCentralManager
     private val isActive = AtomicBoolean(false)
+    private val discoveryRequestsAmount = AtomicInteger(0)
 
     @PostConstruct
     private fun initCentralManager() {
         central = BluetoothCentralManager(bleCentralCallback)
+        central.setRssiThreshold(rssiThreshold.toInt())
     }
 
     override suspend fun startDiscovery() {
         isActive.set(true)
+        discoveryRequestsAmount.incrementAndGet()
         central.scanForPeripherals()
     }
 
-    override fun stopDiscovery() {
-        central.stopScan()
-        isActive.set(false)
+    override fun stopDiscovery(gracefully: Boolean) {
+        val requestsAmount = discoveryRequestsAmount.decrementAndGet()
+        if (!gracefully || requestsAmount <= 0) {
+            discoveryRequestsAmount.set(0)
+            central.stopScan()
+            isActive.set(false)
+        }
     }
 
     override fun isDiscovering(): Boolean {
