@@ -8,7 +8,9 @@ import com.mibe.iot.thinker.discovery.domain.DiscoveredDevice
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import mu.KotlinLogging
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.concurrent.Executors
@@ -19,17 +21,29 @@ class GetDiscoveredDeviceService
     private val getDiscoveredDevicePort: GetDiscoveredDevicePort,
     private val controlDeviceDiscoveryPort: ControlDeviceDiscoveryPort
 ) : GetDiscoveredDeviceUseCase, ControlDeviceDiscoveryUseCase {
+    private val log = KotlinLogging.logger {}
 
     private val discoveryScope = CoroutineScope(Executors.newSingleThreadExecutor().asCoroutineDispatcher())
 
     override fun startDiscovery() {
-        discoveryScope.launch {
-            controlDeviceDiscoveryPort.startDiscovery()
+        if (!controlDeviceDiscoveryPort.isDiscovering()) {
+            log.debug("starting discovery")
+
+            discoveryScope.launch {
+                controlDeviceDiscoveryPort.startDiscovery()
+            }
+            log.info { "discovery has been started" }
+        } else {
+            log.info("discovery is already running")
         }
     }
 
     override fun stopDiscovery() {
-        controlDeviceDiscoveryPort.stopDiscovery()
+        log.debug { "stopping discovery" }
+
+        if (controlDeviceDiscoveryPort.isDiscovering()) controlDeviceDiscoveryPort.stopDiscovery()
+
+        log.info { "discovery has been stopped" }
     }
 
     override suspend fun getDiscoveredDevices(): Flow<DiscoveredDevice> {

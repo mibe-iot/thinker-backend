@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.map
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
+import java.util.concurrent.atomic.AtomicBoolean
 import javax.annotation.PostConstruct
 
 
@@ -19,6 +20,7 @@ class DeviceDiscoveryHandler
 ) : GetDiscoveredDevicePort, ControlDeviceDiscoveryPort {
 
     private lateinit var central: BluetoothCentralManager
+    private val isActive = AtomicBoolean(false)
 
     @PostConstruct
     private fun initCentralManager() {
@@ -26,11 +28,17 @@ class DeviceDiscoveryHandler
     }
 
     override suspend fun startDiscovery() {
+        isActive.set(true)
         central.scanForPeripherals()
     }
 
     override fun stopDiscovery() {
         central.stopScan()
+        isActive.set(false)
+    }
+
+    override fun isDiscovering(): Boolean {
+        return isActive.get()
     }
 
     override suspend fun getDiscoveredDevices(): Flow<DiscoveredDevice> {

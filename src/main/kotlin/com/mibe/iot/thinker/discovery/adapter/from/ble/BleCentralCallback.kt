@@ -15,7 +15,7 @@ class BleCentralCallback : BluetoothCentralManagerCallback() {
     val discoveredPeripherals: MutableMap<String, Pair<BluetoothPeripheral, LocalDateTime>> = ConcurrentHashMap()
 
     override fun onDiscoveredPeripheral(peripheral: BluetoothPeripheral, scanResult: ScanResult) {
-        log.debug {
+        log.trace {
             "discovered device: address=${peripheral.address} " +
                     "name=${peripheral.name} uuids=${peripheral.device?.uuids}"
         }
