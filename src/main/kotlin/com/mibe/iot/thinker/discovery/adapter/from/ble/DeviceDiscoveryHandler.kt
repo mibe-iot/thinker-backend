@@ -4,8 +4,9 @@ import com.mibe.iot.thinker.discovery.application.port.from.ControlDeviceDiscove
 import com.mibe.iot.thinker.discovery.application.port.from.GetDiscoveredDevicePort
 import com.mibe.iot.thinker.discovery.domain.DiscoveredDevice
 import com.welie.blessed.BluetoothCentralManager
-import com.welie.blessed.BluetoothCentralManagerCallback
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.map
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import javax.annotation.PostConstruct
@@ -14,7 +15,7 @@ import javax.annotation.PostConstruct
 @Component
 class DeviceDiscoveryHandler
 @Autowired constructor(
-    private val bleCentralCallback: BluetoothCentralManagerCallback
+    private val bleCentralCallback: BleCentralCallback
 ) : GetDiscoveredDevicePort, ControlDeviceDiscoveryPort {
 
     private lateinit var central: BluetoothCentralManager
@@ -33,6 +34,16 @@ class DeviceDiscoveryHandler
     }
 
     override suspend fun getDiscoveredDevices(): Flow<DiscoveredDevice> {
-        TODO("Not yet implemented")
+        return bleCentralCallback.discoveredPeripherals.values.asFlow()
+            .map { peripheralAndTime ->
+                val discoveredAt = peripheralAndTime.second
+                peripheralAndTime.first.let { peripheral ->
+                    DiscoveredDevice(
+                        peripheral.name.ifBlank { "[unknown]" },
+                        peripheral.address,
+                        discoveredAt
+                    )
+                }
+            }
     }
 }

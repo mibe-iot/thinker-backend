@@ -33,6 +33,6 @@ class GetDiscoveredDeviceService
     }
 
     override suspend fun getDiscoveredDevices(): Flow<DiscoveredDevice> {
-        TODO("Not yet implemented")
+        return getDiscoveredDevicePort.getDiscoveredDevices()
     }
 }

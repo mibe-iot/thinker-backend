@@ -1,7 +1,9 @@
 package com.mibe.iot.thinker.discovery.domain
 
-data class DiscoveredDevice(
-    val uuid: String,
-    var name: String?,
+import java.time.LocalDateTime
 
-    )
+data class DiscoveredDevice(
+    val name: String,
+    val address: String,
+    val discoveredAt: LocalDateTime
+)
