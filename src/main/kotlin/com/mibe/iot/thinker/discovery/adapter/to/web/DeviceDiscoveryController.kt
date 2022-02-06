@@ -26,7 +26,7 @@ class DeviceDiscoveryController
     @GetMapping("/stop")
     @ResponseStatus(HttpStatus.OK)
     fun stopDiscovery(): String {
-        controlDeviceDiscoveryUseCase.startDiscovery()
+        controlDeviceDiscoveryUseCase.stopDiscovery()
         return "Discovery stopped"
     }
 

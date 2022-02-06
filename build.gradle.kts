@@ -22,7 +22,7 @@ val embeddedMongodbVersion = "3.0.0"
 val hateoasVersion = "1.3.3"
 val webmvcVersion = "5.3.9"
 val konformVersion = "0.3.0"
-val blessedVersion = "0.40"
+val blessedVersion = "0.61"
 val logbackVersion = "1.2.10"
 
 dependencies {
@@ -57,7 +57,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
 
     //BLE
-    implementation("com.github.weliem.blessed-bluez:blessed:$blessedVersion")
+    implementation("com.github.mibe-iot:blessed-bluez:0.61.2")
 
     // Test
     developmentOnly("org.springframework.boot:spring-boot-devtools")

@@ -7,11 +7,8 @@ import com.mibe.iot.thinker.discovery.application.port.to.GetDiscoveredDeviceUse
 import com.mibe.iot.thinker.discovery.domain.DiscoveredDevice
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.asCoroutineDispatcher
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withTimeoutOrNull
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.concurrent.Executors
@@ -32,11 +29,7 @@ class GetDiscoveredDeviceService
     }
 
     override fun stopDiscovery() {
-        runBlocking {
-            withTimeoutOrNull(30_000) {
-                controlDeviceDiscoveryPort.stopDiscovery()
-            }
-        }
+        controlDeviceDiscoveryPort.stopDiscovery()
     }
 
     override suspend fun getDiscoveredDevices(): Flow<DiscoveredDevice> {
