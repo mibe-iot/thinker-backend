@@ -21,7 +21,7 @@ class DeviceDiscoveryHandler
     private val bleCentralCallback: BleCentralCallback
 ) : GetDiscoveredDevicePort, ControlDeviceDiscoveryPort {
 
-    @Value("\${thinker.ble.rssiThreshold:-130}")
+    @Value("\${thinker.ble.rssiThreshold:-120}")
     private lateinit var rssiThreshold: String
 
     private lateinit var central: BluetoothCentralManager

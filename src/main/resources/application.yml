@@ -17,4 +17,4 @@ spring:
 
 thinker:
   ble:
-    rssiThreshold: -130
+    rssiThreshold: -120

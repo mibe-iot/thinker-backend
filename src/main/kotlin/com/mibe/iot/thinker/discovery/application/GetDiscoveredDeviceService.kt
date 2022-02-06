@@ -27,23 +27,23 @@ class GetDiscoveredDeviceService
 
     override fun startDiscovery() {
         if (!controlDeviceDiscoveryPort.isDiscovering()) {
-            log.debug("starting discovery")
+            log.debug("Starting discovery")
 
             discoveryScope.launch {
                 controlDeviceDiscoveryPort.startDiscovery()
             }
-            log.info { "discovery has been started" }
+            log.info { "Discovery started" }
         } else {
-            log.info("discovery is already running")
+            log.info("Discovery is already launched")
         }
     }
 
     override fun stopDiscovery() {
-        log.debug { "stopping discovery" }
+        log.debug { "Stopping discovery" }
 
         if (controlDeviceDiscoveryPort.isDiscovering()) controlDeviceDiscoveryPort.stopDiscovery()
 
-        log.info { "discovery has been stopped" }
+        log.info { "Discovery stopped" }
     }
 
     override suspend fun getDiscoveredDevices(): Flow<DiscoveredDevice> {
