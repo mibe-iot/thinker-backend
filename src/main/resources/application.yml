@@ -18,3 +18,4 @@ spring:
 thinker:
   ble:
     rssiThreshold: -120
+    rediscoveryTimeout: 20

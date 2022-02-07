@@ -4,12 +4,18 @@ import com.mibe.iot.thinker.discovery.application.port.from.ControlDeviceDiscove
 import com.mibe.iot.thinker.discovery.application.port.from.GetDiscoveredDevicePort
 import com.mibe.iot.thinker.discovery.domain.DiscoveredDevice
 import com.welie.blessed.BluetoothCentralManager
+import com.welie.blessed.BluetoothCentralManagerCallback
+import com.welie.blessed.BluetoothGattService
+import com.welie.blessed.BluetoothPeripheral
+import com.welie.blessed.BluetoothPeripheralCallback
+import com.welie.blessed.ScanResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.map
+import mu.KotlinLogging
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
+import java.time.LocalDateTime
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 import javax.annotation.PostConstruct
@@ -18,11 +24,15 @@ import javax.annotation.PostConstruct
 @Component
 class DeviceDiscoveryHandler
 @Autowired constructor(
-    private val bleCentralCallback: BleCentralCallback
+    private val bleDiscoveryResults: BleDiscoveryResults
 ) : GetDiscoveredDevicePort, ControlDeviceDiscoveryPort {
+    private val log = KotlinLogging.logger {}
 
     @Value("\${thinker.ble.rssiThreshold:-120}")
     private lateinit var rssiThreshold: String
+
+    @Value("\${thinker.ble.rediscoveryTimeout:30}")
+    private lateinit var rediscoveryTimeout: String
 
     private lateinit var central: BluetoothCentralManager
     private val isActive = AtomicBoolean(false)
@@ -30,6 +40,35 @@ class DeviceDiscoveryHandler
 
     @PostConstruct
     private fun initCentralManager() {
+        val blePeripheralCallback = object : BluetoothPeripheralCallback() {
+            override fun onServicesDiscovered(
+                peripheral: BluetoothPeripheral,
+                services: MutableList<BluetoothGattService>
+            ) {
+                val discoveredAt = LocalDateTime.now()
+                log.info{"Discovered services for ${peripheral.address}: ${services}"}
+                bleDiscoveryResults.devicesWithServices[peripheral.address] =
+                    BleDiscoveredDevice(
+                        peripheral.toDiscoveredDevice(discoveredAt),
+                        services = services.toList()
+                    )
+                peripheral.cancelConnection()
+            }
+        }
+        val bleCentralCallback = object : BluetoothCentralManagerCallback() {
+            override fun onDiscoveredPeripheral(peripheral: BluetoothPeripheral, scanResult: ScanResult) {
+                log.trace {
+                    "discovered device: address=${peripheral.address} " +
+                            "name=${peripheral.name} uuids=${peripheral.device?.uuids}"
+                }
+                bleDiscoveryResults.noticedDevices[peripheral.address] = Pair(peripheral, LocalDateTime.now())
+                if (!bleDiscoveryResults.isDiscovered(peripheral.address) ||
+                    bleDiscoveryResults.isDiscoveryDataOutdated(peripheral.address, rediscoveryTimeout.toInt())
+                ) {
+                    central.connectPeripheral(peripheral, blePeripheralCallback)
+                }
+            }
+        }
         central = BluetoothCentralManager(bleCentralCallback)
         central.setRssiThreshold(rssiThreshold.toInt())
     }
@@ -37,7 +76,7 @@ class DeviceDiscoveryHandler
     override suspend fun startDiscovery() {
         isActive.set(true)
         discoveryRequestsAmount.incrementAndGet()
-        central.scanForPeripherals()
+        central.scanForPeripheralsWithServices(allowedUUIDs.toTypedArray())
     }
 
     override fun stopDiscovery(gracefully: Boolean) {
@@ -54,16 +93,6 @@ class DeviceDiscoveryHandler
     }
 
     override suspend fun getDiscoveredDevices(): Flow<DiscoveredDevice> {
-        return bleCentralCallback.discoveredPeripherals.values.asFlow()
-            .map { peripheralAndTime ->
-                val discoveredAt = peripheralAndTime.second
-                peripheralAndTime.first.let { peripheral ->
-                    DiscoveredDevice(
-                        peripheral.name.ifBlank { "[unknown]" },
-                        peripheral.address,
-                        discoveredAt
-                    )
-                }
-            }
+        return bleDiscoveryResults.devicesWithServices.values.map { it.discoveredDevice }.asFlow()
     }
 }

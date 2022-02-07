@@ -23,14 +23,14 @@ class DeviceDiscoveryScheduler
     @Scheduled(cron = "0 * * * * *")
     fun runPeriodicalDiscovery() {
         if(controlDeviceDiscoveryUseCase.isDiscovering()) return
-        log.info { "Periodical device discovery started" }
+        log.debug { "Periodical device discovery started" }
         runBlocking {
             controlDeviceDiscoveryUseCase.startDiscovery()
             delay(10_000)
             //Won't shut down discovery if it was run by other component
             controlDeviceDiscoveryUseCase.stopDiscovery(gracefully = true)
         }
-        log.info { "Periodical device discovery ended" }
+        log.debug { "Periodical device discovery ended" }
     }
 
 }
