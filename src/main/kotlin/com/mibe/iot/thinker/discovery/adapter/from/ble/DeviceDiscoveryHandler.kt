@@ -1,5 +1,6 @@
 package com.mibe.iot.thinker.discovery.adapter.from.ble
 
+import com.mibe.iot.thinker.discovery.application.port.from.ConnectDiscoveredDevicePort
 import com.mibe.iot.thinker.discovery.application.port.from.ControlDeviceDiscoveryPort
 import com.mibe.iot.thinker.discovery.application.port.from.GetDiscoveredDevicePort
 import com.mibe.iot.thinker.discovery.domain.DiscoveredDevice
@@ -25,7 +26,7 @@ import javax.annotation.PostConstruct
 class DeviceDiscoveryHandler
 @Autowired constructor(
     private val bleDiscoveryResults: BleDiscoveryResults
-) : GetDiscoveredDevicePort, ControlDeviceDiscoveryPort {
+) : GetDiscoveredDevicePort, ControlDeviceDiscoveryPort, ConnectDiscoveredDevicePort {
     private val log = KotlinLogging.logger {}
 
     @Value("\${thinker.ble.rssiThreshold:-120}")
@@ -46,7 +47,7 @@ class DeviceDiscoveryHandler
                 services: MutableList<BluetoothGattService>
             ) {
                 val discoveredAt = LocalDateTime.now()
-                log.info{"Discovered services for ${peripheral.address}: ${services}"}
+                log.info { "Discovered services for ${peripheral.address}: ${services}" }
                 bleDiscoveryResults.devicesWithServices[peripheral.address] =
                     BleDiscoveredDevice(
                         peripheral.toDiscoveredDevice(discoveredAt),
@@ -57,15 +58,18 @@ class DeviceDiscoveryHandler
         }
         val bleCentralCallback = object : BluetoothCentralManagerCallback() {
             override fun onDiscoveredPeripheral(peripheral: BluetoothPeripheral, scanResult: ScanResult) {
+                val address = peripheral.address
                 log.trace {
-                    "discovered device: address=${peripheral.address} " +
+                    "discovered device: address=$address " +
                             "name=${peripheral.name} uuids=${peripheral.device?.uuids}"
                 }
-                bleDiscoveryResults.noticedDevices[peripheral.address] = Pair(peripheral, LocalDateTime.now())
-                if (!bleDiscoveryResults.isDiscovered(peripheral.address) ||
-                    bleDiscoveryResults.isDiscoveryDataOutdated(peripheral.address, rediscoveryTimeout.toInt())
-                ) {
-                    central.connectPeripheral(peripheral, blePeripheralCallback)
+                bleDiscoveryResults.noticedDevices[address] = Pair(peripheral, LocalDateTime.now())
+                bleDiscoveryResults.run {
+                    if (isAllowedToConnect(address) &&
+                        (!isDiscovered(address) || isDiscoveryDataOutdated(address, rediscoveryTimeout.toInt()))
+                    ) {
+                        central.connectPeripheral(peripheral, blePeripheralCallback)
+                    }
                 }
             }
         }
@@ -93,6 +97,10 @@ class DeviceDiscoveryHandler
     }
 
     override suspend fun getDiscoveredDevices(): Flow<DiscoveredDevice> {
-        return bleDiscoveryResults.devicesWithServices.values.map { it.discoveredDevice }.asFlow()
+        return bleDiscoveryResults.noticedDevices.values.map { it.first.toDiscoveredDevice(it.second) }.asFlow()
+    }
+
+    override suspend fun connectDevice(address: String) {
+        bleDiscoveryResults.allowedAddresses += address
     }
 }

@@ -18,33 +18,8 @@ import java.util.concurrent.Executors
 @Service
 class GetDiscoveredDeviceService
 @Autowired constructor(
-    private val getDiscoveredDevicePort: GetDiscoveredDevicePort,
-    private val controlDeviceDiscoveryPort: ControlDeviceDiscoveryPort
-) : GetDiscoveredDeviceUseCase, ControlDeviceDiscoveryUseCase {
-    private val log = KotlinLogging.logger {}
-
-    private val discoveryScope = CoroutineScope(Executors.newSingleThreadExecutor().asCoroutineDispatcher())
-
-    override fun startDiscovery() {
-        if (!controlDeviceDiscoveryPort.isDiscovering()) {
-            log.debug("Starting discovery")
-
-            discoveryScope.launch {
-                controlDeviceDiscoveryPort.startDiscovery()
-            }
-            log.info { "Discovery started" }
-        } else {
-            log.info("Discovery is already launched")
-        }
-    }
-
-    override fun stopDiscovery() {
-        log.debug { "Stopping discovery" }
-
-        if (controlDeviceDiscoveryPort.isDiscovering()) controlDeviceDiscoveryPort.stopDiscovery()
-
-        log.info { "Discovery stopped" }
-    }
+    private val getDiscoveredDevicePort: GetDiscoveredDevicePort
+) : GetDiscoveredDeviceUseCase {
 
     override suspend fun getDiscoveredDevices(): Flow<DiscoveredDevice> {
         return getDiscoveredDevicePort.getDiscoveredDevices()

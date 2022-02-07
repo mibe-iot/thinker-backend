@@ -3,6 +3,7 @@ package com.mibe.iot.thinker.validation.application
 import com.mibe.iot.thinker.validation.domain.ValidationException
 import io.konform.validation.Invalid
 import io.konform.validation.Validation
+import io.konform.validation.ValidationResult
 import reactor.core.publisher.Mono
 
 /**
@@ -16,4 +17,8 @@ fun <T> mapToErrorMonoIfInvalid(valueUnderValidation: T, validation: Validation<
     } else {
         Mono.just(valueUnderValidation!!)
     }
+}
+
+fun <T> ValidationResult<T>.throwOnInvalid() = this.let {
+    { if(it is Invalid<*>) throw ValidationException(it.errors) }
 }
