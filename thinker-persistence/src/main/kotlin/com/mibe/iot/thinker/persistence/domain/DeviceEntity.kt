@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document
 @Document("devices")
 class DeviceEntity(
     @Id
-    var id: String?,
+    var id: String? = null,
     val name: String,
     val address: String,
     val description: String = "",
