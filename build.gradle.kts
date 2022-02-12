@@ -24,6 +24,7 @@ val webmvcVersion = "5.3.9"
 val konformVersion = "0.3.0"
 val logbackVersion = "1.2.10"
 val blessedVersion = "0.61.2"
+val openApiVersion = "1.4.3"
 
 dependencies {
     implementation(project(":thinker-persistence"))
@@ -35,6 +36,12 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
+
+    // Open API
+    implementation("org.springdoc:springdoc-openapi-webflux-ui:$openApiVersion")
+//    implementation("org.springdoc:springdoc-openapi-kotlin:$openApiVersion")
+//    implementation("org.springdoc:springdoc-openapi-webflux-core:$openApiVersion")
+
 
     // Cache
     implementation("io.github.reactivecircus.cache4k:cache4k:0.3.0")
