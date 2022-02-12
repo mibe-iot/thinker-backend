@@ -1,7 +1,6 @@
-package com.mibe.iot.thinker.device.domain
+package com.mibe.iot.thinker.persistence.domain
 
-// TODO
-data class DeviceAction(
+class DeviceActionEntity(
     val name: String,
     val mapping: String,
     val descriptionKey: String

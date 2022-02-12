@@ -26,6 +26,7 @@ val logbackVersion = "1.2.10"
 val blessedVersion = "0.61.2"
 
 dependencies {
+    implementation(project(":thinker-persistence"))
 
     // Spring
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")

@@ -50,6 +50,6 @@ fun Device.toModel() = DeviceModel(
     id ?: throw InvalidDeviceIdException(),
     name,
     description,
-    mac,
+    address,
     actions = actions.map(DeviceAction::toModel).toSet()
 )

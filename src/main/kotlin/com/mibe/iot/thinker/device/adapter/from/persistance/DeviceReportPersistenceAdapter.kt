@@ -1,10 +1,9 @@
 package com.mibe.iot.thinker.device.adapter.from.persistance
 
-import com.mibe.iot.thinker.device.adapter.from.persistance.entity.toDeviceReport
-import com.mibe.iot.thinker.device.adapter.from.persistance.entity.toDeviceReportEntity
 import com.mibe.iot.thinker.device.application.port.from.GetDeviceReportPort
 import com.mibe.iot.thinker.device.application.port.from.SaveDeviceReportPort
 import com.mibe.iot.thinker.device.domain.DeviceReport
+import com.mibe.iot.thinker.persistence.repository.SpringDataDeviceReportRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Component
@@ -13,7 +12,8 @@ import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.toMono
 
 @Component
-class DeviceReportPersistenceAdapter @Autowired constructor(
+class DeviceReportPersistenceAdapter
+@Autowired constructor(
     private val deviceReportRepository: SpringDataDeviceReportRepository
 ) : SaveDeviceReportPort, GetDeviceReportPort {
 

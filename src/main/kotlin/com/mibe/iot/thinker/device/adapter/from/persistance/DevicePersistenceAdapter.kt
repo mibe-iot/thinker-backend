@@ -1,11 +1,10 @@
 package com.mibe.iot.thinker.device.adapter.from.persistance
 
-import com.mibe.iot.thinker.device.adapter.from.persistance.entity.toDevice
-import com.mibe.iot.thinker.device.adapter.from.persistance.entity.toDeviceEntity
 import com.mibe.iot.thinker.device.application.port.from.DeleteDevicePort
 import com.mibe.iot.thinker.device.application.port.from.GetDevicePort
 import com.mibe.iot.thinker.device.application.port.from.UpdateDevicePort
 import com.mibe.iot.thinker.device.domain.Device
+import com.mibe.iot.thinker.persistence.repository.SpringDataDeviceRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Flux

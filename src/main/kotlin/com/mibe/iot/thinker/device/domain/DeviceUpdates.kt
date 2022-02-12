@@ -12,6 +12,6 @@ fun Device.receiveUpdates(deviceUpdates: DeviceUpdates) = Device(
     id,
     deviceUpdates.name ?: name,
     deviceUpdates.description ?: description,
-    deviceUpdates.mac ?: mac,
+    deviceUpdates.mac ?: address,
     deviceUpdates.actions ?: actions
 )
