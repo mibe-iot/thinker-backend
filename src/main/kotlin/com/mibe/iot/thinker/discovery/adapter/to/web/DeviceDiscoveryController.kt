@@ -59,8 +59,9 @@ class DeviceDiscoveryController
     suspend fun connectDevice(@PathVariable(name = "address") address: String) {
         coroutineScope {
             launch {
-                validateAddress(address).throwOnInvalid()
-                connectDiscoveredDeviceUseCase.connectDeviceByAddress(address)
+                val macAddress = address.replace('-', ':')
+                validateAddress(macAddress).throwOnInvalid()
+                connectDiscoveredDeviceUseCase.connectDeviceByAddress(macAddress)
             }
         }
     }

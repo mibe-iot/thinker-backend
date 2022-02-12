@@ -5,7 +5,10 @@ import com.mibe.iot.thinker.constants.PROFILE_DEV
 import com.mibe.iot.thinker.discovery.application.port.from.ConnectDiscoveredDevicePort
 import com.mibe.iot.thinker.discovery.application.port.from.ControlDeviceDiscoveryPort
 import com.mibe.iot.thinker.discovery.application.port.from.GetDiscoveredDevicePort
+import com.mibe.iot.thinker.discovery.application.randomString
+import com.mibe.iot.thinker.discovery.domain.DeviceConnectionData
 import com.mibe.iot.thinker.discovery.domain.DiscoveredDevice
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import mu.KotlinLogging
@@ -48,18 +51,28 @@ class DeviceDiscoveryHandlerMock
         }.asFlow()
     }
 
-    override suspend fun connectDevice(address: String) {
-//        bleDiscoveryResultsHolder.allowedAddresses += address
+    override suspend fun getConnectedDeviceByAddress(address: String): DiscoveredDevice? {
+        return DiscoveredDevice(
+            randomString(5),
+            address,
+            LocalDateTime.now().minusMinutes(1)
+        )
+    }
+
+    override suspend fun connectDevice(discoveredDevice: DiscoveredDevice, connectionData: DeviceConnectionData) {
+        log.info { "Connecting device with address=${discoveredDevice.address} via BLE" }
+        delay(300)
+        log.info { "Sending Name..." }
+        delay(100)
+        log.info { "Sending SSID..." }
+        delay(200)
+        log.info { "Sending Password..." }
+        delay(200)
+        log.info { "Ble device connected" }
     }
 
     private fun randomMacAddress(): String {
         return randomString(12).uppercase().chunked(2).joinToString(":")
-    }
-
-    private fun randomString(length: Int): String {
-        val charset = ('a'..'z') + ('A'..'Z') + ('0'..'9')
-        return List(length) { charset.random() }
-            .joinToString("")
     }
 
 }

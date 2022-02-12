@@ -4,6 +4,7 @@ import com.mibe.iot.thinker.constants.PROFILE_PROD
 import com.mibe.iot.thinker.discovery.application.port.from.ConnectDiscoveredDevicePort
 import com.mibe.iot.thinker.discovery.application.port.from.ControlDeviceDiscoveryPort
 import com.mibe.iot.thinker.discovery.application.port.from.GetDiscoveredDevicePort
+import com.mibe.iot.thinker.discovery.domain.DeviceConnectionData
 import com.mibe.iot.thinker.discovery.domain.DiscoveredDevice
 import com.welie.blessed.BluetoothCentralManager
 import com.welie.blessed.BluetoothCentralManagerCallback
@@ -105,7 +106,13 @@ class DeviceDiscoveryHandler
             .asFlow()
     }
 
-    override suspend fun connectDevice(address: String) {
-        bleDiscoveryResultsHolder.allowedAddresses += address
+    override suspend fun getConnectedDeviceByAddress(address: String): DiscoveredDevice? {
+        return bleDiscoveryResultsHolder.noticedDevices[address]?.let{
+            it.first.toDiscoveredDevice(it.second)
+        }
+    }
+
+    override suspend fun connectDevice(discoveredDevice: DiscoveredDevice, connectionData: DeviceConnectionData) {
+        TODO("Not yet implemented")
     }
 }
