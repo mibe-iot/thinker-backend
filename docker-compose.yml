@@ -7,9 +7,8 @@ services:
 #    links:
 #      - mongo
   mongo:
-    image: andresvidal/rpi3-mongodb3
+    image: mongo
     restart: always
     env_file: .env
-    command: "docker exec -it rpi3-mongodb3 mongo admin\ db.createUser({ user: "root", pwd: "root", roles: [ { role: "userAdminAnyDatabase", db: "admin" } ] })"
     ports:
       - "27017:27017"

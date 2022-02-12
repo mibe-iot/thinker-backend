@@ -8,11 +8,12 @@ plugins {
 }
 
 group = "com.mibe.iot"
-version = "0.0.1-SNAPSHOT"
+version = "0.1"
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 
 repositories {
     mavenCentral()
+    maven { url = uri("https://jitpack.io") }
 }
 
 val kotestVersion = "4.6.1"
@@ -21,16 +22,24 @@ val embeddedMongodbVersion = "3.0.0"
 val hateoasVersion = "1.3.3"
 val webmvcVersion = "5.3.9"
 val konformVersion = "0.3.0"
+val logbackVersion = "1.2.10"
+val blessedVersion = "0.61.2"
+val openApiVersion = "1.4.3"
 
 dependencies {
+    implementation(project(":thinker-persistence"))
 
     // Spring
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
-    implementation("org.springframework.hateoas:spring-hateoas:$hateoasVersion")
-    implementation("org.springframework:spring-webmvc:$webmvcVersion")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
+
+    // Open API
+    implementation("org.springdoc:springdoc-openapi-webflux-ui:$openApiVersion")
+    implementation("org.springdoc:springdoc-openapi-kotlin:$openApiVersion")
+//    implementation("org.springdoc:springdoc-openapi-webflux-core:$openApiVersion")
+
 
     // Cache
     implementation("io.github.reactivecircus.cache4k:cache4k:0.3.0")
@@ -40,6 +49,8 @@ dependencies {
 
     // Logging
     implementation("io.github.microutils:kotlin-logging:2.0.11")
+    implementation("ch.qos.logback:logback-core:$logbackVersion")
+    implementation("ch.qos.logback:logback-classic:$logbackVersion")
     testImplementation("org.slf4j:slf4j-simple:1.7.32")
 
     // Kotlin
@@ -51,6 +62,9 @@ dependencies {
     implementation("io.konform:konform:$konformVersion")
     implementation("org.springframework.boot:spring-boot-starter-validation")
 
+    // BLE
+    implementation("com.github.mibe-iot:blessed-bluez:$blessedVersion")
+
     // Test
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
@@ -58,7 +72,9 @@ dependencies {
     testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
     testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
     testImplementation("io.kotest:kotest-property:$kotestVersion")
+    testImplementation("io.kotest.extensions:kotest-assertions-konform:1.0.0")
     testRuntimeOnly("io.kotest:kotest-assertions-core-jvm:$kotestVersion")
+
     testImplementation("io.mockk:mockk:$mockkVersion")
 }
 

@@ -1,12 +1,14 @@
 package com.mibe.iot.thinker
 
-import com.mibe.iot.thinker.device.adapter.from.persistance.SpringDataDeviceRepository
+import com.mibe.iot.thinker.persistence.PersistenceBeanScanMarker
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRepositories
+import org.springframework.scheduling.annotation.EnableScheduling
 
 @SpringBootApplication
-@EnableReactiveMongoRepositories(basePackageClasses = [SpringDataDeviceRepository::class])
+@EnableScheduling
+@EnableReactiveMongoRepositories(basePackageClasses = [PersistenceBeanScanMarker::class])
 class ThinkerApplication
 
 fun main(args: Array<String>) {

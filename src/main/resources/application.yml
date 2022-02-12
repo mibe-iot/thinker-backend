@@ -14,3 +14,24 @@ spring:
       username: root
       password: root
       authentication-database: admin
+
+springdoc:
+  show-actuator: true
+  use-management-port: true
+  swagger-ui:
+    path: /swagger-doc/swagger-ui
+  api-docs:
+    path: /swagger-doc/v3/api-docs
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: openapi, swaggerui
+  server:
+    port: 9090
+
+thinker:
+  ble:
+    rssiThreshold: -120
+    rediscoveryTimeout: 20
