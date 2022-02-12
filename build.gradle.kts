@@ -31,15 +31,13 @@ dependencies {
 
     // Spring
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
-    implementation("org.springframework.hateoas:spring-hateoas:$hateoasVersion")
-    implementation("org.springframework:spring-webmvc:$webmvcVersion")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
 
     // Open API
     implementation("org.springdoc:springdoc-openapi-webflux-ui:$openApiVersion")
-//    implementation("org.springdoc:springdoc-openapi-kotlin:$openApiVersion")
+    implementation("org.springdoc:springdoc-openapi-kotlin:$openApiVersion")
 //    implementation("org.springdoc:springdoc-openapi-webflux-core:$openApiVersion")
 
 

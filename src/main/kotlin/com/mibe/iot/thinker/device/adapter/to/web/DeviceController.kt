@@ -2,13 +2,15 @@ package com.mibe.iot.thinker.device.adapter.to.web
 
 import com.mibe.iot.thinker.device.adapter.to.web.dto.DeviceDto
 import com.mibe.iot.thinker.device.adapter.to.web.dto.toDeviceUpdates
-import com.mibe.iot.thinker.device.adapter.to.web.model.DeviceModel
-import com.mibe.iot.thinker.device.adapter.to.web.model.assembler.DeviceModelAssembler
 import com.mibe.iot.thinker.device.application.port.to.DeleteDeviceUseCase
 import com.mibe.iot.thinker.device.application.port.to.GetDeviceUseCase
 import com.mibe.iot.thinker.device.application.port.to.UpdateDeviceUseCase
+import com.mibe.iot.thinker.device.domain.Device
+import kotlinx.coroutines.reactive.asFlow
+import kotlinx.coroutines.reactive.awaitFirst
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
@@ -27,19 +29,16 @@ class DeviceController
 @Autowired constructor(
     private val updateDeviceUseCase: UpdateDeviceUseCase,
     private val getDeviceUseCase: GetDeviceUseCase,
-    private val deleteDeviceUseCase: DeleteDeviceUseCase,
-    private val deviceModelAssembler: DeviceModelAssembler
+    private val deleteDeviceUseCase: DeleteDeviceUseCase
 ) {
 
-    @GetMapping("")
+    @GetMapping("", produces = [MediaType.APPLICATION_NDJSON_VALUE])
     @ResponseStatus(HttpStatus.OK)
-    fun getAllDevices(exchange: ServerWebExchange) =
-        deviceModelAssembler.toCollectionModel(getDeviceUseCase.getAllDevices(), exchange)
+    fun getAllDevices(exchange: ServerWebExchange) = getDeviceUseCase.getAllDevices().asFlow()
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id}", produces = [MediaType.APPLICATION_JSON_VALUE])
     @ResponseStatus(HttpStatus.OK)
-    fun getDevice(@PathVariable id: String, exchange: ServerWebExchange) =
-        getDeviceUseCase.getDevice(id).flatMap { deviceModelAssembler.toModel(it, exchange) }
+    fun getDevice(@PathVariable id: String) = getDeviceUseCase.getDevice(id)
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -47,17 +46,15 @@ class DeviceController
 
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    fun updateDevice(
+    suspend fun updateDevice(
         @PathVariable(name = "id") deviceId: String,
         @RequestBody deviceDto: Mono<DeviceDto>,
         exchange: ServerWebExchange
-    ): Mono<DeviceModel> {
+    ): Device? {
         return deviceDto.flatMap { dto ->
             dto.apply { id = deviceId }.toDeviceUpdates().toMono()
         }.flatMap {
             updateDeviceUseCase.updateDevice(Mono.just(it))
-        }.flatMap {
-            deviceModelAssembler.toModel(it, exchange)
-        }
+        }.awaitFirst()
     }
 }

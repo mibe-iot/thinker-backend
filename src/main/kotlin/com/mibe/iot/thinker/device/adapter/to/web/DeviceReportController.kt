@@ -2,12 +2,12 @@ package com.mibe.iot.thinker.device.adapter.to.web
 
 import com.mibe.iot.thinker.device.adapter.to.web.dto.DeviceReportDto
 import com.mibe.iot.thinker.device.adapter.to.web.dto.toDeviceReport
-import com.mibe.iot.thinker.device.adapter.to.web.model.DeviceReportModel
-import com.mibe.iot.thinker.device.adapter.to.web.model.assembler.DeviceReportModelAssembler
 import com.mibe.iot.thinker.device.application.port.to.GetDeviceReportUseCase
 import com.mibe.iot.thinker.device.application.port.to.SaveDeviceReportUseCase
+import com.mibe.iot.thinker.device.domain.DeviceReport
+import kotlinx.coroutines.reactive.asFlow
+import kotlinx.coroutines.reactive.awaitFirst
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.hateoas.CollectionModel
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -23,21 +23,18 @@ import reactor.kotlin.core.publisher.toMono
 @RequestMapping("/api/devices/{deviceId}/reports")
 internal class DeviceReportController @Autowired constructor(
     private val saveDeviceReportUseCase: SaveDeviceReportUseCase,
-    private val getDeviceReportUseCase: GetDeviceReportUseCase,
-    private val deviceReportModelAssembler: DeviceReportModelAssembler
+    private val getDeviceReportUseCase: GetDeviceReportUseCase
 ) {
 
     @PostMapping("")
-    fun saveReport(
+    suspend fun saveReport(
         @PathVariable deviceId: String,
         @RequestBody deviceReportDto: Mono<DeviceReportDto>,
         exchange: ServerWebExchange
-    ): Mono<DeviceReportModel> {
+    ): DeviceReport {
         return deviceReportDto.flatMap { reportDto ->
             saveDeviceReportUseCase.saveReport(reportDto.toDeviceReport(deviceId).toMono())
-        }.flatMap {
-            deviceReportModelAssembler.toModel(it, exchange).toMono()
-        }
+        }.awaitFirst()
     }
 
     @GetMapping("")
@@ -46,24 +43,11 @@ internal class DeviceReportController @Autowired constructor(
         @RequestParam(required = false, defaultValue = "0") page: Int,
         @RequestParam(required = false, defaultValue = "10") pageSize: Int,
         exchange: ServerWebExchange
-    ): Mono<CollectionModel<DeviceReportModel>> {
-        return deviceReportModelAssembler.toCollectionModel(
-            getDeviceReportUseCase.getDeviceReportsByDeviceId(
-                deviceId,
-                page,
-                pageSize
-            ),
-            exchange
-        )
-    }
+    ) = getDeviceReportUseCase.getDeviceReportsByDeviceId(deviceId, page, pageSize).asFlow()
 
     @GetMapping("/{reportId}")
     fun getReport(
         @PathVariable reportId: String,
         exchange: ServerWebExchange
-    ): Mono<DeviceReportModel> {
-        return getDeviceReportUseCase.getDeviceReport(reportId).flatMap {
-            deviceReportModelAssembler.toModel(it, exchange).toMono()
-        }
-    }
+    ) = getDeviceReportUseCase.getDeviceReport(reportId)
 }
