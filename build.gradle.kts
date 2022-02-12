@@ -29,6 +29,9 @@ val openApiVersion = "1.4.3"
 dependencies {
     implementation(project(":thinker-persistence"))
 
+    // MQTT
+    implementation("de.smartsquare:mqtt-starter:0.14.0")
+
     // Spring
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
     implementation("org.springframework.boot:spring-boot-starter-validation")
@@ -38,8 +41,6 @@ dependencies {
     // Open API
     implementation("org.springdoc:springdoc-openapi-webflux-ui:$openApiVersion")
     implementation("org.springdoc:springdoc-openapi-kotlin:$openApiVersion")
-//    implementation("org.springdoc:springdoc-openapi-webflux-core:$openApiVersion")
-
 
     // Cache
     implementation("io.github.reactivecircus.cache4k:cache4k:0.3.0")
@@ -76,6 +77,12 @@ dependencies {
     testRuntimeOnly("io.kotest:kotest-assertions-core-jvm:$kotestVersion")
 
     testImplementation("io.mockk:mockk:$mockkVersion")
+}
+
+subprojects {
+    tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootJar> {
+        enabled = false
+    }
 }
 
 tasks.withType<KotlinCompile> {
