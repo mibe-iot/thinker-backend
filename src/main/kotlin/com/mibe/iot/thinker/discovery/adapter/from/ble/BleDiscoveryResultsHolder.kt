@@ -7,7 +7,7 @@ import java.time.temporal.ChronoUnit
 import java.util.concurrent.ConcurrentHashMap
 
 @Component
-class BleDiscoveryResults(
+class BleDiscoveryResultsHolder(
     val noticedDevices: MutableMap<String, Pair<BluetoothPeripheral, LocalDateTime>> = ConcurrentHashMap(),
     val allowedAddresses: MutableSet<String> = HashSet(),
     val devicesWithServices: MutableMap<String, BleDiscoveredDevice> = ConcurrentHashMap()

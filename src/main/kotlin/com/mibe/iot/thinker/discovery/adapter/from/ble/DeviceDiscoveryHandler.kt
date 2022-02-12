@@ -1,5 +1,6 @@
 package com.mibe.iot.thinker.discovery.adapter.from.ble
 
+import com.mibe.iot.thinker.constants.PROFILE_PROD
 import com.mibe.iot.thinker.discovery.application.port.from.ConnectDiscoveredDevicePort
 import com.mibe.iot.thinker.discovery.application.port.from.ControlDeviceDiscoveryPort
 import com.mibe.iot.thinker.discovery.application.port.from.GetDiscoveredDevicePort
@@ -15,6 +16,7 @@ import kotlinx.coroutines.flow.asFlow
 import mu.KotlinLogging
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import java.time.LocalDateTime
 import java.util.concurrent.atomic.AtomicBoolean
@@ -23,9 +25,10 @@ import javax.annotation.PostConstruct
 
 
 @Component
+@Profile(PROFILE_PROD)
 class DeviceDiscoveryHandler
 @Autowired constructor(
-    private val bleDiscoveryResults: BleDiscoveryResults
+    private val bleDiscoveryResultsHolder: BleDiscoveryResultsHolder
 ) : GetDiscoveredDevicePort, ControlDeviceDiscoveryPort, ConnectDiscoveredDevicePort {
     private val log = KotlinLogging.logger {}
 
@@ -47,8 +50,8 @@ class DeviceDiscoveryHandler
                 services: MutableList<BluetoothGattService>
             ) {
                 val discoveredAt = LocalDateTime.now()
-                log.info { "Discovered services for ${peripheral.address}: ${services}" }
-                bleDiscoveryResults.devicesWithServices[peripheral.address] =
+                log.info { "Discovered services for ${peripheral.address}: $services" }
+                bleDiscoveryResultsHolder.devicesWithServices[peripheral.address] =
                     BleDiscoveredDevice(
                         peripheral.toDiscoveredDevice(discoveredAt),
                         services = services.toList()
@@ -63,8 +66,8 @@ class DeviceDiscoveryHandler
                     "discovered device: address=$address " +
                             "name=${peripheral.name} uuids=${peripheral.device?.uuids}"
                 }
-                bleDiscoveryResults.noticedDevices[address] = Pair(peripheral, LocalDateTime.now())
-                bleDiscoveryResults.run {
+                bleDiscoveryResultsHolder.noticedDevices[address] = Pair(peripheral, LocalDateTime.now())
+                bleDiscoveryResultsHolder.run {
                     if (isAllowedToConnect(address) &&
                         (!isDiscovered(address) || isDiscoveryDataOutdated(address, rediscoveryTimeout.toInt()))
                     ) {
@@ -80,7 +83,8 @@ class DeviceDiscoveryHandler
     override suspend fun startDiscovery() {
         isActive.set(true)
         discoveryRequestsAmount.incrementAndGet()
-        central.scanForPeripheralsWithServices(allowedUUIDs.toTypedArray())
+//        central.scanForPeripheralsWithServices(allowedUUIDs.toTypedArray())
+        central.scanForPeripherals()
     }
 
     override fun stopDiscovery(gracefully: Boolean) {
@@ -97,10 +101,11 @@ class DeviceDiscoveryHandler
     }
 
     override suspend fun getDiscoveredDevices(): Flow<DiscoveredDevice> {
-        return bleDiscoveryResults.noticedDevices.values.map { it.first.toDiscoveredDevice(it.second) }.asFlow()
+        return bleDiscoveryResultsHolder.noticedDevices.values.map { it.first.toDiscoveredDevice(discoveredAt = it.second) }
+            .asFlow()
     }
 
     override suspend fun connectDevice(address: String) {
-        bleDiscoveryResults.allowedAddresses += address
+        bleDiscoveryResultsHolder.allowedAddresses += address
     }
 }

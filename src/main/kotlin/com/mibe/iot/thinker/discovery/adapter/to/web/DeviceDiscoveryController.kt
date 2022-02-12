@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
+import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -29,7 +29,7 @@ class DeviceDiscoveryController
     private val getDeviceDiscoveryUseCase: GetDiscoveredDeviceUseCase
 ) {
 
-    @GetMapping("")
+    @GetMapping("", produces = [MediaType.APPLICATION_NDJSON_VALUE])
     @ResponseStatus(HttpStatus.OK)
     suspend fun getDevices(): Flow<DiscoveredDevice> {
         return getDeviceDiscoveryUseCase.getDiscoveredDevices()
@@ -56,7 +56,7 @@ class DeviceDiscoveryController
      */
     @PostMapping("/connect/{address}")
     @ResponseStatus(HttpStatus.OK)
-    suspend fun connectDevice(@PathVariable(name = "address")address: String) {
+    suspend fun connectDevice(@PathVariable(name = "address") address: String) {
         coroutineScope {
             launch {
                 validateAddress(address).throwOnInvalid()
