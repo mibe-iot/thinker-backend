@@ -2,7 +2,7 @@ package com.mibe.iot.thinker.device.application
 
 import com.mibe.iot.thinker.device.application.port.from.SaveDeviceReportPort
 import com.mibe.iot.thinker.device.application.port.to.SaveDeviceReportUseCase
-import com.mibe.iot.thinker.device.domain.DeviceReport
+import com.mibe.iot.thinker.domain.device.DeviceReport
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono

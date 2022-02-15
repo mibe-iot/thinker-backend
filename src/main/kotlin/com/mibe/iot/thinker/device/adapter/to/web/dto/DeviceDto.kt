@@ -1,8 +1,8 @@
 package com.mibe.iot.thinker.device.adapter.to.web.dto
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import com.mibe.iot.thinker.device.domain.DeviceAction
 import com.mibe.iot.thinker.device.domain.DeviceUpdates
+import com.mibe.iot.thinker.domain.device.DeviceAction
 
 data class DeviceDto(
     @JsonIgnore

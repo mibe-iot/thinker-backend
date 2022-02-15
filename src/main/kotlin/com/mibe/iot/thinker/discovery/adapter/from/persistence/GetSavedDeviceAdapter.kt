@@ -1,8 +1,8 @@
 package com.mibe.iot.thinker.discovery.adapter.from.persistence
 
 import com.mibe.iot.thinker.device.adapter.from.persistance.toDevice
-import com.mibe.iot.thinker.device.domain.Device
 import com.mibe.iot.thinker.discovery.application.port.from.GetSavedDevicePort
+import com.mibe.iot.thinker.domain.device.Device
 import com.mibe.iot.thinker.persistence.repository.SpringDataDeviceRepository
 import kotlinx.coroutines.reactor.awaitSingle
 import org.springframework.beans.factory.annotation.Autowired

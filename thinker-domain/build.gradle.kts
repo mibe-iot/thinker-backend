@@ -4,7 +4,6 @@ plugins {
     kotlin("jvm")
     kotlin("plugin.spring")
 }
-
 group = "com.mibe.iot"
 version = "0.1"
 
@@ -13,11 +12,9 @@ repositories {
 }
 
 dependencies {
-    implementation(project(":thinker-domain"))
-
-    // Spring
-    implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
-
-    // Kotlin
     implementation(kotlin("stdlib"))
+
+    // Validation
+    implementation("io.konform:konform:${findProperty("konformVersion")}")
+    implementation("org.springframework.boot:spring-boot-starter-validation")
 }

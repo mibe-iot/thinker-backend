@@ -8,7 +8,7 @@ import com.mibe.iot.thinker.device.adapter.to.web.dto.toDeviceUpdates
 import com.mibe.iot.thinker.device.application.port.to.DeleteDeviceUseCase
 import com.mibe.iot.thinker.device.application.port.to.GetDeviceUseCase
 import com.mibe.iot.thinker.device.application.port.to.UpdateDeviceUseCase
-import com.mibe.iot.thinker.device.domain.Device
+import com.mibe.iot.thinker.domain.device.Device
 import kotlinx.coroutines.reactive.asFlow
 import mu.KotlinLogging
 import org.springframework.beans.factory.annotation.Autowired

@@ -1,4 +1,4 @@
-package com.mibe.iot.thinker.device.domain
+package com.mibe.iot.thinker.domain.device
 
 // TODO
 data class DeviceAction(
