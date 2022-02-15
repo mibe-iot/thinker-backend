@@ -2,6 +2,11 @@ package com.mibe.iot.thinker.discovery.adapter.from.ble
 
 import java.util.*
 
+const val BIT_SERVICE = "29d9d932-8a5f-11ec-a8a3-0242ac120002"
+const val BIT_CHARACTERISTIC_NAME = "70f3674a-8a62-11ec-a8a3-0242ac120002"
+const val BIT_CHARACTERISTIC_SSID = "63be641a-8a5f-11ec-a8a3-0242ac120002"
+const val BIT_CHARACTERISTIC_PASSWORD = "7385dab8-8a5f-11ec-a8a3-0242ac120002"
+
 val allowedUUIDs = listOf(
-    "a99bb03e-2de8-4706-8503-faaa094e79d5"
+    BIT_SERVICE
 ).map(UUID::fromString)

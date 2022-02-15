@@ -1,7 +1,8 @@
 package com.mibe.iot.thinker.discovery.domain
 
 data class DeviceConnectionData(
-    val deviceName: String,
+    val address: String,
+    var deviceName: String,
     val ssid: String,
     val password: String
 )

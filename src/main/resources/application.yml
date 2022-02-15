@@ -31,6 +31,10 @@ management:
   server:
     port: 9090
 
+mqtt:
+  enabled: true
+  host: thinker.local
+
 thinker:
   ble:
     rssiThreshold: -120

@@ -14,5 +14,5 @@ interface UpdateDeviceUseCase {
      * @param deviceUpdates [Mono] of the [DeviceUpdates]
      * @return [Mono] of the updated [Device]
      */
-    fun updateDevice(deviceUpdates: Mono<DeviceUpdates>): Mono<Device>
+    suspend fun updateDevice(deviceUpdates: DeviceUpdates): Device
 }

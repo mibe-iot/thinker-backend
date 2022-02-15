@@ -35,6 +35,7 @@ class DefaultErrorHandlingAdvice
      */
     @Order(Ordered.LOWEST_PRECEDENCE)
     @ExceptionHandler(InternationalizedException::class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     fun handleInternationalizedException(ex: InternationalizedException, locale: Locale): ErrorData {
         val message = messageService.getErrorMessage(ex.messageKey, locale)
         logger.error(ex) { message }
@@ -51,6 +52,7 @@ class DefaultErrorHandlingAdvice
      * @param locale Locale resolved by LocaleResolver
      */
     @ExceptionHandler(ValidationException::class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     fun handleValidationError(ex: ValidationException, locale: Locale): List<ValidationErrorModel> {
         logger.error(ex) { "Validation error: $ex" }
         return ex.errors.map { error ->

@@ -19,7 +19,7 @@ val validateNewDevice = Validation<Device> {
     Device::description {
         maxLength(DEVICE_DESCRIPTION_LENGTH) hint "validation.device.description.length|||$DEVICE_DESCRIPTION_LENGTH"
     }
-    Device::address required {
+    Device::address ifPresent {
         pattern(MAC_ADDRESS_PATTERN) hint "validation.device.address"
     }
 }

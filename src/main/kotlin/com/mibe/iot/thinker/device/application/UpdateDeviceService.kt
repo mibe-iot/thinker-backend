@@ -8,6 +8,7 @@ import com.mibe.iot.thinker.device.domain.DeviceUpdates
 import com.mibe.iot.thinker.device.domain.receiveUpdates
 import com.mibe.iot.thinker.device.domain.validation.validateDevice
 import com.mibe.iot.thinker.validation.application.mapToErrorMonoIfInvalid
+import kotlinx.coroutines.reactor.awaitSingle
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono
@@ -24,22 +25,10 @@ class UpdateDeviceService @Autowired constructor(
     private val getDevicePort: GetDevicePort
 ) : UpdateDeviceUseCase {
 
-    /**
-     * Validate and update device with help of [UpdateDevicePort.updateDevice]
-     *
-     * @param deviceUpdates [Mono] of the [DeviceUpdates]
-     * @return [Mono] of updated [Device]
-     */
-    override fun updateDevice(deviceUpdates: Mono<DeviceUpdates>): Mono<Device> {
-        return deviceUpdates.flatMap { updates ->
-            getDevicePort.getDevice(updates.id)
-                .flatMap { device ->
-                    Mono.just(device.receiveUpdates(updates))
-                }.log().flatMap {
-                    mapToErrorMonoIfInvalid(it, validateDevice)
-                }.flatMap {
-                    updateDevicePort.updateDevice(Mono.just(it))
-                }
-        }
+    override suspend fun updateDevice(deviceUpdates: DeviceUpdates): Device {
+        val device = getDevicePort.getDevice(deviceUpdates.id).awaitSingle()
+        val updatedDevice = device.receiveUpdates(deviceUpdates)
+        validateDevice(updatedDevice)
+        return updateDevicePort.updateDevice(Mono.just(updatedDevice)).awaitSingle()
     }
 }

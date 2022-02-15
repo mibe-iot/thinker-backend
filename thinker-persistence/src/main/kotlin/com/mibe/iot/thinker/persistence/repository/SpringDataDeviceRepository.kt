@@ -8,4 +8,6 @@ import reactor.core.publisher.Mono
 @Repository
 interface SpringDataDeviceRepository : ReactiveMongoRepository<DeviceEntity, String> {
     fun existsByName(name: String): Mono<Boolean>
+    fun existsByAddress(address: String): Mono<Boolean>
+    fun findByAddress(address: String): Mono<DeviceEntity>
 }
