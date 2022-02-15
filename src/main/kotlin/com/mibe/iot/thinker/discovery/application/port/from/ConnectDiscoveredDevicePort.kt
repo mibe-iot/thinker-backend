@@ -4,5 +4,6 @@ import com.mibe.iot.thinker.discovery.domain.DeviceConnectionData
 import com.mibe.iot.thinker.discovery.domain.DiscoveredDevice
 
 interface ConnectDiscoveredDevicePort {
-    suspend fun connectDevice(discoveredDevice: DiscoveredDevice, connectionData: DeviceConnectionData)
+    suspend fun connectDevice(connectionData: DeviceConnectionData)
+    suspend fun reconnectDevice(connectionData: DeviceConnectionData)
 }

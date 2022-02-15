@@ -1,6 +1,8 @@
 package com.mibe.iot.thinker.device.adapter.to.web
 
+//import com.mibe.iot.thinker.device.adapter.from.mqtt.TestPublisher
 import com.mibe.iot.thinker.device.adapter.from.mqtt.TestPublisher
+import com.mibe.iot.thinker.device.adapter.to.mqtt.MainMqttSubscriber
 import com.mibe.iot.thinker.device.adapter.to.web.dto.DeviceDto
 import com.mibe.iot.thinker.device.adapter.to.web.dto.toDeviceUpdates
 import com.mibe.iot.thinker.device.application.port.to.DeleteDeviceUseCase
@@ -8,6 +10,7 @@ import com.mibe.iot.thinker.device.application.port.to.GetDeviceUseCase
 import com.mibe.iot.thinker.device.application.port.to.UpdateDeviceUseCase
 import com.mibe.iot.thinker.device.domain.Device
 import kotlinx.coroutines.reactive.asFlow
+import mu.KotlinLogging
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -30,8 +33,9 @@ class DeviceController
     private val updateDeviceUseCase: UpdateDeviceUseCase,
     private val getDeviceUseCase: GetDeviceUseCase,
     private val deleteDeviceUseCase: DeleteDeviceUseCase,
-    private val testPublisher: TestPublisher
+    private val testPublisher: TestPublisher,
 ) {
+    private val log = KotlinLogging.logger {}
 
     @GetMapping("", produces = [MediaType.APPLICATION_NDJSON_VALUE])
     @ResponseStatus(HttpStatus.OK)
@@ -59,6 +63,7 @@ class DeviceController
     @PostMapping("/mqtt")
     @ResponseStatus(HttpStatus.OK)
     fun postMqtt(@RequestParam(name = "temp") temp: Int) {
-        testPublisher.publish(TestPublisher.TemperaturePayload(temp))
+        log.info{ "Sending mqtt"}
+        testPublisher.publish()
     }
 }

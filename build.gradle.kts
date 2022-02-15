@@ -16,6 +16,10 @@ repositories {
     maven { url = uri("https://jitpack.io") }
 }
 
+//allOpen{
+//    annotation("org.springframework.context.annotation.Configuration")
+//}
+
 val kotestVersion = "4.6.1"
 val mockkVersion = "1.12.0"
 val embeddedMongodbVersion = "3.0.0"
@@ -31,6 +35,7 @@ dependencies {
 
     // MQTT
     implementation("de.smartsquare:mqtt-starter:0.14.0")
+    api( "com.hivemq:hivemq-mqtt-client:1.2.2")
 
     // Spring
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")

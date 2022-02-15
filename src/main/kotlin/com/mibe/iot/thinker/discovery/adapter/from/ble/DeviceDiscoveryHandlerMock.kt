@@ -23,7 +23,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 @Profile(PROFILE_DEV, PROFILE_DEFAULT)
 class DeviceDiscoveryHandlerMock
 @Autowired constructor(
-    private val bleDiscoveryResultsHolder: BleDiscoveryResultsHolder
+    private val bleDiscoveryDataHolder: BleDiscoveryDataHolder
 ) : GetDiscoveredDevicePort, ControlDeviceDiscoveryPort, ConnectDiscoveredDevicePort {
     private val log = KotlinLogging.logger {}
 
@@ -44,23 +44,23 @@ class DeviceDiscoveryHandlerMock
     override suspend fun getDiscoveredDevices(): Flow<DiscoveredDevice> {
         return (0..(Random().nextInt(4))).map {
             DiscoveredDevice(
-                randomString(5),
                 randomMacAddress(),
-                LocalDateTime.now()
+                LocalDateTime.now(),
+                randomString(5)
             )
         }.asFlow()
     }
 
     override suspend fun getConnectedDeviceByAddress(address: String): DiscoveredDevice? {
         return DiscoveredDevice(
-            randomString(5),
             address,
-            LocalDateTime.now().minusMinutes(1)
+            LocalDateTime.now().minusMinutes(1),
+            randomString(5)
         )
     }
 
-    override suspend fun connectDevice(discoveredDevice: DiscoveredDevice, connectionData: DeviceConnectionData) {
-        log.info { "Connecting device with address=${discoveredDevice.address} via BLE" }
+    override suspend fun connectDevice(connectionData: DeviceConnectionData) {
+        log.info { "Connecting device with address=${connectionData.address} via BLE" }
         delay(300)
         log.info { "Sending Name..." }
         delay(100)
@@ -75,4 +75,7 @@ class DeviceDiscoveryHandlerMock
         return randomString(12).uppercase().chunked(2).joinToString(":")
     }
 
+    override suspend fun reconnectDevice(connectionData: DeviceConnectionData) {
+        TODO("Not yet implemented")
+    }
 }

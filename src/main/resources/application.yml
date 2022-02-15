@@ -32,6 +32,7 @@ management:
     port: 9090
 
 mqtt:
+  enabled: true
   host: thinker.local
 
 thinker:
