@@ -1,17 +1,15 @@
 package com.mibe.iot.thinker.discovery.application
 
-import com.mibe.iot.thinker.discovery.application.exception.DeviceNotFoundException
+import com.mibe.iot.thinker.discovery.application.exception.DiscoveredDeviceNotFoundException
 import com.mibe.iot.thinker.discovery.application.port.from.ConnectDiscoveredDevicePort
 import com.mibe.iot.thinker.discovery.application.port.from.GetDiscoveredDevicePort
 import com.mibe.iot.thinker.discovery.application.port.from.GetSavedDevicePort
 import com.mibe.iot.thinker.discovery.application.port.from.SaveDiscoveredDevicePort
 import com.mibe.iot.thinker.discovery.application.port.to.ConnectDiscoveredDeviceUseCase
-import com.mibe.iot.thinker.discovery.domain.DeviceConnectionData
 import com.mibe.iot.thinker.domain.device.Device
 import com.mibe.iot.thinker.domain.device.DeviceStatus
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import mu.KotlinLogging
@@ -32,7 +30,7 @@ class ConnectDiscoveredDeviceService
 
     override suspend fun connectDeviceByAddress(address: String) {
         val discoveredDevice = getDiscoveredDevicePort.getConnectedDeviceByAddress(address)
-            ?: throw DeviceNotFoundException("Device with address=$address wasn't found")
+            ?: throw DiscoveredDeviceNotFoundException(address)
 
         val device = if (getSavedDevicePort.existsByAddress(address)) {
             getSavedDevicePort.getDeviceByAddress(address)
@@ -64,6 +62,7 @@ class ConnectDiscoveredDeviceService
     }
 
     private fun getOnConnectionSuccessCallback(device: Device, context: CoroutineContext): () -> Unit = {
+        log.info { "Device successfully connected: $device" }
         CoroutineScope(context).launch {
             saveDiscoveredDevicePort.updateDeviceStatus(
                 device.id!!,
@@ -73,6 +72,7 @@ class ConnectDiscoveredDeviceService
     }
 
     private fun getOnConnectionFailedCallback(device: Device, context: CoroutineContext): () -> Unit = {
+        log.info { "Device connection failed: $device" }
         CoroutineScope(context).launch {
             saveDiscoveredDevicePort.updateDeviceStatus(
                 device.id!!,
