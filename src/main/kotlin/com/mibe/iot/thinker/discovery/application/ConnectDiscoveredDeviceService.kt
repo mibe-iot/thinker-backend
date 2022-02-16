@@ -24,23 +24,21 @@ class ConnectDiscoveredDeviceService
     override suspend fun connectDeviceByAddress(address: String) {
         val discoveredDevice = getDiscoveredDevicePort.getConnectedDeviceByAddress(address)
             ?: throw DeviceNotFoundException("Device with address=$address wasn't found")
-        val deviceName = randomString(DEVICE_NAME_LENGTH) //TODO Not random, but sequential
+
+        val persistedDevice = if(getSavedDevicePort.existsByAddress(address)) {
+            getSavedDevicePort.getDeviceByAddress(address)
+        } else {
+            saveDiscoveredDevicePort.saveDiscoveredDevice(discoveredDevice)
+        }
+
         val connectionData = DeviceConnectionData(
             address = address,
-            deviceName = discoveredDevice.name,
-            ssid = "Get-6490C8",
-            password = "ewmhjmztvd"
+            deviceName = persistedDevice.id!!,
+            ssid = "***",
+            password = "***encrypted***"
         )
 
-        if(getSavedDevicePort.existsByAddress(address)) {
-            val deviceFromPersistence = getSavedDevicePort.getDeviceByAddress(address)
-            connectionData.deviceName = deviceFromPersistence.name
-            reconnectDeviceByAddress(connectionData)
-        } else {
-            connectDiscoveredDevicePort.connectDevice(connectionData)
-            val deviceId = saveDiscoveredDevicePort.saveDiscoveredDevice(discoveredDevice, deviceName)
-            log.info { "Device saved with name=$deviceName and id=$deviceId" }
-        }
+
 
     }
 

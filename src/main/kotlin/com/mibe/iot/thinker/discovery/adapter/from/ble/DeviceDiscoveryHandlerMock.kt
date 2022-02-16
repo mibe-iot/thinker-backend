@@ -20,7 +20,7 @@ import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 
 @Component
-@Profile(PROFILE_DEV, PROFILE_DEFAULT)
+@Profile(PROFILE_DEV)
 class DeviceDiscoveryHandlerMock
 @Autowired constructor(
     private val bleDiscoveryDataHolder: BleDiscoveryDataHolder

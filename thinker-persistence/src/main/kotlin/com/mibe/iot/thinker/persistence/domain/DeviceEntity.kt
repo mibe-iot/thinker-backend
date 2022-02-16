@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document
 class DeviceEntity(
     @Id
     var id: String? = null,
-    var name: String,
+    var name: String? = null,
     var address: String,
     var description: String = "",
     var status: DeviceStatus = DeviceStatus.WAITING_CONFIGURATION,

@@ -1,5 +1,6 @@
 package com.mibe.iot.thinker.discovery.adapter.from.ble
 
+import com.mibe.iot.thinker.constants.PROFILE_DEFAULT
 import com.mibe.iot.thinker.constants.PROFILE_PROD
 import com.mibe.iot.thinker.discovery.application.port.from.ConnectDiscoveredDevicePort
 import com.mibe.iot.thinker.discovery.application.port.from.ControlDeviceDiscoveryPort
@@ -25,7 +26,7 @@ import kotlin.collections.HashMap
 
 
 @Component
-@Profile(PROFILE_PROD)
+@Profile(PROFILE_PROD, PROFILE_DEFAULT)
 class DeviceDiscoveryHandler
 @Autowired constructor(
     private val bleDiscoveryDataHolder: BleDiscoveryDataHolder,
