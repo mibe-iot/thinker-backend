@@ -33,6 +33,8 @@ class DeviceDiscoveryHandler
 ) : GetDiscoveredDevicePort, ControlDeviceDiscoveryPort, ConnectDiscoveredDevicePort {
     private val log = KotlinLogging.logger {}
 
+    private var discoveryStartTime: LocalDateTime = LocalDateTime.now()
+
     @Value("\${thinker.ble.rssiThreshold:-120}")
     private lateinit var rssiThreshold: String
 
@@ -64,6 +66,7 @@ class DeviceDiscoveryHandler
     }
 
     override suspend fun startDiscovery(connectionData: DeviceConnectionData) {
+        discoveryStartTime = LocalDateTime.now()
         discoveryDataHolder.connectionData = connectionData
         isActive.set(true)
         central.scanForPeripherals()
@@ -112,5 +115,9 @@ class DeviceDiscoveryHandler
 
     override fun removeConnectableDevice(device: Device) {
         discoveryDataHolder.removeConnectableDevice(device)
+    }
+
+    override fun getDiscoveryStartedTime(): LocalDateTime {
+        return discoveryStartTime
     }
 }
