@@ -20,11 +20,13 @@ class DiscoveryDataHolder(
 ) {
     fun shouldBeConfigured(address: String): Boolean {
         return connectableDevices.firstOrNull { it.address == address }
-            ?.let { when{
-                it.status == DeviceStatus.WAITING_CONFIGURATION -> true
-                it.connectType == DeviceConnectType.AUTO -> true
-                else -> false
-            } } ?: false
+            ?.let {
+                when {
+                    it.status == DeviceStatus.WAITING_CONFIGURATION -> true
+                    it.connectType == DeviceConnectType.AUTO -> true
+                    else -> false
+                }
+            } ?: false
     }
 
     data class CharacteristicsState(

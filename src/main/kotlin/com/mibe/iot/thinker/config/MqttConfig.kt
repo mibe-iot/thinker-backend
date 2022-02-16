@@ -2,23 +2,16 @@ package com.mibe.iot.thinker.config
 
 //import com.hivemq.client.mqtt.mqtt3.Mqtt3ClientBuilder
 //import de.smartsquare.starter.mqtt.Mqtt3ClientConfigurer
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.hivemq.client.mqtt.MqttClient
 import com.hivemq.client.mqtt.MqttClientBuilder
-import com.hivemq.client.mqtt.mqtt3.Mqtt3Client
-import com.hivemq.client.mqtt.mqtt3.message.connect.Mqtt3Connect
 import com.hivemq.client.mqtt.mqtt5.Mqtt5Client
 import com.hivemq.client.mqtt.mqtt5.message.connect.Mqtt5Connect
 import de.smartsquare.starter.mqtt.AnnotationCollector
-import de.smartsquare.starter.mqtt.Mqtt3ClientConfigurer
-import de.smartsquare.starter.mqtt.Mqtt3Publisher
-import de.smartsquare.starter.mqtt.Mqtt3Router
 import de.smartsquare.starter.mqtt.Mqtt5ClientConfigurer
 import de.smartsquare.starter.mqtt.Mqtt5Publisher
 import de.smartsquare.starter.mqtt.Mqtt5Router
 import de.smartsquare.starter.mqtt.MqttMessageAdapter
 import de.smartsquare.starter.mqtt.MqttProperties
-import de.smartsquare.starter.mqtt.SpringAwareMqtt3Client
 import de.smartsquare.starter.mqtt.SpringAwareMqtt5Client
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass
@@ -26,8 +19,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.stereotype.Component
-import java.util.concurrent.TimeUnit
 
 @Configuration
 @ConditionalOnClass(MqttClient::class)

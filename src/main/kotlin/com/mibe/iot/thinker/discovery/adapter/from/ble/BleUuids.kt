@@ -1,6 +1,6 @@
 package com.mibe.iot.thinker.discovery.adapter.from.ble
 
-import java.util.*
+import java.util.UUID
 
 const val BIT_SERVICE = "29d9d932-8a5f-11ec-a8a3-0242ac120002"
 const val BIT_CHARACTERISTIC_NAME = "70f3674a-8a62-11ec-a8a3-0242ac120002"

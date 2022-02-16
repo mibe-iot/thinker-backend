@@ -7,6 +7,7 @@ import com.mibe.iot.thinker.web.error.ErrorData
 import com.mibe.iot.thinker.web.error.InternationalizedException
 import com.mibe.iot.thinker.web.error.UNHANDLED_EXCEPTION
 import com.mibe.iot.thinker.web.error.toErrorData
+import java.util.Locale
 import mu.KotlinLogging
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.Ordered
@@ -15,7 +16,6 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
-import java.util.*
 
 /**
  * Handles exceptions that are thrown from controllers

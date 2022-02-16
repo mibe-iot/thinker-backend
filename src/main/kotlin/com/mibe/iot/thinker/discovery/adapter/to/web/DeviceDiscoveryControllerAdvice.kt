@@ -1,6 +1,5 @@
 package com.mibe.iot.thinker.discovery.adapter.to.web
 
-import com.mibe.iot.thinker.device.adapter.to.web.DEVICE_NOT_FOUND
 import com.mibe.iot.thinker.discovery.application.exception.DiscoveredDeviceNotFoundException
 import com.mibe.iot.thinker.message.application.MessageService
 import com.mibe.iot.thinker.web.error.ErrorData

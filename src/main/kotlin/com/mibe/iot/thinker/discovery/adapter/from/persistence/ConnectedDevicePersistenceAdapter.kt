@@ -7,8 +7,6 @@ import com.mibe.iot.thinker.domain.device.Device
 import com.mibe.iot.thinker.domain.device.DeviceStatus
 import com.mibe.iot.thinker.persistence.domain.DeviceEntity
 import com.mibe.iot.thinker.persistence.repository.SpringDataDeviceRepository
-import kotlinx.coroutines.reactive.awaitFirst
-import kotlinx.coroutines.reactive.awaitSingle
 import kotlinx.coroutines.reactor.awaitSingle
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component

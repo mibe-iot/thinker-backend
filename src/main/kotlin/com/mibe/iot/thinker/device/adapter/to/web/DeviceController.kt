@@ -2,7 +2,6 @@ package com.mibe.iot.thinker.device.adapter.to.web
 
 //import com.mibe.iot.thinker.device.adapter.from.mqtt.TestPublisher
 import com.mibe.iot.thinker.device.adapter.from.mqtt.TestPublisher
-import com.mibe.iot.thinker.device.adapter.to.mqtt.MainMqttSubscriber
 import com.mibe.iot.thinker.device.adapter.to.web.dto.DeviceDto
 import com.mibe.iot.thinker.device.adapter.to.web.dto.toDeviceUpdates
 import com.mibe.iot.thinker.device.application.port.to.DeleteDeviceUseCase
@@ -63,7 +62,7 @@ class DeviceController
     @PostMapping("/mqtt")
     @ResponseStatus(HttpStatus.OK)
     fun postMqtt(@RequestParam(name = "temp") temp: Int) {
-        log.info{ "Sending mqtt"}
+        log.info { "Sending mqtt" }
         testPublisher.publish()
     }
 }
