@@ -43,10 +43,10 @@ class ConnectDiscoveredDeviceService
 
     override suspend fun setConnectableDevices(devices: Flow<Device>) {
         val context = coroutineContext
-        val connectableDevices = devices.toList().associateWith {
+        val connectableDevices = devices.toList().associateWith { device ->
             Pair(
-                getOnConnectionSuccessCallback(it, context),
-                getOnConnectionFailedCallback(it, context)
+                getOnConnectionSuccessCallback(device, context),
+                getOnConnectionFailedCallback(device, context)
             )
         }
         connectDiscoveredDevicePort.setConnectableDevices(connectableDevices)
@@ -68,6 +68,7 @@ class ConnectDiscoveredDeviceService
                 device.id!!,
                 DeviceStatus.CONFIGURED
             )
+            connectDiscoveredDevicePort.removeConnectableDevice(device)
         }
     }
 
@@ -78,6 +79,7 @@ class ConnectDiscoveredDeviceService
                 device.id!!,
                 DeviceStatus.CONFIGURATION_FAILED
             )
+            connectDiscoveredDevicePort.removeConnectableDevice(device)
         }
     }
 

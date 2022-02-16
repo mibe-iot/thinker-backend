@@ -110,8 +110,7 @@ class DeviceDiscoveryHandler
         return discoveryDataHolder.discoveredDevices[address]
     }
 
-    override suspend fun connectDevice(connectionData: DeviceConnectionData) {
-        discoveryDataHolder.connectionData = connectionData
+    override fun removeConnectableDevice(device: Device) {
+        discoveryDataHolder.removeConnectableDevice(device)
     }
-
 }

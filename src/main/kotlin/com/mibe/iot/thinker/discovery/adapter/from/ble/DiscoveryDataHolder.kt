@@ -29,6 +29,12 @@ class DiscoveryDataHolder(
             } ?: false
     }
 
+    fun removeConnectableDevice(device: Device) {
+        connectableDevices -= device
+        deviceCharacteristicsConfigured -= device.address
+        deviceConfigurationCallbacks -= device.address
+    }
+
     data class CharacteristicsState(
         var isNameWritten: Boolean = false,
         var isSsidWritten: Boolean = false,
