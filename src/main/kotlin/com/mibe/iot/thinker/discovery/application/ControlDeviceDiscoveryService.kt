@@ -1,15 +1,15 @@
 package com.mibe.iot.thinker.discovery.application
 
 import com.mibe.iot.thinker.discovery.application.port.from.ControlDeviceDiscoveryPort
-import com.mibe.iot.thinker.discovery.application.port.from.GetDiscoveredDevicePort
 import com.mibe.iot.thinker.discovery.application.port.to.ControlDeviceDiscoveryUseCase
+import com.mibe.iot.thinker.discovery.domain.DeviceConnectionData
+import java.util.concurrent.Executors
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.launch
 import mu.KotlinLogging
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import java.util.concurrent.Executors
 
 @Service
 class ControlDeviceDiscoveryService
@@ -24,9 +24,11 @@ class ControlDeviceDiscoveryService
         if (!controlDeviceDiscoveryPort.isDiscovering()) {
             log.debug("Starting discovery")
 
-            discoveryScope.launch {
-                controlDeviceDiscoveryPort.startDiscovery()
-            }
+            val connectionData = DeviceConnectionData(
+                ssid = "***".toByteArray(),
+                password = "***encrypted***".toByteArray()
+            )
+            discoveryScope.launch { controlDeviceDiscoveryPort.startDiscovery(connectionData) }
             log.info { "Discovery started" }
         } else {
             log.info("Discovery is already launched")

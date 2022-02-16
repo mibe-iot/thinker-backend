@@ -7,16 +7,21 @@ import com.mibe.iot.thinker.discovery.application.port.from.GetSavedDevicePort
 import com.mibe.iot.thinker.discovery.application.port.from.SaveDiscoveredDevicePort
 import com.mibe.iot.thinker.discovery.application.port.to.ConnectDiscoveredDeviceUseCase
 import com.mibe.iot.thinker.discovery.domain.DeviceConnectionData
+import com.mibe.iot.thinker.domain.device.Device
+import com.mibe.iot.thinker.domain.device.DeviceStatus
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import mu.KotlinLogging
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import kotlin.coroutines.coroutineContext
 
 @Service
 class ConnectDiscoveredDeviceService
 @Autowired constructor(
     private val saveDiscoveredDevicePort: SaveDiscoveredDevicePort,
-    private val getDiscoveredDevicePort: GetDiscoveredDevicePort,
     private val getSavedDevicePort: GetSavedDevicePort,
+    private val getDiscoveredDevicePort: GetDiscoveredDevicePort,
     private val connectDiscoveredDevicePort: ConnectDiscoveredDevicePort
 ) : ConnectDiscoveredDeviceUseCase {
     private val log = KotlinLogging.logger {}
@@ -25,21 +30,34 @@ class ConnectDiscoveredDeviceService
         val discoveredDevice = getDiscoveredDevicePort.getConnectedDeviceByAddress(address)
             ?: throw DeviceNotFoundException("Device with address=$address wasn't found")
 
-        val persistedDevice = if(getSavedDevicePort.existsByAddress(address)) {
+        val device = if (getSavedDevicePort.existsByAddress(address)) {
             getSavedDevicePort.getDeviceByAddress(address)
         } else {
             saveDiscoveredDevicePort.saveDiscoveredDevice(discoveredDevice)
         }
 
-        val connectionData = DeviceConnectionData(
-            address = address,
-            deviceName = persistedDevice.id!!,
-            ssid = "***",
-            password = "***encrypted***"
-        )
+        addDeviceToConnections(device)
+    }
 
-
-
+    private suspend fun addDeviceToConnections(device: Device) {
+        val context = coroutineContext
+        connectDiscoveredDevicePort.addConnectableDevices(device,
+            onConnectionSuccess = {
+                CoroutineScope(context).launch {
+                    saveDiscoveredDevicePort.updateDeviceStatus(
+                        device.id!!,
+                        DeviceStatus.CONFIGURED
+                    )
+                }
+            },
+            onConnectionFailure = {
+                CoroutineScope(context).launch {
+                    saveDiscoveredDevicePort.updateDeviceStatus(
+                        device.id!!,
+                        DeviceStatus.CONFIGURATION_FAILED
+                    )
+                }
+            })
     }
 
     private suspend fun reconnectDeviceByAddress(connectionData: DeviceConnectionData) {
