@@ -1,6 +1,6 @@
 package com.mibe.iot.thinker.device.application.port.from
 
-import com.mibe.iot.thinker.device.domain.Device
+import com.mibe.iot.thinker.domain.device.Device
 import reactor.core.publisher.Mono
 
 /**

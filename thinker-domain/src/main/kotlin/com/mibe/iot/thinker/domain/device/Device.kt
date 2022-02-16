@@ -1,4 +1,4 @@
-package com.mibe.iot.thinker.device.domain
+package com.mibe.iot.thinker.domain.device
 
 /**
  * Device represents a single device in IoT network (bit)
@@ -8,5 +8,7 @@ data class Device(
     val name: String,
     val address: String,
     val description: String = "",
+    var status: DeviceStatus = DeviceStatus.WAITING_CONFIGURATION,
+    var connectType: DeviceConnectType = DeviceConnectType.MANUAL,
     var actions: Set<DeviceAction> = emptySet()
 )

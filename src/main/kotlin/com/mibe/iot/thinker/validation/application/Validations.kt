@@ -20,5 +20,5 @@ fun <T> mapToErrorMonoIfInvalid(valueUnderValidation: T, validation: Validation<
 }
 
 fun <T> ValidationResult<T>.throwOnInvalid() = this.let {
-    { if(it is Invalid<*>) throw ValidationException(it.errors) }
+    { if (it is Invalid<*>) throw ValidationException(it.errors) }
 }

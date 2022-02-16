@@ -3,11 +3,10 @@ package com.mibe.iot.thinker.device.application
 import com.mibe.iot.thinker.device.application.port.from.GetDevicePort
 import com.mibe.iot.thinker.device.application.port.from.UpdateDevicePort
 import com.mibe.iot.thinker.device.application.port.to.UpdateDeviceUseCase
-import com.mibe.iot.thinker.device.domain.Device
 import com.mibe.iot.thinker.device.domain.DeviceUpdates
 import com.mibe.iot.thinker.device.domain.receiveUpdates
-import com.mibe.iot.thinker.device.domain.validation.validateDevice
-import com.mibe.iot.thinker.validation.application.mapToErrorMonoIfInvalid
+import com.mibe.iot.thinker.domain.device.Device
+import com.mibe.iot.thinker.domain.device.validation.validateDevice
 import kotlinx.coroutines.reactor.awaitSingle
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service

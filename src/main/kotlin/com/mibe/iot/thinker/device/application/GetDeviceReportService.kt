@@ -2,7 +2,7 @@ package com.mibe.iot.thinker.device.application
 
 import com.mibe.iot.thinker.device.application.port.from.GetDeviceReportPort
 import com.mibe.iot.thinker.device.application.port.to.GetDeviceReportUseCase
-import com.mibe.iot.thinker.device.domain.DeviceReport
+import com.mibe.iot.thinker.domain.device.DeviceReport
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort

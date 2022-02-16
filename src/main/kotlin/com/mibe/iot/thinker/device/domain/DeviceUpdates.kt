@@ -1,5 +1,8 @@
 package com.mibe.iot.thinker.device.domain
 
+import com.mibe.iot.thinker.domain.device.Device
+import com.mibe.iot.thinker.domain.device.DeviceAction
+
 data class DeviceUpdates(
     val id: String,
     val name: String?,

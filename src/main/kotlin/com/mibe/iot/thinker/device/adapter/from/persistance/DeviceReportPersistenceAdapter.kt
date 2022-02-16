@@ -2,7 +2,7 @@ package com.mibe.iot.thinker.device.adapter.from.persistance
 
 import com.mibe.iot.thinker.device.application.port.from.GetDeviceReportPort
 import com.mibe.iot.thinker.device.application.port.from.SaveDeviceReportPort
-import com.mibe.iot.thinker.device.domain.DeviceReport
+import com.mibe.iot.thinker.domain.device.DeviceReport
 import com.mibe.iot.thinker.persistence.repository.SpringDataDeviceReportRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable

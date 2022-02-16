@@ -13,6 +13,8 @@ repositories {
 }
 
 dependencies {
+    implementation(project(":thinker-domain"))
+
     // Spring
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
 

@@ -4,7 +4,7 @@ import com.mibe.iot.thinker.device.adapter.to.web.dto.DeviceReportDto
 import com.mibe.iot.thinker.device.adapter.to.web.dto.toDeviceReport
 import com.mibe.iot.thinker.device.application.port.to.GetDeviceReportUseCase
 import com.mibe.iot.thinker.device.application.port.to.SaveDeviceReportUseCase
-import com.mibe.iot.thinker.device.domain.DeviceReport
+import com.mibe.iot.thinker.domain.device.DeviceReport
 import kotlinx.coroutines.reactive.asFlow
 import kotlinx.coroutines.reactive.awaitFirst
 import org.springframework.beans.factory.annotation.Autowired

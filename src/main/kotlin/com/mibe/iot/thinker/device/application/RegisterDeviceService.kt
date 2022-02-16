@@ -4,8 +4,8 @@ import com.mibe.iot.thinker.device.application.port.from.GetDevicePort
 import com.mibe.iot.thinker.device.application.port.from.UpdateDevicePort
 import com.mibe.iot.thinker.device.application.port.to.RegisterDeviceUseCase
 import com.mibe.iot.thinker.device.application.port.to.exception.DeviceAlreadyExistsException
-import com.mibe.iot.thinker.device.domain.Device
-import com.mibe.iot.thinker.device.domain.validation.validateNewDevice
+import com.mibe.iot.thinker.domain.device.Device
+import com.mibe.iot.thinker.domain.device.validation.validateNewDevice
 import com.mibe.iot.thinker.validation.application.mapToErrorMonoIfInvalid
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service

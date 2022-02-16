@@ -1,6 +1,6 @@
 package com.mibe.iot.thinker.device.adapter.to.web.dto
 
-import com.mibe.iot.thinker.device.domain.DeviceReport
+import com.mibe.iot.thinker.domain.device.DeviceReport
 import java.time.LocalDateTime
 
 data class DeviceReportDto(

@@ -3,7 +3,7 @@ package com.mibe.iot.thinker.device.application
 import com.mibe.iot.thinker.device.application.port.from.GetDevicePort
 import com.mibe.iot.thinker.device.application.port.to.GetDeviceUseCase
 import com.mibe.iot.thinker.device.application.port.to.exception.DeviceNotFoundException
-import com.mibe.iot.thinker.device.domain.Device
+import com.mibe.iot.thinker.domain.device.Device
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux

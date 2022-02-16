@@ -1,7 +1,7 @@
-package com.mibe.iot.thinker.device.domain.validation
+package com.mibe.iot.thinker.domain.device.validation
 
-import com.mibe.iot.thinker.constants.MAC_ADDRESS_PATTERN
-import com.mibe.iot.thinker.device.domain.Device
+import com.mibe.iot.thinker.domain.MAC_ADDRESS_PATTERN
+import com.mibe.iot.thinker.domain.device.Device
 import io.konform.validation.Validation
 import io.konform.validation.jsonschema.maxLength
 import io.konform.validation.jsonschema.minLength

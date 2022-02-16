@@ -8,10 +8,12 @@ import org.springframework.web.bind.annotation.RestController
 import reactor.core.publisher.Mono
 
 @RestController
-@RequestMapping(path = [
-    "/api/health",
-    "/"
-])
+@RequestMapping(
+    path = [
+        "/api/health",
+        "/"
+    ]
+)
 class HealthController {
 
     @GetMapping("")

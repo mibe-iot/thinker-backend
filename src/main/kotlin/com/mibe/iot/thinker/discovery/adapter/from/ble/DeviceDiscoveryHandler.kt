@@ -1,15 +1,20 @@
 package com.mibe.iot.thinker.discovery.adapter.from.ble
 
+import com.mibe.iot.thinker.constants.PROFILE_DEFAULT
 import com.mibe.iot.thinker.constants.PROFILE_PROD
 import com.mibe.iot.thinker.discovery.application.port.from.ConnectDiscoveredDevicePort
 import com.mibe.iot.thinker.discovery.application.port.from.ControlDeviceDiscoveryPort
 import com.mibe.iot.thinker.discovery.application.port.from.GetDiscoveredDevicePort
 import com.mibe.iot.thinker.discovery.domain.DeviceConnectionData
 import com.mibe.iot.thinker.discovery.domain.DiscoveredDevice
+import com.mibe.iot.thinker.domain.device.Device
 import com.welie.blessed.BluetoothCentralManager
 import com.welie.blessed.BluetoothCentralManagerCallback
 import com.welie.blessed.BluetoothPeripheral
 import com.welie.blessed.ScanResult
+import java.time.LocalDateTime
+import java.util.concurrent.atomic.AtomicBoolean
+import javax.annotation.PostConstruct
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import mu.KotlinLogging
@@ -17,38 +22,40 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
-import java.time.LocalDateTime
-import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicInteger
-import javax.annotation.PostConstruct
-import kotlin.collections.HashMap
 
 
 @Component
-@Profile(PROFILE_PROD)
+@Profile(PROFILE_PROD, PROFILE_DEFAULT)
 class DeviceDiscoveryHandler
 @Autowired constructor(
-    private val bleDiscoveryDataHolder: BleDiscoveryDataHolder,
+    private val discoveryDataHolder: DiscoveryDataHolder,
     private val blePeripheralCallback: BlePeripheralCallback
 ) : GetDiscoveredDevicePort, ControlDeviceDiscoveryPort, ConnectDiscoveredDevicePort {
     private val log = KotlinLogging.logger {}
+
+    private var discoveryStartTime: LocalDateTime = LocalDateTime.now()
 
     @Value("\${thinker.ble.rssiThreshold:-120}")
     private lateinit var rssiThreshold: String
 
     private lateinit var central: BluetoothCentralManager
     private val isActive = AtomicBoolean(false)
-    private val discoveryRequestsAmount = AtomicInteger(0)
 
     @PostConstruct
     private fun initCentralManager() {
         val bleCentralCallback = object : BluetoothCentralManagerCallback() {
             override fun onDiscoveredPeripheral(peripheral: BluetoothPeripheral, scanResult: ScanResult) {
-                val address = peripheral.address
-                log.trace { "Discovered device: address=$address name=${peripheral.name} uuids=${peripheral.device?.uuids}" }
-                bleDiscoveryDataHolder.noticedDevices[address] = Pair(peripheral, LocalDateTime.now())
-                bleDiscoveryDataHolder.run {
-                    if (isAllowedToConnect(address) && !isDiscovered(address)) {
+
+                val discoveredDevice =
+                    DiscoveredDevice(address = peripheral.address, discoveredAt = LocalDateTime.now(), peripheral.name)
+
+                log.trace {
+                    "Discovered device: address=${discoveredDevice.address} " + "name=${peripheral.name} uuids=${peripheral.device?.uuids}"
+                }
+
+                discoveryDataHolder.run {
+                    discoveredDevices[discoveredDevice.address] = discoveredDevice
+                    if (shouldBeConfigured(discoveredDevice.address)) {
                         central.connectPeripheral(peripheral, blePeripheralCallback)
                     }
                 }
@@ -58,18 +65,39 @@ class DeviceDiscoveryHandler
         central.setRssiThreshold(rssiThreshold.toInt())
     }
 
-    override suspend fun startDiscovery() {
+    override suspend fun startDiscovery(connectionData: DeviceConnectionData) {
+        discoveryStartTime = LocalDateTime.now()
+        discoveryDataHolder.connectionData = connectionData
         isActive.set(true)
-        discoveryRequestsAmount.incrementAndGet()
         central.scanForPeripherals()
     }
 
-    override fun stopDiscovery(gracefully: Boolean) {
-        val requestsAmount = discoveryRequestsAmount.decrementAndGet()
-        if (!gracefully || requestsAmount <= 0) {
-            discoveryRequestsAmount.set(0)
-            central.stopScan()
-            isActive.set(false)
+    override fun stopDiscovery() {
+        central.stopScan()
+        isActive.set(false)
+    }
+
+    override fun setConnectableDevices(devicesAndActions: Map<Device, Pair<() -> Unit, () -> Unit>>) {
+        discoveryDataHolder.connectableDevices.addAll(devicesAndActions.keys)
+        discoveryDataHolder.deviceConfigurationCallbacks += devicesAndActions.map {
+            it.key.address to DeviceConfigurationCallbacks(
+                it.value.first,
+                it.value.second
+            )
+        }
+    }
+
+    override fun addConnectableDevices(
+        device: Device,
+        onConnectionSuccess: () -> Unit,
+        onConnectionFailure: () -> Unit
+    ) {
+        discoveryDataHolder.apply {
+            connectableDevices.add(device)
+            deviceConfigurationCallbacks += device.address to DeviceConfigurationCallbacks(
+                onConnectionSuccess,
+                onConnectionFailure
+            )
         }
     }
 
@@ -78,25 +106,18 @@ class DeviceDiscoveryHandler
     }
 
     override suspend fun getDiscoveredDevices(): Flow<DiscoveredDevice> {
-        return bleDiscoveryDataHolder.noticedDevices.values.map { it.first.toDiscoveredDevice(discoveredAt = it.second) }
-            .asFlow()
+        return discoveryDataHolder.discoveredDevices.values.asFlow()
     }
 
     override suspend fun getConnectedDeviceByAddress(address: String): DiscoveredDevice? {
-        return bleDiscoveryDataHolder.noticedDevices[address]?.let {
-            it.first.toDiscoveredDevice(it.second)
-        }
+        return discoveryDataHolder.discoveredDevices[address]
     }
 
-    override suspend fun connectDevice(connectionData: DeviceConnectionData) {
-        bleDiscoveryDataHolder.apply {
-            deviceConnectionData[connectionData.address] = connectionData
-            allowedAddresses += connectionData.address
-        }
+    override fun removeConnectableDevice(device: Device) {
+        discoveryDataHolder.removeConnectableDevice(device)
     }
 
-    override suspend fun reconnectDevice(connectionData: DeviceConnectionData) {
-        bleDiscoveryDataHolder.devicesToReconnect += connectionData.address
-        connectDevice(connectionData)
+    override fun getDiscoveryStartedTime(): LocalDateTime {
+        return discoveryStartTime
     }
 }

@@ -1,50 +1,86 @@
 package com.mibe.iot.thinker.discovery.application
 
-import com.mibe.iot.thinker.discovery.application.exception.DeviceNotFoundException
+import com.mibe.iot.thinker.discovery.application.exception.DiscoveredDeviceNotFoundException
 import com.mibe.iot.thinker.discovery.application.port.from.ConnectDiscoveredDevicePort
 import com.mibe.iot.thinker.discovery.application.port.from.GetDiscoveredDevicePort
 import com.mibe.iot.thinker.discovery.application.port.from.GetSavedDevicePort
 import com.mibe.iot.thinker.discovery.application.port.from.SaveDiscoveredDevicePort
 import com.mibe.iot.thinker.discovery.application.port.to.ConnectDiscoveredDeviceUseCase
-import com.mibe.iot.thinker.discovery.domain.DeviceConnectionData
+import com.mibe.iot.thinker.domain.device.Device
+import com.mibe.iot.thinker.domain.device.DeviceStatus
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.launch
 import mu.KotlinLogging
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.coroutineContext
 
 @Service
 class ConnectDiscoveredDeviceService
 @Autowired constructor(
     private val saveDiscoveredDevicePort: SaveDiscoveredDevicePort,
-    private val getDiscoveredDevicePort: GetDiscoveredDevicePort,
     private val getSavedDevicePort: GetSavedDevicePort,
+    private val getDiscoveredDevicePort: GetDiscoveredDevicePort,
     private val connectDiscoveredDevicePort: ConnectDiscoveredDevicePort
 ) : ConnectDiscoveredDeviceUseCase {
     private val log = KotlinLogging.logger {}
 
     override suspend fun connectDeviceByAddress(address: String) {
         val discoveredDevice = getDiscoveredDevicePort.getConnectedDeviceByAddress(address)
-            ?: throw DeviceNotFoundException("Device with address=$address wasn't found")
-        val deviceName = randomString(DEVICE_NAME_LENGTH) //TODO Not random, but sequential
-        val connectionData = DeviceConnectionData(
-            address = address,
-            deviceName = discoveredDevice.name,
-            ssid = "Get-6490C8",
-            password = "ewmhjmztvd"
-        )
+            ?: throw DiscoveredDeviceNotFoundException(address)
 
-        if(getSavedDevicePort.existsByAddress(address)) {
-            val deviceFromPersistence = getSavedDevicePort.getDeviceByAddress(address)
-            connectionData.deviceName = deviceFromPersistence.name
-            reconnectDeviceByAddress(connectionData)
+        val device = if (getSavedDevicePort.existsByAddress(address)) {
+            getSavedDevicePort.getDeviceByAddress(address)
         } else {
-            connectDiscoveredDevicePort.connectDevice(connectionData)
-            val deviceId = saveDiscoveredDevicePort.saveDiscoveredDevice(discoveredDevice, deviceName)
-            log.info { "Device saved with name=$deviceName and id=$deviceId" }
+            saveDiscoveredDevicePort.saveDiscoveredDevice(discoveredDevice)
         }
 
+        addDeviceToConnections(device)
     }
 
-    private suspend fun reconnectDeviceByAddress(connectionData: DeviceConnectionData) {
-        connectDiscoveredDevicePort.reconnectDevice(connectionData)
+    override suspend fun setConnectableDevices(devices: Flow<Device>) {
+        val context = coroutineContext
+        val connectableDevices = devices.toList().associateWith { device ->
+            Pair(
+                getOnConnectionSuccessCallback(device, context),
+                getOnConnectionFailedCallback(device, context)
+            )
+        }
+        connectDiscoveredDevicePort.setConnectableDevices(connectableDevices)
     }
+
+    private suspend fun addDeviceToConnections(device: Device) {
+        val context = coroutineContext
+        connectDiscoveredDevicePort.addConnectableDevices(
+            device,
+            onConnectionSuccess = getOnConnectionSuccessCallback(device, context),
+            onConnectionFailure = getOnConnectionFailedCallback(device, context)
+        )
+    }
+
+    private fun getOnConnectionSuccessCallback(device: Device, context: CoroutineContext): () -> Unit = {
+        log.info { "Device successfully connected: $device" }
+        CoroutineScope(context).launch {
+            saveDiscoveredDevicePort.updateDeviceStatus(
+                device.id!!,
+                DeviceStatus.CONFIGURED
+            )
+            connectDiscoveredDevicePort.removeConnectableDevice(device)
+        }
+    }
+
+    private fun getOnConnectionFailedCallback(device: Device, context: CoroutineContext): () -> Unit = {
+        log.info { "Device connection failed: $device" }
+        CoroutineScope(context).launch {
+            saveDiscoveredDevicePort.updateDeviceStatus(
+                device.id!!,
+                DeviceStatus.CONFIGURATION_FAILED
+            )
+            connectDiscoveredDevicePort.removeConnectableDevice(device)
+        }
+    }
+
 }

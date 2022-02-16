@@ -7,30 +7,47 @@ plugins {
     kotlin("plugin.spring") version "1.5.21"
 }
 
-group = "com.mibe.iot"
-version = "0.1"
-java.sourceCompatibility = JavaVersion.VERSION_1_8
-
 repositories {
     mavenCentral()
     maven { url = uri("https://jitpack.io") }
 }
 
-//allOpen{
-//    annotation("org.springframework.context.annotation.Configuration")
-//}
+java.sourceCompatibility = JavaVersion.VERSION_1_8
 
 val kotestVersion = "4.6.1"
 val mockkVersion = "1.12.0"
 val embeddedMongodbVersion = "3.0.0"
 val hateoasVersion = "1.3.3"
 val webmvcVersion = "5.3.9"
-val konformVersion = "0.3.0"
 val logbackVersion = "1.2.10"
 val blessedVersion = "0.61.2"
 val openApiVersion = "1.4.3"
 
+allprojects {
+    group = "com.mibe.iot"
+    version = "0.1"
+
+    tasks.withType<KotlinCompile> {
+        kotlinOptions {
+            freeCompilerArgs = listOf("-Xjsr305=strict")
+            jvmTarget = "1.8"
+        }
+    }
+
+    tasks.withType<Test> {
+        useJUnitPlatform()
+    }
+
+}
+
+subprojects {
+    tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootJar> {
+        enabled = false
+    }
+}
+
 dependencies {
+    implementation(project(":thinker-domain"))
     implementation(project(":thinker-persistence"))
 
     // MQTT
@@ -65,7 +82,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
 
     // Validation
-    implementation("io.konform:konform:$konformVersion")
+    implementation("io.konform:konform:${findProperty("konformVersion")}")
     implementation("org.springframework.boot:spring-boot-starter-validation")
 
     // BLE
@@ -82,21 +99,4 @@ dependencies {
     testRuntimeOnly("io.kotest:kotest-assertions-core-jvm:$kotestVersion")
 
     testImplementation("io.mockk:mockk:$mockkVersion")
-}
-
-subprojects {
-    tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootJar> {
-        enabled = false
-    }
-}
-
-tasks.withType<KotlinCompile> {
-    kotlinOptions {
-        freeCompilerArgs = listOf("-Xjsr305=strict")
-        jvmTarget = "1.8"
-    }
-}
-
-tasks.withType<Test> {
-    useJUnitPlatform()
 }
