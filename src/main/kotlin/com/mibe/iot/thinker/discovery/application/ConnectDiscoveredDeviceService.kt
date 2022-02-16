@@ -10,10 +10,14 @@ import com.mibe.iot.thinker.discovery.domain.DeviceConnectionData
 import com.mibe.iot.thinker.domain.device.Device
 import com.mibe.iot.thinker.domain.device.DeviceStatus
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import mu.KotlinLogging
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.coroutineContext
 
 @Service
@@ -39,28 +43,42 @@ class ConnectDiscoveredDeviceService
         addDeviceToConnections(device)
     }
 
-    private suspend fun addDeviceToConnections(device: Device) {
+    override suspend fun setConnectableDevices(devices: Flow<Device>) {
         val context = coroutineContext
-        connectDiscoveredDevicePort.addConnectableDevices(device,
-            onConnectionSuccess = {
-                CoroutineScope(context).launch {
-                    saveDiscoveredDevicePort.updateDeviceStatus(
-                        device.id!!,
-                        DeviceStatus.CONFIGURED
-                    )
-                }
-            },
-            onConnectionFailure = {
-                CoroutineScope(context).launch {
-                    saveDiscoveredDevicePort.updateDeviceStatus(
-                        device.id!!,
-                        DeviceStatus.CONFIGURATION_FAILED
-                    )
-                }
-            })
+        val connectableDevices = devices.toList().associateWith {
+            Pair(
+                getOnConnectionSuccessCallback(it, context),
+                getOnConnectionFailedCallback(it, context)
+            )
+        }
+        connectDiscoveredDevicePort.setConnectableDevices(connectableDevices)
     }
 
-    private suspend fun reconnectDeviceByAddress(connectionData: DeviceConnectionData) {
-        connectDiscoveredDevicePort.reconnectDevice(connectionData)
+    private suspend fun addDeviceToConnections(device: Device) {
+        val context = coroutineContext
+        connectDiscoveredDevicePort.addConnectableDevices(
+            device,
+            onConnectionSuccess = getOnConnectionSuccessCallback(device, context),
+            onConnectionFailure = getOnConnectionFailedCallback(device, context)
+        )
     }
+
+    private fun getOnConnectionSuccessCallback(device: Device, context: CoroutineContext): () -> Unit = {
+        CoroutineScope(context).launch {
+            saveDiscoveredDevicePort.updateDeviceStatus(
+                device.id!!,
+                DeviceStatus.CONFIGURED
+            )
+        }
+    }
+
+    private fun getOnConnectionFailedCallback(device: Device, context: CoroutineContext): () -> Unit = {
+        CoroutineScope(context).launch {
+            saveDiscoveredDevicePort.updateDeviceStatus(
+                device.id!!,
+                DeviceStatus.CONFIGURATION_FAILED
+            )
+        }
+    }
+
 }

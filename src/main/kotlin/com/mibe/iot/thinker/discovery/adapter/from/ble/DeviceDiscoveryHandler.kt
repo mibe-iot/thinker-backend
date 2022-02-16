@@ -28,7 +28,6 @@ import org.springframework.stereotype.Component
 @Profile(PROFILE_PROD, PROFILE_DEFAULT)
 class DeviceDiscoveryHandler
 @Autowired constructor(
-    private val bleDiscoveryDataHolder: BleDiscoveryDataHolder,
     private val discoveryDataHolder: DiscoveryDataHolder,
     private val blePeripheralCallback: BlePeripheralCallback
 ) : GetDiscoveredDevicePort, ControlDeviceDiscoveryPort, ConnectDiscoveredDevicePort {
@@ -97,25 +96,15 @@ class DeviceDiscoveryHandler
     }
 
     override suspend fun getDiscoveredDevices(): Flow<DiscoveredDevice> {
-        return bleDiscoveryDataHolder.noticedDevices.values.map { it.first.toDiscoveredDevice(discoveredAt = it.second) }
-            .asFlow()
+        return discoveryDataHolder.discoveredDevices.values.asFlow()
     }
 
     override suspend fun getConnectedDeviceByAddress(address: String): DiscoveredDevice? {
-        return bleDiscoveryDataHolder.noticedDevices[address]?.let {
-            it.first.toDiscoveredDevice(it.second)
-        }
+        return discoveryDataHolder.discoveredDevices[address]
     }
 
     override suspend fun connectDevice(connectionData: DeviceConnectionData) {
-        bleDiscoveryDataHolder.apply {
-            deviceConnectionData[connectionData.address] = connectionData
-            allowedAddresses += connectionData.address
-        }
+        discoveryDataHolder.connectionData = connectionData
     }
 
-    override suspend fun reconnectDevice(connectionData: DeviceConnectionData) {
-        bleDiscoveryDataHolder.devicesToReconnect += connectionData.address
-        connectDevice(connectionData)
-    }
 }
