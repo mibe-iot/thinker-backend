@@ -27,6 +27,6 @@ class GetSavedDeviceAdapter
     }
 
     override suspend fun getByStatus(status: DeviceStatus): Flow<Device> {
-        return deviceRepository.findByDeviceStatus(status).asFlow().map { it.toDevice() }
+        return deviceRepository.findByStatus(status).asFlow().map { it.toDevice() }
     }
 }
