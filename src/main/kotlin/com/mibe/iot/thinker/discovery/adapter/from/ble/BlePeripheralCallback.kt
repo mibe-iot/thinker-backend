@@ -58,6 +58,7 @@ class BlePeripheralCallback
             }
         } else {
             discoveryDataHolder.deviceConfigurationCallbacks[address]?.let { it.onConfigurationFailed() }
+            peripheral.cancelConnection()
         }
     }
 

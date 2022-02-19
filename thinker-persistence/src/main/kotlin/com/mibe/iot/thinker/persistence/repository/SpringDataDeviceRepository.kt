@@ -12,5 +12,5 @@ interface SpringDataDeviceRepository : ReactiveMongoRepository<DeviceEntity, Str
     fun existsByName(name: String): Mono<Boolean>
     fun existsByAddress(address: String): Mono<Boolean>
     fun findByAddress(address: String): Mono<DeviceEntity>
-    fun findByDeviceStatus(status: DeviceStatus): Flux<DeviceEntity>
+    fun findByStatus(status: DeviceStatus): Flux<DeviceEntity>
 }
