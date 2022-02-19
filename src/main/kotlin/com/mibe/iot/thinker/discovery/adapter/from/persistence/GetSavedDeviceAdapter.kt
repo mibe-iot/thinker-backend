@@ -23,7 +23,7 @@ class GetSavedDeviceAdapter
     }
 
     override suspend fun existsByAddress(address: String): Boolean {
-        return deviceRepository.existsByName(address).awaitSingle()
+        return deviceRepository.existsByAddress(address).awaitSingle()
     }
 
     override suspend fun getByStatus(status: DeviceStatus): Flow<Device> {
