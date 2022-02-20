@@ -25,6 +25,12 @@ class DevicePersistenceAdapter
     private val deviceRepository: SpringDataDeviceRepository
 ) : UpdateDevicePort, GetDevicePort, DeleteDevicePort {
 
+    override suspend fun getDevice(id: String): Device? = deviceRepository.findById(id).awaitSingleOrNull()?.toDevice()
+
+    override suspend fun getDeviceByAddress(address: String): Device? =
+        deviceRepository.findByAddress(address).awaitSingleOrNull()?.toDevice()
+
+
     override fun updateDevice(device: Mono<Device>): Mono<Device> {
         return device.flatMap { deviceRepository.save(it.toDeviceEntity()) }
             .flatMap { it.toDevice().toMono() }
@@ -42,8 +48,6 @@ class DevicePersistenceAdapter
     override suspend fun deleteDevice(id: String) {
         deviceRepository.deleteById(id).awaitSingle()
     }
-
-    override suspend fun getDevice(id: String): Device? = deviceRepository.findById(id).awaitSingleOrNull()?.toDevice()
 
     override suspend fun existsWithId(id: String): Boolean {
         return deviceRepository.existsById(id).awaitSingle()

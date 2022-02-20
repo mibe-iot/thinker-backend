@@ -19,9 +19,14 @@ class DeviceControllerAdvice @Autowired constructor(
     @ExceptionHandler(DeviceNotFoundException::class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     fun handleDeviceNotFound(exception: DeviceNotFoundException, locale: Locale): ErrorData {
+        val descriptionKey = if (exception.deviceId != null) {
+            DEVICE_NOT_FOUND_BY_ID
+        } else {
+            DEVICE_NOT_FOUND
+        }
         return ErrorData(
-            description = messageService.getErrorMessage(DEVICE_NOT_FOUND, locale, exception.deviceId),
-            descriptionKey = DEVICE_NOT_FOUND,
+            description = messageService.getErrorMessage(descriptionKey, locale),
+            descriptionKey = descriptionKey,
             httpStatus = HttpStatus.NOT_FOUND.value()
         )
     }
@@ -34,5 +39,11 @@ class DeviceControllerAdvice @Autowired constructor(
             descriptionKey = DEVICE_NAME_ALREADY_EXISTS,
             httpStatus = HttpStatus.CONFLICT.value()
         )
+    }
+
+    companion object {
+        const val DEVICE_NOT_FOUND_BY_ID = "device.not.found.by.id"
+        const val DEVICE_NOT_FOUND = "device.not.found"
+        const val DEVICE_NAME_ALREADY_EXISTS = "device.name.already.exists"
     }
 }

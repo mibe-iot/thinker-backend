@@ -10,9 +10,16 @@ interface GetDeviceUseCase {
     /**
      * Finds device by id
      *
-     * @return [Device] found by id or null
+     * @return [Device] found by id
      */
-    suspend fun getDevice(id: String): Device?
+    suspend fun getDevice(id: String): Device
+
+    /**
+     * Finds device by MAC address
+     *
+     * @return [Device] found by address
+     */
+    suspend fun getDeviceByAddress(address: String): Device
 
     /**
      * Get all devices.
