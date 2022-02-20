@@ -1,10 +1,19 @@
 package com.mibe.iot.thinker.device.application.port.to
 
 import com.mibe.iot.thinker.domain.device.DeviceReport
-import reactor.core.publisher.Flux
-import reactor.core.publisher.Mono
+import kotlinx.coroutines.flow.Flow
 
 interface GetDeviceReportUseCase {
-    fun getDeviceReport(reportId: String): Mono<DeviceReport>
-    fun getDeviceReportsByDeviceId(deviceId: String, page: Int, pageSize: Int): Flux<DeviceReport>
+    /**
+     * Gets device's report by report id and device id
+     *
+     * @throws [com.mibe.iot.thinker.device.application.port.to.exception.DeviceReportNotFoundException]
+     * on report not found
+     */
+    suspend fun getDeviceReport(reportId: String, deviceId: String): DeviceReport
+
+    /**
+     * Gets several device reports.
+     */
+    suspend fun getDeviceReportsByDeviceId(deviceId: String, page: Int, pageSize: Int): Flow<DeviceReport>
 }
