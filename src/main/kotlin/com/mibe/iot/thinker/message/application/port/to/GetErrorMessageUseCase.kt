@@ -1,6 +1,6 @@
 package com.mibe.iot.thinker.message.application.port.to
 
-import java.util.Locale
+import java.util.*
 
 interface GetErrorMessageUseCase {
 

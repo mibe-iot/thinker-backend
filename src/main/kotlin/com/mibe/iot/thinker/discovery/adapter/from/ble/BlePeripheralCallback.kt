@@ -5,7 +5,7 @@ import com.welie.blessed.BluetoothGattCharacteristic
 import com.welie.blessed.BluetoothGattService
 import com.welie.blessed.BluetoothPeripheral
 import com.welie.blessed.BluetoothPeripheralCallback
-import java.util.UUID
+import java.util.*
 import mu.KotlinLogging
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component

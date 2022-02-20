@@ -8,6 +8,8 @@ import com.mibe.iot.thinker.discovery.application.port.from.SaveDiscoveredDevice
 import com.mibe.iot.thinker.discovery.application.port.to.ConnectDiscoveredDeviceUseCase
 import com.mibe.iot.thinker.domain.device.Device
 import com.mibe.iot.thinker.domain.device.DeviceStatus
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.coroutineContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.toList
@@ -15,8 +17,6 @@ import kotlinx.coroutines.launch
 import mu.KotlinLogging
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.coroutineContext
 
 @Service
 class ConnectDiscoveredDeviceService

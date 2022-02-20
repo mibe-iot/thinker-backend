@@ -5,7 +5,6 @@ import com.mibe.iot.thinker.device.application.port.from.GetDevicePort
 import com.mibe.iot.thinker.device.application.port.to.DeleteDeviceUseCase
 import com.mibe.iot.thinker.device.application.port.to.exception.DeviceNotFoundException
 import org.springframework.stereotype.Service
-import reactor.core.publisher.Mono
 
 /**
  * Delete device service

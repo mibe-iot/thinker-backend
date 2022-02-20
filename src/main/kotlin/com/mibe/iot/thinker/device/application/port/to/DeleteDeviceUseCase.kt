@@ -1,7 +1,5 @@
 package com.mibe.iot.thinker.device.application.port.to
 
-import reactor.core.publisher.Mono
-
 /**
  * Delete device use case
  */

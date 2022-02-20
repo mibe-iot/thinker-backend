@@ -3,7 +3,6 @@ package com.mibe.iot.thinker.device.application.port.from
 import com.mibe.iot.thinker.domain.device.DeviceReport
 import kotlinx.coroutines.flow.Flow
 import org.springframework.data.domain.Pageable
-import reactor.core.publisher.Flux
 
 interface GetDeviceReportPort {
 
