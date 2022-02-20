@@ -2,7 +2,6 @@ package com.mibe.iot.thinker.device.application.port.to
 
 import com.mibe.iot.thinker.domain.device.Device
 import kotlinx.coroutines.flow.Flow
-import reactor.core.publisher.Mono
 
 /**
  * Get device use case
@@ -21,4 +20,6 @@ interface GetDeviceUseCase {
      * @return [Flow] of [Device]s
      */
     fun getAllDevices(): Flow<Device>
+
+    suspend fun existsById(deviceId: String): Boolean
 }

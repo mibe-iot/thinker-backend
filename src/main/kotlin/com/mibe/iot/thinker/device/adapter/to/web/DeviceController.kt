@@ -22,7 +22,6 @@ class DeviceController
     private val updateDeviceUseCase: UpdateDeviceUseCase,
     private val getDeviceUseCase: GetDeviceUseCase,
     private val deleteDeviceUseCase: DeleteDeviceUseCase,
-    private val testPublisher: TestPublisher,
 ) {
     private val log = KotlinLogging.logger {}
 
@@ -39,24 +38,22 @@ class DeviceController
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteDevice(@PathVariable id: String) = deleteDeviceUseCase.deleteDevice(id)
+    suspend fun deleteDevice(@PathVariable(name = "id") id: String) {
+        if (getDeviceUseCase.existsById(id)) {
+            deleteDeviceUseCase.deleteDevice(id)
+        } else {
+            throw DeviceNotFoundException(id)
+        }
+    }
 
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     suspend fun updateDevice(
         @PathVariable(name = "id") deviceId: String,
-        @RequestBody deviceDto: DeviceDto,
-        exchange: ServerWebExchange
+        @RequestBody deviceDto: DeviceDto
     ): Device? {
         val updates = deviceDto.apply { id = deviceId }.toDeviceUpdates()
         return updateDeviceUseCase.updateDevice(updates)
-    }
-
-    @PostMapping("/mqtt")
-    @ResponseStatus(HttpStatus.OK)
-    fun postMqtt(@RequestParam(name = "temp") temp: Int) {
-        log.info { "Sending mqtt" }
-        testPublisher.publish()
     }
 }
 

@@ -16,7 +16,7 @@ class DeleteDeviceService(
     private val deleteDevicePort: DeleteDevicePort
 ) : DeleteDeviceUseCase {
 
-    override fun deleteDevice(id: String): Mono<Void> {
-        return deleteDevicePort.deleteDevice(id)
+    override suspend fun deleteDevice(id: String) {
+        deleteDevicePort.deleteDevice(id)
     }
 }
