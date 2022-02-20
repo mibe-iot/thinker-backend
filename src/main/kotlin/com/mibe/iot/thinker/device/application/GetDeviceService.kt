@@ -4,9 +4,9 @@ import com.mibe.iot.thinker.device.application.port.from.GetDevicePort
 import com.mibe.iot.thinker.device.application.port.to.GetDeviceUseCase
 import com.mibe.iot.thinker.device.application.port.to.exception.DeviceNotFoundException
 import com.mibe.iot.thinker.domain.device.Device
+import kotlinx.coroutines.flow.Flow
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 
 /**
@@ -34,9 +34,9 @@ class GetDeviceService @Autowired constructor(
     /**
      * Get all devices by calling [GetDevicePort.getAllDevices]
      *
-     * @return [Flux] of all persisted [Device]s
+     * @return [Flow] of all persisted [Device]s
      */
-    override fun getAllDevices(): Flux<Device> {
+    override fun getAllDevices(): Flow<Device> {
         return getDevicePort.getAllDevices()
     }
 }

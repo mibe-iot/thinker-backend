@@ -4,13 +4,19 @@ import com.mibe.iot.thinker.device.application.port.from.DeleteDevicePort
 import com.mibe.iot.thinker.device.application.port.from.GetDevicePort
 import com.mibe.iot.thinker.device.application.port.from.UpdateDevicePort
 import com.mibe.iot.thinker.domain.device.Device
+import com.mibe.iot.thinker.persistence.domain.DeviceEntity
 import com.mibe.iot.thinker.persistence.repository.SpringDataDeviceRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.reactive.asFlow
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
-import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.toMono
 
+/**
+ * Adapter to provide device with operations mapped to persistence layer
+ */
 @Component
 class DevicePersistenceAdapter
 @Autowired constructor(
@@ -22,8 +28,13 @@ class DevicePersistenceAdapter
             .flatMap { it.toDevice().toMono() }
     }
 
-    override fun getAllDevices(): Flux<Device> {
-        return deviceRepository.findAll().flatMap { entity -> entity.toDevice().toMono() }
+    /**
+     * Gets all devices from repository.
+     *
+     * @return [Flow] of [Device]s
+     */
+    override fun getAllDevices(): Flow<Device> {
+        return deviceRepository.findAll().asFlow().map(DeviceEntity::toDevice)
     }
 
     override fun deleteDevice(id: String): Mono<Void> {

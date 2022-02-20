@@ -1,7 +1,7 @@
 package com.mibe.iot.thinker.device.application.port.to
 
 import com.mibe.iot.thinker.domain.device.Device
-import reactor.core.publisher.Flux
+import kotlinx.coroutines.flow.Flow
 import reactor.core.publisher.Mono
 
 /**
@@ -17,9 +17,9 @@ interface GetDeviceUseCase {
     fun getDevice(id: String): Mono<Device>
 
     /**
-     * Get all devices
+     * Get all devices.
      *
-     * @return [Flux] of [Device]s
+     * @return [Flow] of [Device]s
      */
-    fun getAllDevices(): Flux<Device>
+    fun getAllDevices(): Flow<Device>
 }
