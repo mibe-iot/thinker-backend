@@ -6,8 +6,9 @@ import com.mibe.iot.thinker.validation.domain.ValidationException
 import com.mibe.iot.thinker.web.error.ErrorData
 import com.mibe.iot.thinker.web.error.InternationalizedException
 import com.mibe.iot.thinker.web.error.UNHANDLED_EXCEPTION
-import com.mibe.iot.thinker.web.error.toErrorData
-import java.util.Locale
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.map
 import mu.KotlinLogging
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.Ordered
@@ -16,6 +17,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
+import java.util.*
 
 /**
  * Handles exceptions that are thrown from controllers
@@ -26,7 +28,7 @@ class DefaultErrorHandlingAdvice
     private val messageService: MessageService
 ) {
 
-    private val logger = KotlinLogging.logger { }
+    private val logger = KotlinLogging.logger {}
 
     /**
      * Handles ValidationException and returns internationalized message to user
@@ -38,12 +40,12 @@ class DefaultErrorHandlingAdvice
     @ExceptionHandler(InternationalizedException::class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     fun handleInternationalizedException(ex: InternationalizedException, locale: Locale): ErrorData {
-        val message = messageService.getErrorMessage(ex.messageKey, locale)
+        val description = messageService.getErrorMessage(ex.messageKey, locale)
         logger.error { "Internationalized exception: ${ex.messageKey} locale: ${locale.country}" }
-        return ex.toErrorData(
-            message,
-            ex.messageKey,
-            HttpStatus.INTERNAL_SERVER_ERROR
+        return ErrorData(
+            description = description,
+            descriptionKey = ex.messageKey,
+            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR.value()
         )
     }
 
@@ -55,23 +57,24 @@ class DefaultErrorHandlingAdvice
      */
     @ExceptionHandler(ValidationException::class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    fun handleValidationError(ex: ValidationException, locale: Locale): List<ValidationErrorModel> {
+    suspend fun handleValidationError(ex: ValidationException, locale: Locale): Flow<ValidationErrorModel> {
         logger.error { "Validation error: ${ex.errors}" }
-        return ex.errors.map { error ->
-            val messageAndParameters = error.message.split("|||")
-            val messageKey = messageAndParameters[0]
-            val messageParameters = messageAndParameters.drop(1)
-            val message = messageService.getErrorMessageOrDefault(
-                messageKey,
-                messageKey,
-                locale,
-                *messageParameters.toTypedArray()
-            )
-            ValidationErrorModel(
-                error.dataPath,
-                message
-            )
-        }
+        return ex.errors.asFlow()
+            .map { error ->
+                val messageAndParameters = error.message.split("|||")
+                val messageKey = messageAndParameters[0]
+                val messageParameters = messageAndParameters.drop(1)
+                val message = messageService.getErrorMessageOrDefault(
+                    messageKey,
+                    messageKey,
+                    locale,
+                    *messageParameters.toTypedArray()
+                )
+                ValidationErrorModel(
+                    error.dataPath,
+                    message
+                )
+            }
     }
 
     /**
@@ -84,10 +87,10 @@ class DefaultErrorHandlingAdvice
     @Order(Ordered.LOWEST_PRECEDENCE)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     fun defaultExceptionHandler(exception: Exception, locale: Locale): ErrorData {
-        return exception.toErrorData(
-            messageService.getErrorMessage(UNHANDLED_EXCEPTION, locale),
-            UNHANDLED_EXCEPTION,
-            HttpStatus.INTERNAL_SERVER_ERROR
+        return ErrorData(
+            description = messageService.getErrorMessage(UNHANDLED_EXCEPTION, locale),
+            descriptionKey = UNHANDLED_EXCEPTION,
+            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR.value()
         )
     }
 }

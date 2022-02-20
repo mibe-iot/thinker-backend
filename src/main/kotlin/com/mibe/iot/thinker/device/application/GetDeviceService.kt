@@ -7,7 +7,6 @@ import com.mibe.iot.thinker.domain.device.Device
 import kotlinx.coroutines.flow.Flow
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import reactor.core.publisher.Mono
 
 /**
  * Get device service
@@ -21,14 +20,14 @@ class GetDeviceService @Autowired constructor(
 ) : GetDeviceUseCase {
 
     /**
-     * Get device by its id with help of [GetDeviceUseCase.getDevice]
+     * Get device by its id.
      *
      * @param id the id of the [Device]
-     * @return [Mono] of the founded [Device]
-     * @throws [DeviceNotFoundException] if no device was found by the [id]
+     * @return found device or null
      */
-    override fun getDevice(id: String): Mono<Device> {
-        return getDevicePort.getDevice(id).switchIfEmpty(Mono.error(DeviceNotFoundException(id)))
+    override suspend fun getDevice(id: String): Device {
+        return getDevicePort.getDevice(id)
+            ?: throw DeviceNotFoundException(id)
     }
 
     /**

@@ -6,6 +6,7 @@ import com.mibe.iot.thinker.device.adapter.to.web.dto.toDeviceUpdates
 import com.mibe.iot.thinker.device.application.port.to.DeleteDeviceUseCase
 import com.mibe.iot.thinker.device.application.port.to.GetDeviceUseCase
 import com.mibe.iot.thinker.device.application.port.to.UpdateDeviceUseCase
+import com.mibe.iot.thinker.device.application.port.to.exception.DeviceNotFoundException
 import com.mibe.iot.thinker.domain.device.Device
 import mu.KotlinLogging
 import org.springframework.beans.factory.annotation.Autowired
@@ -27,11 +28,14 @@ class DeviceController
 
     @GetMapping("", produces = [MediaType.APPLICATION_NDJSON_VALUE])
     @ResponseStatus(HttpStatus.OK)
-    fun getAllDevices(exchange: ServerWebExchange) = getDeviceUseCase.getAllDevices()
+    fun getAllDevices() = getDeviceUseCase.getAllDevices()
 
     @GetMapping("/{id}", produces = [MediaType.APPLICATION_JSON_VALUE])
     @ResponseStatus(HttpStatus.OK)
-    fun getDevice(@PathVariable id: String) = getDeviceUseCase.getDevice(id)
+    suspend fun getDevice(@PathVariable id: String): Device {
+        return getDeviceUseCase.getDevice(id)
+            ?: throw DeviceNotFoundException(id)
+    }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -55,3 +59,4 @@ class DeviceController
         testPublisher.publish()
     }
 }
+

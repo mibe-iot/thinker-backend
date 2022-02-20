@@ -19,6 +19,9 @@ fun <T> mapToErrorMonoIfInvalid(valueUnderValidation: T, validation: Validation<
     }
 }
 
+/**
+ * Throws [ValidationException] on error validation result.
+ */
 fun <T> ValidationResult<T>.throwOnInvalid() = run {
     if (this is Invalid<*>) throw ValidationException(this.errors)
 }

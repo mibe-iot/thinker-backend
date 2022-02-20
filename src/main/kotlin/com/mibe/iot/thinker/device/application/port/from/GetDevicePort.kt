@@ -8,7 +8,7 @@ import reactor.core.publisher.Mono
  * The out port for getting device info
  */
 interface GetDevicePort {
-    fun getDevice(id: String): Mono<Device>
+    suspend fun getDevice(id: String): Device?
     fun getAllDevices(): Flow<Device>
     fun existsWithId(id: String): Mono<Boolean>
     fun existsWithName(name: String): Mono<Boolean>

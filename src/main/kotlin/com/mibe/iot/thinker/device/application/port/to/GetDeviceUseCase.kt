@@ -11,10 +11,9 @@ interface GetDeviceUseCase {
     /**
      * Finds device by id
      *
-     * @return [Mono] of the [Device] found by id
-     * @throws [com.mibe.iot.thinker.device.application.port.to.exception.DeviceNotFoundException] when no Device found
+     * @return [Device] found by id or null
      */
-    fun getDevice(id: String): Mono<Device>
+    suspend fun getDevice(id: String): Device?
 
     /**
      * Get all devices.

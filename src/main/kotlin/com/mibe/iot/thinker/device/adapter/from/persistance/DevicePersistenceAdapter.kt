@@ -9,6 +9,8 @@ import com.mibe.iot.thinker.persistence.repository.SpringDataDeviceRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.reactive.asFlow
+import kotlinx.coroutines.reactive.awaitSingle
+import kotlinx.coroutines.reactor.awaitSingleOrNull
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Mono
@@ -41,11 +43,7 @@ class DevicePersistenceAdapter
         return deviceRepository.deleteById(id)
     }
 
-    override fun getDevice(id: String): Mono<Device> {
-        return deviceRepository.findById(id).flatMap {
-            Mono.just(it.toDevice())
-        }
-    }
+    override suspend fun getDevice(id: String): Device? = deviceRepository.findById(id).awaitSingleOrNull()?.toDevice()
 
     override fun existsWithId(id: String): Mono<Boolean> {
         return deviceRepository.existsById(id)
