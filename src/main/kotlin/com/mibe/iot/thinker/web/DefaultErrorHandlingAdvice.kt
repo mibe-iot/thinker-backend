@@ -30,6 +30,7 @@ class DefaultErrorHandlingAdvice
 
     /**
      * Handles ValidationException and returns internationalized message to user
+     *
      * @param ex ValidationException
      * @param locale Locale resolved by LocaleResolver
      */
@@ -38,7 +39,7 @@ class DefaultErrorHandlingAdvice
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     fun handleInternationalizedException(ex: InternationalizedException, locale: Locale): ErrorData {
         val message = messageService.getErrorMessage(ex.messageKey, locale)
-        logger.error(ex) { message }
+        logger.error { "Internationalized exception: ${ex.messageKey} locale: ${locale.country}" }
         return ex.toErrorData(
             message,
             ex.messageKey,
@@ -48,13 +49,14 @@ class DefaultErrorHandlingAdvice
 
     /**
      * Handles ValidationException and returns internationalized message to user
+     *
      * @param ex ValidationException
      * @param locale Locale resolved by LocaleResolver
      */
     @ExceptionHandler(ValidationException::class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     fun handleValidationError(ex: ValidationException, locale: Locale): List<ValidationErrorModel> {
-        logger.error(ex) { "Validation error: $ex" }
+        logger.error { "Validation error: ${ex.errors}" }
         return ex.errors.map { error ->
             val messageAndParameters = error.message.split("|||")
             val messageKey = messageAndParameters[0]
