@@ -10,8 +10,8 @@ interface SaveDeviceReportUseCase {
     /**
      * Save report to persistent storage.
      *
-     * @param report [Mono] of [DeviceReport]
-     * @return [Mono] of the saved [DeviceReport]
+     * @param report [DeviceReport]
+     * @return saved [DeviceReport]
      */
-    fun saveReport(report: Mono<DeviceReport>): Mono<DeviceReport>
+    suspend fun saveReport(report: DeviceReport): DeviceReport
 }

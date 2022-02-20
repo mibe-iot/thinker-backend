@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.reactive.asFlow
 import kotlinx.coroutines.reactive.awaitSingle
+import kotlinx.coroutines.reactor.awaitSingle
 import kotlinx.coroutines.reactor.awaitSingleOrNull
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
@@ -45,8 +46,8 @@ class DevicePersistenceAdapter
 
     override suspend fun getDevice(id: String): Device? = deviceRepository.findById(id).awaitSingleOrNull()?.toDevice()
 
-    override fun existsWithId(id: String): Mono<Boolean> {
-        return deviceRepository.existsById(id)
+    override suspend fun existsWithId(id: String): Boolean {
+        return deviceRepository.existsById(id).awaitSingle()
     }
 
     override fun existsWithName(name: String): Mono<Boolean> {

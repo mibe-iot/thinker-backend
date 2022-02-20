@@ -1,7 +1,7 @@
 package com.mibe.iot.thinker.device.application.port.to
 
 import com.mibe.iot.thinker.domain.device.DeviceReport
-import reactor.core.publisher.Flux
+import kotlinx.coroutines.flow.Flow
 
 interface GetDeviceReportUseCase {
     /**
@@ -12,6 +12,8 @@ interface GetDeviceReportUseCase {
      */
     suspend fun getDeviceReport(reportId: String, deviceId: String): DeviceReport
 
-
-    fun getDeviceReportsByDeviceId(deviceId: String, page: Int, pageSize: Int): Flux<DeviceReport>
+    /**
+     * Gets several device reports.
+     */
+    suspend fun getDeviceReportsByDeviceId(deviceId: String, page: Int, pageSize: Int): Flow<DeviceReport>
 }

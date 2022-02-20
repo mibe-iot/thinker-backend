@@ -36,11 +36,11 @@ internal class DeviceReportController @Autowired constructor(
 
     @GetMapping("")
     @ResponseStatus(HttpStatus.OK)
-    fun getReportsByDeviceId(
+    suspend fun getReportsByDeviceId(
         @PathVariable deviceId: String,
         @RequestParam(required = false, defaultValue = "0") page: Int,
         @RequestParam(required = false, defaultValue = "10") pageSize: Int
-    ) = getDeviceReportUseCase.getDeviceReportsByDeviceId(deviceId, page, pageSize).asFlow()
+    ) = getDeviceReportUseCase.getDeviceReportsByDeviceId(deviceId, page, pageSize)
 
     @GetMapping("/{reportId}")
     @ResponseStatus(HttpStatus.OK)
@@ -50,12 +50,9 @@ internal class DeviceReportController @Autowired constructor(
     @PostMapping("")
     suspend fun saveReport(
         @PathVariable deviceId: String,
-        @RequestBody deviceReportDto: Mono<DeviceReportDto>,
-        exchange: ServerWebExchange
+        @RequestBody deviceReportDto: DeviceReportDto
     ): DeviceReport {
-        return deviceReportDto.flatMap { reportDto ->
-            saveDeviceReportUseCase.saveReport(reportDto.toDeviceReport(deviceId).toMono())
-        }.awaitFirst()
+        return saveDeviceReportUseCase.saveReport(deviceReportDto.toDeviceReport(deviceId))
     }
 
     @ExceptionHandler(DeviceReportNotFoundException::class)

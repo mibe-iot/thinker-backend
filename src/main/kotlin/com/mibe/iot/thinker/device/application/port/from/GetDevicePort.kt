@@ -10,6 +10,6 @@ import reactor.core.publisher.Mono
 interface GetDevicePort {
     suspend fun getDevice(id: String): Device?
     fun getAllDevices(): Flow<Device>
-    fun existsWithId(id: String): Mono<Boolean>
+    suspend fun existsWithId(id: String): Boolean
     fun existsWithName(name: String): Mono<Boolean>
 }
