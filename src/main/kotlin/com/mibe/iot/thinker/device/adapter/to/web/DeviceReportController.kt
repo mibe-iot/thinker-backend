@@ -47,14 +47,6 @@ internal class DeviceReportController @Autowired constructor(
     suspend fun getReport(@PathVariable deviceId: String, @PathVariable reportId: String) =
         getDeviceReportUseCase.getDeviceReport(reportId, deviceId)
 
-    @PostMapping("")
-    suspend fun saveReport(
-        @PathVariable deviceId: String,
-        @RequestBody deviceReportDto: DeviceReportDto
-    ): DeviceReport {
-        return saveDeviceReportUseCase.saveReport(deviceReportDto.toDeviceReport(deviceId))
-    }
-
     @ExceptionHandler(DeviceReportNotFoundException::class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     fun handleDeviceReportNotFound(exception: DeviceReportNotFoundException, locale: Locale): ErrorData {
