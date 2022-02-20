@@ -20,6 +20,4 @@ interface GetDeviceUseCase {
      * @return [Flow] of [Device]s
      */
     fun getAllDevices(): Flow<Device>
-
-    suspend fun existsById(deviceId: String): Boolean
 }

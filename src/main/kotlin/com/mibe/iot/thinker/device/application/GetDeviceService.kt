@@ -38,8 +38,4 @@ class GetDeviceService @Autowired constructor(
     override fun getAllDevices(): Flow<Device> {
         return getDevicePort.getAllDevices()
     }
-
-    override suspend fun existsById(deviceId: String): Boolean {
-        return getDevicePort.existsWithId(deviceId)
-    }
 }

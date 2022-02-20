@@ -1,7 +1,9 @@
 package com.mibe.iot.thinker.device.application
 
 import com.mibe.iot.thinker.device.application.port.from.DeleteDevicePort
+import com.mibe.iot.thinker.device.application.port.from.GetDevicePort
 import com.mibe.iot.thinker.device.application.port.to.DeleteDeviceUseCase
+import com.mibe.iot.thinker.device.application.port.to.exception.DeviceNotFoundException
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono
 
@@ -13,10 +15,16 @@ import reactor.core.publisher.Mono
  */
 @Service
 class DeleteDeviceService(
-    private val deleteDevicePort: DeleteDevicePort
+    private val deleteDevicePort: DeleteDevicePort,
+    private val getDevicePort: GetDevicePort
 ) : DeleteDeviceUseCase {
 
     override suspend fun deleteDevice(id: String) {
-        deleteDevicePort.deleteDevice(id)
+        if (getDevicePort.existsWithId(id)) {
+            deleteDevicePort.deleteDevice(id)
+        } else {
+            throw DeviceNotFoundException(id)
+        }
+
     }
 }

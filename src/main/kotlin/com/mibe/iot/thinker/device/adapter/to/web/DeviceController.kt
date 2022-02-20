@@ -1,6 +1,5 @@
 package com.mibe.iot.thinker.device.adapter.to.web
 
-import com.mibe.iot.thinker.device.adapter.from.mqtt.TestPublisher
 import com.mibe.iot.thinker.device.adapter.to.web.dto.DeviceDto
 import com.mibe.iot.thinker.device.adapter.to.web.dto.toDeviceUpdates
 import com.mibe.iot.thinker.device.application.port.to.DeleteDeviceUseCase
@@ -12,8 +11,14 @@ import mu.KotlinLogging
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
-import org.springframework.web.bind.annotation.*
-import org.springframework.web.server.ServerWebExchange
+import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.ResponseStatus
+import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api/devices")
@@ -39,11 +44,7 @@ class DeviceController
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     suspend fun deleteDevice(@PathVariable(name = "id") id: String) {
-        if (getDeviceUseCase.existsById(id)) {
-            deleteDeviceUseCase.deleteDevice(id)
-        } else {
-            throw DeviceNotFoundException(id)
-        }
+        deleteDeviceUseCase.deleteDevice(id)
     }
 
     @PatchMapping("/{id}")
