@@ -5,7 +5,7 @@ import com.mibe.iot.thinker.discovery.domain.DiscoveredDevice
 import com.mibe.iot.thinker.domain.device.Device
 import com.mibe.iot.thinker.domain.device.DeviceConnectType
 import com.mibe.iot.thinker.domain.device.DeviceStatus
-import java.util.UUID
+import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentSkipListSet
 import org.springframework.stereotype.Component

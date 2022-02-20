@@ -1,36 +1,27 @@
 package com.mibe.iot.thinker.device.adapter.to.web
 
-import com.mibe.iot.thinker.device.adapter.to.web.dto.DeviceReportDto
-import com.mibe.iot.thinker.device.adapter.to.web.dto.toDeviceReport
+import com.mibe.iot.thinker.device.application.port.to.DeleteDeviceReportUseCase
 import com.mibe.iot.thinker.device.application.port.to.GetDeviceReportUseCase
-import com.mibe.iot.thinker.device.application.port.to.SaveDeviceReportUseCase
 import com.mibe.iot.thinker.device.application.port.to.exception.DeviceReportNotFoundException
-import com.mibe.iot.thinker.domain.device.DeviceReport
 import com.mibe.iot.thinker.message.application.MessageService
 import com.mibe.iot.thinker.web.error.ErrorData
 import java.util.*
-import kotlinx.coroutines.reactive.asFlow
-import kotlinx.coroutines.reactive.awaitFirst
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.server.ServerWebExchange
-import reactor.core.publisher.Mono
-import reactor.kotlin.core.publisher.toMono
 
 @RestController
 @RequestMapping("/api/devices/{deviceId}/reports")
 internal class DeviceReportController @Autowired constructor(
-    private val saveDeviceReportUseCase: SaveDeviceReportUseCase,
     private val getDeviceReportUseCase: GetDeviceReportUseCase,
+    private val deleteDeviceReportUseCase: DeleteDeviceReportUseCase,
     private val messageService: MessageService
 ) {
 
@@ -46,6 +37,13 @@ internal class DeviceReportController @Autowired constructor(
     @ResponseStatus(HttpStatus.OK)
     suspend fun getReport(@PathVariable deviceId: String, @PathVariable reportId: String) =
         getDeviceReportUseCase.getDeviceReport(reportId, deviceId)
+
+    @DeleteMapping("/{reportId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    suspend fun deleteReport(
+        @PathVariable(name = "deviceId") deviceId: String,
+        @PathVariable(name = "reportId") reportId: String
+    ) = deleteDeviceReportUseCase.deleteReport(reportId, deviceId)
 
     @ExceptionHandler(DeviceReportNotFoundException::class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
