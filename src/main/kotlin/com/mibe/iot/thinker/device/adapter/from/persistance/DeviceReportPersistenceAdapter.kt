@@ -4,6 +4,7 @@ import com.mibe.iot.thinker.device.application.port.from.GetDeviceReportPort
 import com.mibe.iot.thinker.device.application.port.from.SaveDeviceReportPort
 import com.mibe.iot.thinker.domain.device.DeviceReport
 import com.mibe.iot.thinker.persistence.repository.SpringDataDeviceReportRepository
+import kotlinx.coroutines.reactor.awaitSingleOrNull
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Component
@@ -22,10 +23,8 @@ class DeviceReportPersistenceAdapter
             .flatMap { entity -> entity.toDeviceReport().toMono() }
     }
 
-    override fun getById(reportId: String): Mono<DeviceReport> {
-        return deviceReportRepository.findById(reportId).flatMap {
-            it.toDeviceReport().toMono()
-        }
+    override suspend fun getByIdOrNull(reportId: String, deviceId: String): DeviceReport? {
+        return deviceReportRepository.findByIdAndDeviceId(reportId, deviceId).awaitSingleOrNull()?.toDeviceReport()
     }
 
     override fun getByDeviceId(deviceId: String, pageable: Pageable): Flux<DeviceReport> {
