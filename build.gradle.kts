@@ -48,6 +48,7 @@ subprojects {
 
 dependencies {
     implementation(project(":thinker-domain"))
+    implementation(project(":thinker-service"))
     implementation(project(":thinker-persistence"))
 
     // MQTT
