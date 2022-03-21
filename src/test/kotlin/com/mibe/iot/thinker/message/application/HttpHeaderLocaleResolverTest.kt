@@ -1,5 +1,6 @@
 package com.mibe.iot.thinker.message.application
 
+import com.mibe.iot.thinker.app.message.HttpHeaderLocaleResolver
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe

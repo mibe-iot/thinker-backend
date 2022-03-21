@@ -3,9 +3,9 @@ package com.mibe.iot.thinker.app.device
 import com.mibe.iot.thinker.service.device.port.UpdateDevicePort
 import com.mibe.iot.thinker.service.device.UpdateDeviceUseCase
 import com.mibe.iot.thinker.service.device.exception.DeviceNotFoundException
-import com.mibe.iot.thinker.service.device.domain.DeviceUpdates
-import com.mibe.iot.thinker.service.device.domain.receiveUpdates
 import com.mibe.iot.thinker.domain.device.Device
+import com.mibe.iot.thinker.domain.device.DeviceUpdates
+import com.mibe.iot.thinker.domain.device.receiveUpdates
 import com.mibe.iot.thinker.domain.device.validation.validateDevice
 import com.mibe.iot.thinker.service.device.port.GetDevicePort
 import com.mibe.iot.thinker.validation.application.throwOnInvalid

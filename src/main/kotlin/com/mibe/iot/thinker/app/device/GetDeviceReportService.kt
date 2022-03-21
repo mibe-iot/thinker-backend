@@ -1,15 +1,14 @@
 package com.mibe.iot.thinker.app.device
 
+import com.mibe.iot.thinker.domain.data.ItemsPage
+import com.mibe.iot.thinker.domain.device.DeviceReport
 import com.mibe.iot.thinker.service.device.GetDeviceReportUseCase
 import com.mibe.iot.thinker.service.device.exception.DeviceNotFoundException
 import com.mibe.iot.thinker.service.device.exception.DeviceReportNotFoundException
-import com.mibe.iot.thinker.domain.device.DeviceReport
 import com.mibe.iot.thinker.service.device.port.GetDevicePort
 import com.mibe.iot.thinker.service.device.port.GetDeviceReportPort
 import kotlinx.coroutines.flow.Flow
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.domain.PageRequest
-import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 
 @Service
@@ -31,7 +30,6 @@ class GetDeviceReportService
         if (!getDevicePort.existsWithId(deviceId)) throw DeviceNotFoundException(
             deviceId
         )
-        val pageable = PageRequest.of(page, pageSize, Sort.by("dateTimeCreated"))
-        return getDeviceReportPort.getByDeviceId(deviceId, pageable)
+        return getDeviceReportPort.getByDeviceId(deviceId, ItemsPage(page, pageSize))
     }
 }

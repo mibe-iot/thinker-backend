@@ -53,7 +53,7 @@ dependencies {
 
     // MQTT
     implementation("de.smartsquare:mqtt-starter:0.14.0")
-    api( "com.hivemq:hivemq-mqtt-client:1.2.2")
+    api("com.hivemq:hivemq-mqtt-client:1.2.2")
 
     // Spring
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")

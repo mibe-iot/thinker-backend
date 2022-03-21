@@ -1,6 +1,6 @@
 package com.mibe.iot.thinker
 
-import com.mibe.iot.thinker.message.application.MessageService
+import com.mibe.iot.thinker.app.message.MessageService
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe

@@ -1,8 +1,8 @@
 package com.mibe.iot.thinker.service.discovery.port
 
-import com.mibe.iot.thinker.discovery.domain.DiscoveredDevice
 import com.mibe.iot.thinker.domain.device.Device
 import com.mibe.iot.thinker.domain.device.DeviceStatus
+import com.mibe.iot.thinker.domain.discovery.DiscoveredDevice
 
 interface SaveDiscoveredDevicePort {
     suspend fun saveDiscoveredDevice(discoveredDevice: DiscoveredDevice): Device
