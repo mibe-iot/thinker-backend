@@ -1,6 +1,6 @@
 package com.mibe.iot.thinker.validation.application
 
-import com.mibe.iot.thinker.discovery.domain.validation.validateAddress
+import com.mibe.iot.thinker.app.discovery.domain.validation.validateAddress
 import io.kotest.assertions.konform.shouldBeInvalid
 import io.kotest.assertions.konform.shouldBeValid
 import io.kotest.core.spec.style.FreeSpec
