@@ -1,19 +1,17 @@
 package com.mibe.iot.thinker.app.discovery
 
 import com.mibe.iot.thinker.app.discovery.exception.DiscoveredDeviceNotFoundException
+import com.mibe.iot.thinker.domain.device.Device
+import com.mibe.iot.thinker.domain.device.DeviceStatus
+import com.mibe.iot.thinker.domain.discovery.DeviceConfigurationCallbacks
+import com.mibe.iot.thinker.service.discovery.ConnectDiscoveredDeviceUseCase
 import com.mibe.iot.thinker.service.discovery.port.ConnectDiscoveredDevicePort
 import com.mibe.iot.thinker.service.discovery.port.GetDiscoveredDevicePort
 import com.mibe.iot.thinker.service.discovery.port.GetSavedDevicePort
 import com.mibe.iot.thinker.service.discovery.port.SaveDiscoveredDevicePort
-import com.mibe.iot.thinker.service.discovery.ConnectDiscoveredDeviceUseCase
-import com.mibe.iot.thinker.domain.device.Device
-import com.mibe.iot.thinker.domain.device.DeviceStatus
-import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.coroutineContext
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -42,28 +40,26 @@ class ConnectDiscoveredDeviceService
     }
 
     override suspend fun setConnectableDevices(devices: Flow<Device>) {
-        val context = coroutineContext
         val connectableDevices = devices.toList().associateWith { device ->
-            Pair(
-                getOnConnectionSuccessCallback(device, context),
-                getOnConnectionFailedCallback(device, context)
+            DeviceConfigurationCallbacks(
+                onConfigurationSucceeded = getOnConfigurationSuccessCallback(device),
+                onConfigurationFailed = getOnConfigurationFailedCallback(device)
             )
         }
         connectDiscoveredDevicePort.setConnectableDevices(connectableDevices)
     }
 
     private suspend fun addDeviceToConnections(device: Device) {
-        val context = coroutineContext
         connectDiscoveredDevicePort.addConnectableDevices(
             device,
-            onConnectionSuccess = getOnConnectionSuccessCallback(device, context),
-            onConnectionFailure = getOnConnectionFailedCallback(device, context)
+            onConnectionSuccess = getOnConfigurationSuccessCallback(device),
+            onConnectionFailure = getOnConfigurationFailedCallback(device)
         )
     }
 
-    private fun getOnConnectionSuccessCallback(device: Device, context: CoroutineContext): () -> Unit = {
+    private fun getOnConfigurationSuccessCallback(device: Device): () -> Unit = {
         log.info { "Device successfully connected: $device" }
-        CoroutineScope(context).launch {
+        runBlocking {
             saveDiscoveredDevicePort.updateDeviceStatus(
                 device.id!!,
                 DeviceStatus.CONFIGURED
@@ -72,9 +68,9 @@ class ConnectDiscoveredDeviceService
         }
     }
 
-    private fun getOnConnectionFailedCallback(device: Device, context: CoroutineContext): () -> Unit = {
+    private fun getOnConfigurationFailedCallback(device: Device): () -> Unit = {
         log.info { "Device connection failed: $device" }
-        CoroutineScope(context).launch {
+        runBlocking {
             saveDiscoveredDevicePort.updateDeviceStatus(
                 device.id!!,
                 DeviceStatus.CONFIGURATION_FAILED

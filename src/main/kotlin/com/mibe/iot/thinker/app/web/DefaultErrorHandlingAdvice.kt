@@ -26,7 +26,7 @@ class DefaultErrorHandlingAdvice
     private val messageService: MessageService
 ) {
 
-    private val logger = KotlinLogging.logger {}
+    private val log = KotlinLogging.logger {}
 
     /**
      * Handles ValidationException and returns internationalized message to user
@@ -39,7 +39,7 @@ class DefaultErrorHandlingAdvice
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     fun handleInternationalizedException(ex: InternationalizedException, locale: Locale): ErrorData {
         val description = messageService.getErrorMessage(ex.messageKey, locale)
-        logger.error { "Internationalized exception: ${ex.messageKey} locale: ${locale.country}" }
+        log.error { "Internationalized exception: ${ex.messageKey} locale: ${locale.country}" }
         return ErrorData(
             description = description,
             descriptionKey = ex.messageKey,
@@ -56,7 +56,7 @@ class DefaultErrorHandlingAdvice
     @ExceptionHandler(ValidationException::class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     suspend fun handleValidationError(ex: ValidationException, locale: Locale): Flow<ValidationErrorModel> {
-        logger.error { "Validation error: ${ex.errors}" }
+        log.error { "Validation error: ${ex.errors}" }
         return ex.errors.asFlow()
             .map { error ->
                 val messageAndParameters = error.message.split("|||")
@@ -85,6 +85,7 @@ class DefaultErrorHandlingAdvice
     @Order(Ordered.LOWEST_PRECEDENCE)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     fun defaultExceptionHandler(exception: Exception, locale: Locale): ErrorData {
+        log.error(exception) { "Unhandled exception" }
         return ErrorData(
             description = messageService.getErrorMessage(UNHANDLED_EXCEPTION, locale),
             descriptionKey = UNHANDLED_EXCEPTION,

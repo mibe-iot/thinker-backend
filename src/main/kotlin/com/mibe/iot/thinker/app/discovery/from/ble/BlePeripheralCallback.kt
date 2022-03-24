@@ -52,11 +52,13 @@ class BlePeripheralCallback
             log.info { "Characteristic uuid=${characteristic.uuid} successfully written" }
             characteristicsState.run {
                 if (isNameWritten && isSsidWritten && isPasswordWritten) {
-                    discoveryDataHolder.deviceConfigurationCallbacks[address]?.let { it.onConfigurationCompleted() }
+                    log.info { "All characteristics written successfully" }
+                    discoveryDataHolder.deviceConfigurationCallbacks[address]?.let { it.onConfigurationSucceeded() }
                     peripheral.cancelConnection()
                 }
             }
         } else {
+            log.error { "Error while trying to write characteristics" }
             discoveryDataHolder.deviceConfigurationCallbacks[address]?.let { it.onConfigurationFailed() }
             peripheral.cancelConnection()
         }

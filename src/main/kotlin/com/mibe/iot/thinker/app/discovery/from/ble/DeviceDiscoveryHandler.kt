@@ -2,19 +2,17 @@ package com.mibe.iot.thinker.app.discovery.from.ble
 
 import com.mibe.iot.thinker.PROFILE_DEFAULT
 import com.mibe.iot.thinker.PROFILE_PROD
+import com.mibe.iot.thinker.domain.device.Device
+import com.mibe.iot.thinker.domain.discovery.DeviceConfigurationCallbacks
+import com.mibe.iot.thinker.domain.discovery.DeviceConnectionData
+import com.mibe.iot.thinker.domain.discovery.DiscoveredDevice
 import com.mibe.iot.thinker.service.discovery.port.ConnectDiscoveredDevicePort
 import com.mibe.iot.thinker.service.discovery.port.ControlDeviceDiscoveryPort
 import com.mibe.iot.thinker.service.discovery.port.GetDiscoveredDevicePort
-import com.mibe.iot.thinker.domain.discovery.DeviceConnectionData
-import com.mibe.iot.thinker.domain.discovery.DiscoveredDevice
-import com.mibe.iot.thinker.domain.device.Device
 import com.welie.blessed.BluetoothCentralManager
 import com.welie.blessed.BluetoothCentralManagerCallback
 import com.welie.blessed.BluetoothPeripheral
 import com.welie.blessed.ScanResult
-import java.time.LocalDateTime
-import java.util.concurrent.atomic.AtomicBoolean
-import javax.annotation.PostConstruct
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import mu.KotlinLogging
@@ -22,6 +20,9 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
+import java.time.LocalDateTime
+import java.util.concurrent.atomic.AtomicBoolean
+import javax.annotation.PostConstruct
 
 
 @Component
@@ -77,14 +78,9 @@ class DeviceDiscoveryHandler
         isActive.set(false)
     }
 
-    override fun setConnectableDevices(devicesAndActions: Map<Device, Pair<() -> Unit, () -> Unit>>) {
+    override fun setConnectableDevices(devicesAndActions: Map<Device, DeviceConfigurationCallbacks>) {
         discoveryDataHolder.connectableDevices.addAll(devicesAndActions.keys)
-        discoveryDataHolder.deviceConfigurationCallbacks += devicesAndActions.map {
-            it.key.address to DeviceConfigurationCallbacks(
-                it.value.first,
-                it.value.second
-            )
-        }
+        discoveryDataHolder.deviceConfigurationCallbacks += devicesAndActions.map { it.key.address to it.value }
     }
 
     override fun addConnectableDevices(

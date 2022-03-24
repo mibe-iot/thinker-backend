@@ -5,6 +5,8 @@ import com.mibe.iot.thinker.domain.discovery.DiscoveredDevice
 import com.mibe.iot.thinker.domain.device.Device
 import com.mibe.iot.thinker.domain.device.DeviceConnectType
 import com.mibe.iot.thinker.domain.device.DeviceStatus
+import com.mibe.iot.thinker.domain.discovery.DeviceConfigurationCallbacks
+import mu.KotlinLogging
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentSkipListSet
@@ -18,6 +20,8 @@ class DiscoveryDataHolder(
     var connectionData: DeviceConnectionData?,
     val deviceCharacteristicsConfigured: MutableMap<String, CharacteristicsState> = ConcurrentHashMap()
 ) {
+    private val log = KotlinLogging.logger {}
+
     fun shouldBeConfigured(address: String): Boolean {
         return connectableDevices.firstOrNull { it.address == address }
             ?.let {
@@ -33,6 +37,7 @@ class DiscoveryDataHolder(
         connectableDevices -= device
         deviceCharacteristicsConfigured -= device.address
         deviceConfigurationCallbacks -= device.address
+        log.debug { "Connectable devices: $connectableDevices" }
     }
 
     data class CharacteristicsState(

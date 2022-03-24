@@ -35,6 +35,7 @@ class ControlDeviceDiscoveryService
             )
             discoveryScope.launch {
                 val connectableDevices = getSavedDevicePort.getByStatus(DeviceStatus.WAITING_CONFIGURATION)
+                log.info { "List of saved devices waiting configuration: $connectableDevices" }
                 connectDiscoveredDeviceUseCase.setConnectableDevices(connectableDevices)
                 controlDeviceDiscoveryPort.startDiscovery(connectionData)
             }

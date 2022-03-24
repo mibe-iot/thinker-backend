@@ -11,10 +11,10 @@ fun ConfigurationEntity.toWifiConfig() = WifiConfiguration(
     this.parameters[PASSWORD] ?: ""
 )
 
-fun WifiConfiguration.toConfigEntity() = ConfigurationEntity(
-    null,
-    ConfigurationType.WIFI,
-    mapOf(
+fun WifiConfiguration.toConfigEntity(id: String) = ConfigurationEntity(
+    id = id,
+    type = ConfigurationType.WIFI,
+    parameters = mapOf(
         SSID to this.ssid,
         PASSWORD to this.password
     )
