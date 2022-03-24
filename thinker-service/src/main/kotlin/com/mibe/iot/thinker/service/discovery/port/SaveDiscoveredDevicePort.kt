@@ -6,5 +6,5 @@ import com.mibe.iot.thinker.domain.discovery.DiscoveredDevice
 
 interface SaveDiscoveredDevicePort {
     suspend fun saveDiscoveredDevice(discoveredDevice: DiscoveredDevice): Device
-    suspend fun updateDeviceStatus(deviceId: String, deviceStatus: DeviceStatus)
+    suspend fun updateDeviceStatus(deviceId: String, deviceStatus: DeviceStatus, configurationHash: Int? = null)
 }

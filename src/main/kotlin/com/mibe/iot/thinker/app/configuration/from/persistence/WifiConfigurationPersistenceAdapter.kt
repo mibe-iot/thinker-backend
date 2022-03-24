@@ -8,20 +8,22 @@ import kotlinx.coroutines.reactor.awaitSingle
 import kotlinx.coroutines.reactor.awaitSingleOrNull
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
+import java.time.LocalDateTime
 
 @Component
 class WifiConfigurationPersistenceAdapter
 @Autowired constructor(
     private val configurationRepository: SpringDataConfigurationRepository
-) : WifiConfigurationPort{
+) : WifiConfigurationPort {
 
     override suspend fun get(): WifiConfiguration? {
         return configurationRepository.findById(ConfigurationType.WIFI.name).awaitSingleOrNull()?.toWifiConfig()
     }
 
     override suspend fun update(wifiConfiguration: WifiConfiguration): WifiConfiguration {
-         return configurationRepository.save(wifiConfiguration.toConfigEntity(wifiConfiguration.type.name))
+         return configurationRepository.save(wifiConfiguration.toConfigEntity())
              .awaitSingle().toWifiConfig()
 
     }
+
 }

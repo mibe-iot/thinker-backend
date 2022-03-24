@@ -22,9 +22,11 @@ class ConnectedDevicePersistenceAdapter
         return repository.save(entity).awaitSingle().toDevice()
     }
 
-    override suspend fun updateDeviceStatus(deviceId: String, deviceStatus: DeviceStatus) {
+    override suspend fun updateDeviceStatus(deviceId: String, deviceStatus: DeviceStatus, configurationHash: Int?) {
         val device = repository.findById(deviceId).awaitSingle()
         device.status = deviceStatus
+        device.configurationHash = configurationHash
         repository.save(device)
     }
+
 }

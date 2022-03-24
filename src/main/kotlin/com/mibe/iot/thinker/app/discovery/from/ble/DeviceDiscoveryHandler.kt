@@ -89,15 +89,11 @@ class DeviceDiscoveryHandler
 
     override fun addConnectableDevices(
         device: Device,
-        onConnectionSuccess: () -> Unit,
-        onConnectionFailure: () -> Unit
+        deviceConfigurationCallbacks: DeviceConfigurationCallbacks
     ) {
         discoveryDataHolder.apply {
             connectableDevices.add(device)
-            deviceConfigurationCallbacks += device.address to DeviceConfigurationCallbacks(
-                onConnectionSuccess,
-                onConnectionFailure
-            )
+            this.deviceConfigurationCallbacks += device.address to deviceConfigurationCallbacks
         }
     }
 

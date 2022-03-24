@@ -16,5 +16,6 @@ class DeviceEntity(
     var description: String = "",
     var status: DeviceStatus = DeviceStatus.WAITING_CONFIGURATION,
     var connectType: DeviceConnectType = DeviceConnectType.MANUAL,
+    var configurationHash: Int? = null,
     var actions: Set<DeviceActionEntity> = emptySet()
 )

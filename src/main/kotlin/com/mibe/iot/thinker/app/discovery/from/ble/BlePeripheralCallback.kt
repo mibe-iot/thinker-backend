@@ -53,7 +53,9 @@ class BlePeripheralCallback
             characteristicsState.run {
                 if (isNameWritten && isSsidWritten && isPasswordWritten) {
                     log.info { "All characteristics written successfully" }
-                    discoveryDataHolder.deviceConfigurationCallbacks[address]?.let { it.onConfigurationSucceeded() }
+                    discoveryDataHolder.deviceConfigurationCallbacks[address]?.let {
+                        it.onConfigurationSucceeded(discoveryDataHolder.connectionData.hashCode())
+                    }
                     peripheral.cancelConnection()
                 }
             }

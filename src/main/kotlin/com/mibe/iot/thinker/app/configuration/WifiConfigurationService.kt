@@ -20,4 +20,5 @@ class WifiConfigurationService
     override suspend fun update(wifiConfiguration: WifiConfiguration) {
         wifiConfigurationPort.update(wifiConfiguration)
     }
+
 }

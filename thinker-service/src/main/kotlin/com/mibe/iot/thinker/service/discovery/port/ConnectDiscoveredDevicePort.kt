@@ -5,6 +5,6 @@ import com.mibe.iot.thinker.domain.discovery.DeviceConfigurationCallbacks
 
 interface ConnectDiscoveredDevicePort {
     fun setConnectableDevices(devicesAndActions: Map<Device, DeviceConfigurationCallbacks>)
-    fun addConnectableDevices(device: Device, onConnectionSuccess: () -> Unit, onConnectionFailure: () -> Unit)
+    fun addConnectableDevices(device: Device, deviceConfigurationCallbacks: DeviceConfigurationCallbacks)
     fun removeConnectableDevice(device: Device)
 }

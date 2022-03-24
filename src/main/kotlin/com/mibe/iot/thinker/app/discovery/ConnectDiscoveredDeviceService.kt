@@ -52,17 +52,20 @@ class ConnectDiscoveredDeviceService
     private suspend fun addDeviceToConnections(device: Device) {
         connectDiscoveredDevicePort.addConnectableDevices(
             device,
-            onConnectionSuccess = getOnConfigurationSuccessCallback(device),
-            onConnectionFailure = getOnConfigurationFailedCallback(device)
+            DeviceConfigurationCallbacks(
+                onConfigurationSucceeded = getOnConfigurationSuccessCallback(device),
+                onConfigurationFailed = getOnConfigurationFailedCallback(device)
+            )
         )
     }
 
-    private fun getOnConfigurationSuccessCallback(device: Device): () -> Unit = {
+    private fun getOnConfigurationSuccessCallback(device: Device): (Int) -> Unit = { configurationHash ->
         log.info { "Device successfully connected: $device" }
         runBlocking {
             saveDiscoveredDevicePort.updateDeviceStatus(
                 device.id!!,
-                DeviceStatus.CONFIGURED
+                DeviceStatus.CONFIGURED,
+                configurationHash
             )
             connectDiscoveredDevicePort.removeConnectableDevice(device)
         }
