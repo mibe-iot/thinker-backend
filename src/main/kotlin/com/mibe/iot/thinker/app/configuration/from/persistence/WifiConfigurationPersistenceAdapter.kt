@@ -15,9 +15,8 @@ class WifiConfigurationPersistenceAdapter
     private val configurationRepository: SpringDataConfigurationRepository
 ) : WifiConfigurationPort{
 
-    override suspend fun get(): WifiConfiguration {
+    override suspend fun get(): WifiConfiguration? {
         return configurationRepository.findById(ConfigurationType.WIFI.name).awaitSingleOrNull()?.toWifiConfig()
-            ?: WifiConfiguration("", "")
     }
 
     override suspend fun update(wifiConfiguration: WifiConfiguration): WifiConfiguration {

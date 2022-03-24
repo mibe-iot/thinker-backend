@@ -4,7 +4,7 @@ import com.mibe.iot.thinker.domain.configuration.WifiConfiguration
 
 interface WifiConfigurationPort {
 
-    suspend fun get(): WifiConfiguration
+    suspend fun get(): WifiConfiguration?
     suspend fun update(wifiConfiguration: WifiConfiguration): WifiConfiguration
 
 }

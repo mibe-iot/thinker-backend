@@ -66,11 +66,15 @@ class DeviceDiscoveryHandler
         central.setRssiThreshold(rssiThreshold.toInt())
     }
 
-    override suspend fun startDiscovery(connectionData: DeviceConnectionData) {
+    override suspend fun startDiscovery() {
+        requireNotNull(discoveryDataHolder.connectionData)
         discoveryStartTime = LocalDateTime.now()
-        discoveryDataHolder.connectionData = connectionData
         isActive.set(true)
         central.scanForPeripherals()
+    }
+
+    override suspend fun updateConnectionData(connectionData: DeviceConnectionData) {
+        discoveryDataHolder.connectionData = connectionData
     }
 
     override fun stopDiscovery() {
