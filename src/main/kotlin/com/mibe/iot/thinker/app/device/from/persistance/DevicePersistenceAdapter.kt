@@ -1,6 +1,7 @@
 package com.mibe.iot.thinker.app.device.from.persistance
 
 import com.mibe.iot.thinker.domain.device.Device
+import com.mibe.iot.thinker.domain.device.DeviceAction
 import com.mibe.iot.thinker.domain.device.DeviceStatus
 import com.mibe.iot.thinker.persistence.entity.DeviceEntity
 import com.mibe.iot.thinker.persistence.repository.SpringDataDeviceRepository
@@ -8,6 +9,7 @@ import com.mibe.iot.thinker.service.device.port.DeleteDevicePort
 import com.mibe.iot.thinker.service.device.port.GetDevicePort
 import com.mibe.iot.thinker.service.device.port.UpdateDevicePort
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.reactive.asFlow
@@ -32,6 +34,10 @@ class DevicePersistenceAdapter
 ) : UpdateDevicePort, GetDevicePort, DeleteDevicePort {
 
     override suspend fun getDevice(id: String): Device? = deviceRepository.findById(id).awaitSingleOrNull()?.toDevice()
+
+    override suspend fun getDeviceActions(id: String): Flow<DeviceAction>? {
+        return deviceRepository.findById(id).awaitSingleOrNull()?.actions?.map { it.toDeviceAction() }?.asFlow()
+    }
 
     override suspend fun getDeviceByAddress(address: String): Device? =
         deviceRepository.findByAddress(address).awaitSingleOrNull()?.toDevice()

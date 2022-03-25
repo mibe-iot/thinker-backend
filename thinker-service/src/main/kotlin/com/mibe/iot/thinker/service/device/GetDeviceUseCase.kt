@@ -1,6 +1,7 @@
 package com.mibe.iot.thinker.service.device
 
 import com.mibe.iot.thinker.domain.device.Device
+import com.mibe.iot.thinker.domain.device.DeviceAction
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -13,6 +14,8 @@ interface GetDeviceUseCase {
      * @return [Device] found by id
      */
     suspend fun getDevice(id: String): Device
+
+    suspend fun getDeviceActions(id: String): Flow<DeviceAction>
 
     /**
      * Finds device by MAC address

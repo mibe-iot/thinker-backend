@@ -8,11 +8,15 @@ import com.mibe.iot.thinker.persistence.entity.DeviceEntity
 import com.mibe.iot.thinker.persistence.entity.DeviceReportEntity
 
 fun DeviceAction.toDeviceActionEntity() = DeviceActionEntity(
-    name, mapping, descriptionKey
+    name = name,
+    deviceName = deviceName,
+    descriptionKey = descriptionKey
 )
 
 fun DeviceActionEntity.toDeviceAction() = DeviceAction(
-    name, mapping, descriptionKey
+    name = name,
+    deviceName = deviceName,
+    descriptionKey = descriptionKey
 )
 
 fun Device.toDeviceEntity() = DeviceEntity(

@@ -5,6 +5,7 @@ import com.mibe.iot.thinker.service.device.GetDeviceUseCase
 import com.mibe.iot.thinker.service.device.exception.DeviceNotFoundException
 import com.mibe.iot.thinker.app.discovery.domain.validation.validateAddress
 import com.mibe.iot.thinker.domain.device.Device
+import com.mibe.iot.thinker.domain.device.DeviceAction
 import com.mibe.iot.thinker.validation.application.throwOnInvalid
 import kotlinx.coroutines.flow.Flow
 import org.springframework.beans.factory.annotation.Autowired
@@ -30,6 +31,11 @@ class GetDeviceService
      */
     override suspend fun getDevice(id: String): Device {
         return getDevicePort.getDevice(id)
+            ?: throw DeviceNotFoundException(id)
+    }
+
+    override suspend fun getDeviceActions(id: String): Flow<DeviceAction> {
+        return getDevicePort.getDeviceActions(id)
             ?: throw DeviceNotFoundException(id)
     }
 
