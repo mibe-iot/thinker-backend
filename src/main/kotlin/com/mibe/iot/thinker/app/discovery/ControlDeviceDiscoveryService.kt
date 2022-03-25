@@ -7,6 +7,7 @@ import com.mibe.iot.thinker.service.discovery.ControlDeviceDiscoveryUseCase
 import com.mibe.iot.thinker.domain.discovery.DeviceConnectionData
 import com.mibe.iot.thinker.domain.device.DeviceStatus
 import com.mibe.iot.thinker.service.configuration.WifiConfigurationUseCase
+import com.mibe.iot.thinker.service.device.UpdateDeviceUseCase
 import java.util.concurrent.Executors
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.asCoroutineDispatcher
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service
 class ControlDeviceDiscoveryService
 @Autowired constructor(
     private val connectDiscoveredDeviceUseCase: ConnectDiscoveredDeviceUseCase,
+    private val updateDeviceUseCase: UpdateDeviceUseCase,
     private val wifiConfigurationUseCase: WifiConfigurationUseCase,
     private val getSavedDevicePort: GetSavedDevicePort,
     private val controlDeviceDiscoveryPort: ControlDeviceDiscoveryPort
@@ -43,7 +45,7 @@ class ControlDeviceDiscoveryService
 
     override suspend fun refreshDeviceConnectionData() {
         val connectionData = getConnectionData()
-        connectionData.hashCode()
+        updateDeviceUseCase.resetAllWithConfigurationHashNot(connectionData.hashCode())
         val connectableDevices = getSavedDevicePort.getByStatus(DeviceStatus.WAITING_CONFIGURATION)
         log.info { "List of saved devices waiting configuration: $connectableDevices" }
         connectDiscoveredDeviceUseCase.setConnectableDevices(connectableDevices)

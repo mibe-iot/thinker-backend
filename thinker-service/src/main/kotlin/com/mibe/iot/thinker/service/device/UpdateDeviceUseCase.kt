@@ -14,4 +14,6 @@ interface UpdateDeviceUseCase {
      * @return updated [Device]
      */
     suspend fun updateDevice(deviceUpdates: DeviceUpdates): Device
+
+    suspend fun resetAllWithConfigurationHashNot(configurationHash: Int)
 }

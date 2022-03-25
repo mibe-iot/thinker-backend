@@ -13,4 +13,5 @@ interface GetDevicePort {
     fun getAllDevices(): Flow<Device>
     suspend fun existsWithId(id: String): Boolean
     fun existsWithName(name: String): Mono<Boolean>
+    suspend fun getAllWithDifferentHash(configurationHash: Int): Flow<Device>
 }

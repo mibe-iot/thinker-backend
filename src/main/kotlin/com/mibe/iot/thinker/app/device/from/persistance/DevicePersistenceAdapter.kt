@@ -1,6 +1,7 @@
 package com.mibe.iot.thinker.app.device.from.persistance
 
 import com.mibe.iot.thinker.domain.device.Device
+import com.mibe.iot.thinker.domain.device.DeviceStatus
 import com.mibe.iot.thinker.persistence.entity.DeviceEntity
 import com.mibe.iot.thinker.persistence.repository.SpringDataDeviceRepository
 import com.mibe.iot.thinker.service.device.port.DeleteDevicePort
@@ -8,10 +9,15 @@ import com.mibe.iot.thinker.service.device.port.GetDevicePort
 import com.mibe.iot.thinker.service.device.port.UpdateDevicePort
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.reactive.asFlow
 import kotlinx.coroutines.reactor.awaitSingle
 import kotlinx.coroutines.reactor.awaitSingleOrNull
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.mongodb.core.ReactiveMongoTemplate
+import org.springframework.data.mongodb.core.query.Criteria
+import org.springframework.data.mongodb.core.query.Query
+import org.springframework.data.mongodb.core.query.Update
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Mono
 
@@ -21,7 +27,8 @@ import reactor.core.publisher.Mono
 @Component
 class DevicePersistenceAdapter
 @Autowired constructor(
-    private val deviceRepository: SpringDataDeviceRepository
+    private val deviceRepository: SpringDataDeviceRepository,
+    private val reactiveMongoTemplate: ReactiveMongoTemplate
 ) : UpdateDevicePort, GetDevicePort, DeleteDevicePort {
 
     override suspend fun getDevice(id: String): Device? = deviceRepository.findById(id).awaitSingleOrNull()?.toDevice()
@@ -32,6 +39,12 @@ class DevicePersistenceAdapter
 
     override suspend fun updateDevice(device: Device): Device {
         return deviceRepository.save(device.toDeviceEntity()).awaitSingle().toDevice()
+    }
+
+    override suspend fun updateStatusByIds(deviceIds: Flow<String>, newStatus: DeviceStatus) {
+        val query = Query.query(Criteria.where("id").`in`(deviceIds.toList()))
+        val update = Update().apply { set("status", newStatus) }
+        reactiveMongoTemplate.updateMulti(query, update, DeviceEntity::class.java)
     }
 
     /**
@@ -53,5 +66,9 @@ class DevicePersistenceAdapter
 
     override fun existsWithName(name: String): Mono<Boolean> {
         return deviceRepository.existsByName(name)
+    }
+
+    override suspend fun getAllWithDifferentHash(configurationHash: Int): Flow<Device> {
+        return deviceRepository.findAllByConfigurationHashNot(configurationHash).asFlow().map { it.toDevice() }
     }
 }
