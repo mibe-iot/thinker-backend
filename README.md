@@ -15,6 +15,8 @@ To view endoints you can use swagger - go /swagger-doc/swagger-ui.
 
 ## Running application
 
+To run MQTT broker execute `/opt/hivemq/bin/run.sh > /dev/null 2>&1 &`
+
 *TO DO*
 
 ## Screenshots
