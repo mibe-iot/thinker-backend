@@ -1,5 +1,6 @@
 package com.mibe.iot.thinker.app.device.to.mqtt
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.hivemq.client.mqtt.datatypes.MqttQos.AT_LEAST_ONCE
 import com.hivemq.client.mqtt.datatypes.MqttTopic
@@ -15,7 +16,7 @@ import org.springframework.stereotype.Component
 class MainMqttSubscriber
 @Autowired constructor(
     private val updateDeviceUseCase: UpdateDeviceUseCase,
-    private val jsonMapper: JsonMapper
+    private val jsonMapper: ObjectMapper
 ) {
 
     @MqttSubscribe(topic = "/mibe/actions", qos = AT_LEAST_ONCE)

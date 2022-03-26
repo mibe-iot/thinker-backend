@@ -1,16 +1,18 @@
 package com.mibe.iot.thinker.app.discovery
 
-import com.mibe.iot.thinker.service.discovery.port.ControlDeviceDiscoveryPort
-import com.mibe.iot.thinker.service.discovery.port.GetSavedDevicePort
-import com.mibe.iot.thinker.service.discovery.ConnectDiscoveredDeviceUseCase
-import com.mibe.iot.thinker.service.discovery.ControlDeviceDiscoveryUseCase
-import com.mibe.iot.thinker.domain.discovery.DeviceConnectionData
 import com.mibe.iot.thinker.domain.device.DeviceStatus
+import com.mibe.iot.thinker.domain.discovery.DeviceConnectionData
 import com.mibe.iot.thinker.service.configuration.WifiConfigurationUseCase
 import com.mibe.iot.thinker.service.device.UpdateDeviceUseCase
+import com.mibe.iot.thinker.service.discovery.ConnectDiscoveredDeviceUseCase
+import com.mibe.iot.thinker.service.discovery.ControlDeviceDiscoveryUseCase
+import com.mibe.iot.thinker.service.discovery.port.ControlDeviceDiscoveryPort
+import com.mibe.iot.thinker.service.discovery.port.GetSavedDevicePort
 import java.util.concurrent.Executors
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.asCoroutineDispatcher
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import mu.KotlinLogging
 import org.springframework.beans.factory.annotation.Autowired
@@ -45,9 +47,9 @@ class ControlDeviceDiscoveryService
 
     override suspend fun refreshDeviceConnectionData() {
         val connectionData = getConnectionData()
-        updateDeviceUseCase.resetAllWithConfigurationHashNot(connectionData.hashCode())
+        log.info { "New connectionData: $connectionData" }
+        updateDeviceUseCase.resetAllUnconfiguredWithHashNot(connectionData.hashCode())
         val connectableDevices = getSavedDevicePort.getByStatus(DeviceStatus.WAITING_CONFIGURATION)
-        log.info { "List of saved devices waiting configuration: $connectableDevices" }
         connectDiscoveredDeviceUseCase.setConnectableDevices(connectableDevices)
         controlDeviceDiscoveryPort.updateConnectionData(connectionData)
     }

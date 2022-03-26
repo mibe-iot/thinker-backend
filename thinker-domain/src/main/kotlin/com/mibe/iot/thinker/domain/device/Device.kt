@@ -10,6 +10,7 @@ data class Device(
     val description: String = "",
     var status: DeviceStatus = DeviceStatus.WAITING_CONFIGURATION,
     var connectType: DeviceConnectType = DeviceConnectType.MANUAL,
+    var configurationHash: Int? = null,
     var actions: Set<DeviceAction> = emptySet()
 ) : Comparable<Device> {
     override fun compareTo(other: Device): Int {

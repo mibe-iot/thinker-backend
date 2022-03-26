@@ -2,7 +2,8 @@ package com.mibe.iot.thinker.domain.device
 
 enum class DeviceStatus {
     WAITING_CONFIGURATION,
+    WIFI_SHARED,
     CONFIGURED,
-    CONFIGURATION_FAILED,
+    WIFI_SHARING_FAILED,
     BLOCKED
 }

@@ -3,6 +3,7 @@ package com.mibe.iot.thinker.app.configuration.to.web
 import com.mibe.iot.thinker.domain.configuration.WifiConfiguration
 import com.mibe.iot.thinker.service.configuration.WifiConfigurationUseCase
 import com.mibe.iot.thinker.service.discovery.ControlDeviceDiscoveryUseCase
+import mu.KotlinLogging
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -20,6 +21,7 @@ class ConfigurationsController
     private val wifiConfigurationUseCase: WifiConfigurationUseCase,
     private val controlDeviceDiscoveryUseCase: ControlDeviceDiscoveryUseCase
 ) {
+    private val log = KotlinLogging.logger{}
 
     @GetMapping("/wifi", produces = [MediaType.APPLICATION_JSON_VALUE])
     @ResponseStatus(HttpStatus.OK)
@@ -29,6 +31,7 @@ class ConfigurationsController
     @ResponseStatus(HttpStatus.OK)
     suspend fun updateWifiConfig(@RequestBody wifiConfiguration: WifiConfiguration) {
         wifiConfigurationUseCase.update(wifiConfiguration)
+        log.info { "Wi-Fi configuration updated successfully" }
         controlDeviceDiscoveryUseCase.refreshDeviceConnectionData()
     }
 

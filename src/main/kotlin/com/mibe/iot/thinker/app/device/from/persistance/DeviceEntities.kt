@@ -24,7 +24,10 @@ fun Device.toDeviceEntity() = DeviceEntity(
     name = name,
     address = address,
     description = description,
-    actions = actions.map { it.toDeviceActionEntity() }.toSet()
+    actions = actions.map { it.toDeviceActionEntity() }.toSet(),
+    status = status,
+    connectType = connectType,
+    configurationHash = configurationHash
 )
 
 fun DeviceEntity.toDevice() = Device(
@@ -32,7 +35,10 @@ fun DeviceEntity.toDevice() = Device(
     name = name ?: "",
     address = address,
     description = description,
-    actions = actions.map { it.toDeviceAction() }.toSet()
+    actions = actions.map { it.toDeviceAction() }.toSet(),
+    status = status,
+    connectType = connectType,
+    configurationHash = configurationHash
 )
 
 fun DeviceReport.toDeviceReportEntity() = DeviceReportEntity(

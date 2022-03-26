@@ -63,7 +63,7 @@ class DevicePersistenceAdapter
     }
 
     override suspend fun deleteDevice(id: String) {
-        deviceRepository.deleteById(id).awaitSingle()
+        deviceRepository.deleteById(id).awaitSingleOrNull()
     }
 
     override suspend fun existsWithId(id: String): Boolean {
