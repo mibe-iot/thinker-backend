@@ -3,6 +3,7 @@ package com.mibe.iot.thinker.app.device.to.web
 import com.mibe.iot.thinker.app.device.to.web.dto.DeviceDto
 import com.mibe.iot.thinker.app.device.to.web.dto.toDeviceUpdates
 import com.mibe.iot.thinker.domain.device.Device
+import com.mibe.iot.thinker.service.device.ControlDeviceActionUseCase
 import com.mibe.iot.thinker.service.device.DeleteDeviceUseCase
 import com.mibe.iot.thinker.service.device.GetDeviceUseCase
 import com.mibe.iot.thinker.service.device.UpdateDeviceUseCase
@@ -28,6 +29,7 @@ class DeviceController
     private val updateDeviceUseCase: UpdateDeviceUseCase,
     private val getDeviceUseCase: GetDeviceUseCase,
     private val deleteDeviceUseCase: DeleteDeviceUseCase,
+    private val controlDeviceActionUseCase: ControlDeviceActionUseCase
 ) {
     private val log = KotlinLogging.logger {}
 
@@ -69,7 +71,7 @@ class DeviceController
         @PathVariable(name = "id") deviceId: String,
         @PathVariable(name = "actionName") actionName: String
     ){
-
+        controlDeviceActionUseCase.invokeAction(deviceId, actionName)
     }
 }
 

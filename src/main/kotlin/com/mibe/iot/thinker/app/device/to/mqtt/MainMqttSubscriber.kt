@@ -1,14 +1,15 @@
 package com.mibe.iot.thinker.app.device.to.mqtt
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.json.JsonMapper
 import com.hivemq.client.mqtt.datatypes.MqttQos.AT_LEAST_ONCE
 import com.hivemq.client.mqtt.datatypes.MqttTopic
 import com.mibe.iot.thinker.domain.device.DeviceAction
 import com.mibe.iot.thinker.domain.device.DeviceUpdates
+import com.mibe.iot.thinker.service.device.SaveDeviceReportUseCase
 import com.mibe.iot.thinker.service.device.UpdateDeviceUseCase
 import de.smartsquare.starter.mqtt.MqttSubscribe
 import kotlinx.coroutines.runBlocking
+import mu.KotlinLogging
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
@@ -16,16 +17,28 @@ import org.springframework.stereotype.Component
 class MainMqttSubscriber
 @Autowired constructor(
     private val updateDeviceUseCase: UpdateDeviceUseCase,
+    private val saveDeviceReportUseCase: SaveDeviceReportUseCase,
     private val jsonMapper: ObjectMapper
 ) {
+    private val log = KotlinLogging.logger{}
 
     @MqttSubscribe(topic = "/mibe/actions", qos = AT_LEAST_ONCE)
     fun handleActionsSharing(actionsJson: String, topic: MqttTopic) {
         val deviceActionsData = jsonMapper.readValue(actionsJson, DeviceActionsData::class.java)
         val actions = deviceActionsData.actions.map { it.withDeviceName(deviceActionsData.deviceName) }.toSet()
+        log.info { "Got actions from topic $topic" }
+        log.info { "Actions: $actions" }
         val deviceUpdates = DeviceUpdates(id = deviceActionsData.deviceName, actions = actions)
         runBlocking { updateDeviceUseCase.updateDevice(deviceUpdates) }
     }
+
+    @MqttSubscribe(topic = "/mibe/reports/+", qos = AT_LEAST_ONCE)
+    fun handleReportsSharing(reportModelJson: String, topic: MqttTopic) {
+        val reportModel = jsonMapper.readValue(reportModelJson, DeviceReportModel::class.java)
+        log.info { "Got report from topic $topic" }
+        runBlocking { saveDeviceReportUseCase.saveReport(topic.levels.last(), reportModel.reportData) }
+    }
+
 
     private fun DeviceAction.withDeviceName(deviceName: String) = DeviceAction(
         name = name,
