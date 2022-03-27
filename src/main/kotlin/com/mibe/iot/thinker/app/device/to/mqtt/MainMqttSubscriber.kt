@@ -24,7 +24,7 @@ class MainMqttSubscriber
 
     @MqttSubscribe(topic = "/mibe/actions", qos = AT_LEAST_ONCE)
     fun handleActionsSharing(actionsJson: String, topic: MqttTopic) {
-        val deviceActionsData = jsonMapper.readValue(actionsJson, DeviceActionsData::class.java)
+        val deviceActionsData = jsonMapper.readValue(actionsJson, DeviceActionsDataModel::class.java)
         val actions = deviceActionsData.actions.map { it.withDeviceName(deviceActionsData.deviceName) }.toSet()
         log.info { "Got actions from topic $topic" }
         log.info { "Actions: $actions" }
@@ -40,10 +40,9 @@ class MainMqttSubscriber
     }
 
 
-    private fun DeviceAction.withDeviceName(deviceName: String) = DeviceAction(
+    private fun DeviceActionModel.withDeviceName(deviceName: String) = DeviceAction(
         name = name,
-        deviceName = deviceName,
-        descriptionKey = descriptionKey
+        deviceName = deviceName
     )
 
 }
