@@ -8,5 +8,7 @@ interface GetDeviceReportPort {
 
     suspend fun getByIdOrNull(reportId: String, deviceId: String): DeviceReport?
     fun getByDeviceId(deviceId: String, itemsPage: ItemsPage): Flow<DeviceReport>
+    suspend fun getLatestDeviceReport(deviceId: String): DeviceReport?
     suspend fun existsById(reportId: String): Boolean
+
 }

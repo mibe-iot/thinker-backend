@@ -5,8 +5,12 @@ import com.mibe.iot.thinker.service.device.GetDeviceUseCase
 import com.mibe.iot.thinker.service.device.exception.DeviceNotFoundException
 import com.mibe.iot.thinker.app.discovery.domain.validation.validateAddress
 import com.mibe.iot.thinker.domain.device.Device
+import com.mibe.iot.thinker.domain.device.DeviceAction
+import com.mibe.iot.thinker.domain.device.DeviceReport
+import com.mibe.iot.thinker.domain.device.DeviceWithReport
+import com.mibe.iot.thinker.service.device.port.GetDeviceReportPort
 import com.mibe.iot.thinker.validation.application.throwOnInvalid
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -19,7 +23,8 @@ import org.springframework.stereotype.Service
 @Service
 class GetDeviceService
 @Autowired constructor(
-    private val getDevicePort: GetDevicePort
+    private val getDevicePort: GetDevicePort,
+    private val getDeviceReportPort: GetDeviceReportPort
 ) : GetDeviceUseCase {
 
     /**
@@ -30,6 +35,11 @@ class GetDeviceService
      */
     override suspend fun getDevice(id: String): Device {
         return getDevicePort.getDevice(id)
+            ?: throw DeviceNotFoundException(id)
+    }
+
+    override suspend fun getDeviceActions(id: String): Flow<DeviceAction> {
+        return getDevicePort.getDeviceActions(id)
             ?: throw DeviceNotFoundException(id)
     }
 
@@ -52,5 +62,11 @@ class GetDeviceService
      */
     override fun getAllDevices(): Flow<Device> {
         return getDevicePort.getAllDevices()
+    }
+
+    override suspend fun getAllDevicesWithLatestReports(): Flow<DeviceWithReport> {
+        return getAllDevices().map { device ->
+            DeviceWithReport(device, getDeviceReportPort.getLatestDeviceReport(device.id!!))
+        }
     }
 }

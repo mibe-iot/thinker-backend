@@ -8,14 +8,23 @@ import com.mibe.iot.thinker.domain.device.DeviceStatus
 import com.mibe.iot.thinker.persistence.entity.DeviceEntity
 import com.mibe.iot.thinker.persistence.repository.SpringDataDeviceRepository
 import kotlinx.coroutines.reactor.awaitSingle
+import mu.KotlinLogging
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.mongodb.core.MongoTemplate
+import org.springframework.data.mongodb.core.ReactiveMongoTemplate
+import org.springframework.data.mongodb.core.query.Criteria
+import org.springframework.data.mongodb.core.query.Query
+import org.springframework.data.mongodb.core.query.Update
+import org.springframework.data.mongodb.core.updateFirst
 import org.springframework.stereotype.Component
 
 @Component
 class ConnectedDevicePersistenceAdapter
 @Autowired constructor(
-    private val repository: SpringDataDeviceRepository
+    private val repository: SpringDataDeviceRepository,
+    private val reactiveMongoTemplate: ReactiveMongoTemplate
 ) : SaveDiscoveredDevicePort {
+    private val log = KotlinLogging.logger{}
 
     override suspend fun saveDiscoveredDevice(discoveredDevice: DiscoveredDevice): Device {
         val entity = DeviceEntity(address = discoveredDevice.address)
@@ -23,10 +32,16 @@ class ConnectedDevicePersistenceAdapter
     }
 
     override suspend fun updateDeviceStatus(deviceId: String, deviceStatus: DeviceStatus, configurationHash: Int?) {
-        val device = repository.findById(deviceId).awaitSingle()
-        device.status = deviceStatus
-        device.configurationHash = configurationHash
-        repository.save(device)
+        log.info { "Updating device status by id=$deviceId" }
+//        val device = repository.findById(deviceId).awaitSingle()
+//        log.info { "found device: $device" }
+//        device.status = deviceStatus
+//        device.configurationHash = configurationHash
+//        repository.save(device).awaitSingle()
+
+        val query = Query.query(Criteria.where("id").`is`(deviceId))
+        val update = Update().apply { set("status", deviceStatus); set("configurationHash", configurationHash) }
+        reactiveMongoTemplate.updateFirst(query, update, DeviceEntity::class.java).awaitSingle()
     }
 
 }

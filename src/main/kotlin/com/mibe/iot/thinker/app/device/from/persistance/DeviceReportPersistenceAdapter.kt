@@ -15,6 +15,8 @@ import kotlinx.coroutines.reactor.awaitSingleOrNull
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
+import org.springframework.data.mongodb.core.query.Criteria
+import org.springframework.data.mongodb.core.query.Query
 import org.springframework.stereotype.Component
 
 @Component
@@ -35,6 +37,11 @@ class DeviceReportPersistenceAdapter
         val pageable = PageRequest.of(itemsPage.page, itemsPage.pageSize, Sort.by("dateTimeCreated"))
         return deviceReportRepository.findByDeviceId(deviceId, pageable).asFlow()
             .map(DeviceReportEntity::toDeviceReport)
+    }
+
+    override suspend fun getLatestDeviceReport(deviceId: String): DeviceReport? {
+        return deviceReportRepository.findTopByDeviceIdOrderByDateTimeCreated(deviceId).awaitSingleOrNull()
+            ?.toDeviceReport()
     }
 
     override suspend fun existsById(reportId: String): Boolean =

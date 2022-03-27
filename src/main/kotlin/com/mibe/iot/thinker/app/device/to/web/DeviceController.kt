@@ -2,10 +2,14 @@ package com.mibe.iot.thinker.app.device.to.web
 
 import com.mibe.iot.thinker.app.device.to.web.dto.DeviceDto
 import com.mibe.iot.thinker.app.device.to.web.dto.toDeviceUpdates
+import com.mibe.iot.thinker.app.web.model.DeviceModel
 import com.mibe.iot.thinker.domain.device.Device
+import com.mibe.iot.thinker.service.device.ControlDeviceActionUseCase
 import com.mibe.iot.thinker.service.device.DeleteDeviceUseCase
 import com.mibe.iot.thinker.service.device.GetDeviceUseCase
 import com.mibe.iot.thinker.service.device.UpdateDeviceUseCase
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import mu.KotlinLogging
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -14,6 +18,7 @@ import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -26,13 +31,18 @@ class DeviceController
 @Autowired constructor(
     private val updateDeviceUseCase: UpdateDeviceUseCase,
     private val getDeviceUseCase: GetDeviceUseCase,
+
     private val deleteDeviceUseCase: DeleteDeviceUseCase,
+    private val controlDeviceActionUseCase: ControlDeviceActionUseCase
 ) {
     private val log = KotlinLogging.logger {}
 
     @GetMapping("", produces = [MediaType.APPLICATION_NDJSON_VALUE])
     @ResponseStatus(HttpStatus.OK)
-    fun getAllDevices() = getDeviceUseCase.getAllDevices()
+    suspend fun getAllDevicesWithLatestReport(): Flow<DeviceModel> {
+        val devicesWithReports = getDeviceUseCase.getAllDevicesWithLatestReports()
+        return devicesWithReports.map { DeviceModel.from(it) }
+    }
 
     @GetMapping("/{id}", produces = [MediaType.APPLICATION_JSON_VALUE])
     @ResponseStatus(HttpStatus.OK)
@@ -61,6 +71,14 @@ class DeviceController
     ): Device? {
         val updates = deviceDto.apply { id = deviceId }.toDeviceUpdates()
         return updateDeviceUseCase.updateDevice(updates)
+    }
+
+    @PostMapping("/{id}/{actionName}")
+    suspend fun invokeDeviceAction(
+        @PathVariable(name = "id") deviceId: String,
+        @PathVariable(name = "actionName") actionName: String
+    ){
+        controlDeviceActionUseCase.invokeAction(deviceId, actionName)
     }
 }
 

@@ -25,7 +25,7 @@ val openApiVersion = "1.4.3"
 
 allprojects {
     group = "com.mibe.iot"
-    version = "0.1"
+    version = "0.2"
 
     tasks.withType<KotlinCompile> {
         kotlinOptions {

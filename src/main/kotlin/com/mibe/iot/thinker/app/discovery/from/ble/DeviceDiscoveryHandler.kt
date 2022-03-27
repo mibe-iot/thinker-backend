@@ -84,6 +84,7 @@ class DeviceDiscoveryHandler
 
     override fun setConnectableDevices(devicesAndActions: Map<Device, DeviceConfigurationCallbacks>) {
         discoveryDataHolder.connectableDevices.addAll(devicesAndActions.keys)
+        log.info { "Connectable devices: ${discoveryDataHolder.connectableDevices}" }
         discoveryDataHolder.deviceConfigurationCallbacks += devicesAndActions.map { it.key.address to it.value }
     }
 

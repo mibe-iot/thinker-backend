@@ -5,9 +5,6 @@ plugins {
     kotlin("plugin.spring")
 }
 
-group = "com.mibe.iot"
-version = "0.1"
-
 repositories {
     mavenCentral()
 }

@@ -4,12 +4,14 @@ import com.mibe.iot.thinker.app.discovery.exception.DiscoveredDeviceNotFoundExce
 import com.mibe.iot.thinker.domain.device.Device
 import com.mibe.iot.thinker.domain.device.DeviceStatus
 import com.mibe.iot.thinker.domain.discovery.DeviceConfigurationCallbacks
+import com.mibe.iot.thinker.service.device.port.UpdateDevicePort
 import com.mibe.iot.thinker.service.discovery.ConnectDiscoveredDeviceUseCase
 import com.mibe.iot.thinker.service.discovery.port.ConnectDiscoveredDevicePort
 import com.mibe.iot.thinker.service.discovery.port.GetDiscoveredDevicePort
 import com.mibe.iot.thinker.service.discovery.port.GetSavedDevicePort
 import com.mibe.iot.thinker.service.discovery.port.SaveDiscoveredDevicePort
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service
 class ConnectDiscoveredDeviceService
 @Autowired constructor(
     private val saveDiscoveredDevicePort: SaveDiscoveredDevicePort,
+    private val updateDevicePort: UpdateDevicePort,
     private val getSavedDevicePort: GetSavedDevicePort,
     private val getDiscoveredDevicePort: GetDiscoveredDevicePort,
     private val connectDiscoveredDevicePort: ConnectDiscoveredDevicePort
@@ -31,7 +34,9 @@ class ConnectDiscoveredDeviceService
             ?: throw DiscoveredDeviceNotFoundException(address)
 
         val device = if (getSavedDevicePort.existsByAddress(address)) {
-            getSavedDevicePort.getDeviceByAddress(address)
+            val savedDevice = getSavedDevicePort.getDeviceByAddress(address)
+            savedDevice.status = DeviceStatus.WAITING_CONFIGURATION
+            updateDevicePort.updateDevice(savedDevice)
         } else {
             saveDiscoveredDevicePort.saveDiscoveredDevice(discoveredDevice)
         }
@@ -64,7 +69,7 @@ class ConnectDiscoveredDeviceService
         runBlocking {
             saveDiscoveredDevicePort.updateDeviceStatus(
                 device.id!!,
-                DeviceStatus.CONFIGURED,
+                DeviceStatus.WIFI_SHARED,
                 configurationHash
             )
             connectDiscoveredDevicePort.removeConnectableDevice(device)
@@ -76,7 +81,7 @@ class ConnectDiscoveredDeviceService
         runBlocking {
             saveDiscoveredDevicePort.updateDeviceStatus(
                 device.id!!,
-                DeviceStatus.CONFIGURATION_FAILED
+                DeviceStatus.WIFI_SHARING_FAILED
             )
             connectDiscoveredDevicePort.removeConnectableDevice(device)
         }

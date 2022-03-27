@@ -5,10 +5,10 @@ import com.mibe.iot.thinker.domain.device.DeviceAction
 
 data class DeviceUpdates(
     val id: String,
-    val name: String?,
-    val address: String?,
-    val description: String?,
-    val actions: Set<DeviceAction>?
+    val name: String? = null,
+    val address: String? = null,
+    val description: String? = null,
+    val actions: Set<DeviceAction>? = null
 )
 
 fun Device.receiveUpdates(deviceUpdates: DeviceUpdates) = Device(

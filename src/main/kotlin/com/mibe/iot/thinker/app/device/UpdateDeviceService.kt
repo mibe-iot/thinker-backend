@@ -10,9 +10,7 @@ import com.mibe.iot.thinker.domain.device.receiveUpdates
 import com.mibe.iot.thinker.domain.device.validation.validateDevice
 import com.mibe.iot.thinker.service.device.port.GetDevicePort
 import com.mibe.iot.thinker.validation.application.throwOnInvalid
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.forEach
 import kotlinx.coroutines.flow.map
 import mu.KotlinLogging
 import org.springframework.beans.factory.annotation.Autowired
@@ -40,10 +38,13 @@ class UpdateDeviceService
         return updateDevicePort.updateDevice(updatedDevice)
     }
 
-    override suspend fun resetAllWithConfigurationHashNot(configurationHash: Int) {
-        val devicesToBeReconfigured = getDevicePort.getAllWithDifferentHash(configurationHash)
-        log.info { "Found devices with old configuration: $devicesToBeReconfigured" }
-        val deviceIds = devicesToBeReconfigured.map { it.id!! }
-        updateDevicePort.updateStatusByIds(deviceIds, DeviceStatus.WAITING_CONFIGURATION)
+    override suspend fun resetAllUnconfiguredWithHashNot(configurationHash: Int) {
+//        val devicesToBeReconfigured = getDevicePort.getAllWithDifferentHash(configurationHash)
+//
+//        log.info { "Found devices with old configuration:" }
+//        devicesToBeReconfigured.collect{log.info { it }}
+//
+//        val deviceIds = devicesToBeReconfigured.map { it.id!! }
+//        updateDevicePort.updateStatusByIds(deviceIds, DeviceStatus.WAITING_CONFIGURATION)
     }
 }
