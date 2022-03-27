@@ -40,6 +40,7 @@ class DeviceControllerAdvice @Autowired constructor(
             description = messageService.getErrorMessage(
                 DEVICE_ACTION_NOT_FOUND,
                 locale,
+                exception.actionName,
                 exception.deviceId ?: "[unknown]"
             ),
             descriptionKey = DEVICE_ACTION_NOT_FOUND,
