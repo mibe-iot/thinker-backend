@@ -33,7 +33,7 @@ management:
 
 mqtt:
   enabled: true
-  host: localhost
+  host: thinker.local
 
 thinker:
   ble:
