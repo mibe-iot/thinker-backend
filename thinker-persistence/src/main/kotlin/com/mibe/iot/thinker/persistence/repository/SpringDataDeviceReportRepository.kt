@@ -9,4 +9,5 @@ import reactor.core.publisher.Mono
 interface SpringDataDeviceReportRepository : ReactiveMongoRepository<DeviceReportEntity, String> {
     fun findByIdAndDeviceId(reportId: String, deviceId: String): Mono<DeviceReportEntity>
     fun findByDeviceId(deviceId: String, pageable: Pageable): Flux<DeviceReportEntity>
+    fun findTopByDeviceIdOrderByDateTimeCreated(deviceId: String): Mono<DeviceReportEntity>
 }
