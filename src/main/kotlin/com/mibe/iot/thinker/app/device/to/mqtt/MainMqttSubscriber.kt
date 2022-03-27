@@ -42,7 +42,6 @@ class MainMqttSubscriber
 
     private fun DeviceActionModel.withDeviceName(deviceName: String) = DeviceAction(
         name = name,
-        deviceName = deviceName
     )
 
 }

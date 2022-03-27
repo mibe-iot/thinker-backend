@@ -17,7 +17,7 @@ class ControlDeviceActionService(
     override suspend fun invokeAction(deviceId: String, actionName: String) {
         val deviceAction = (getDeviceUseCase.getDeviceActions(deviceId).filter { it.name == actionName }.firstOrNull()
             ?: throw DeviceActionNotFoundException(deviceId, actionName))
-        controlDeviceActionPort.activateAction(deviceAction)
+        controlDeviceActionPort.activateAction(deviceId, deviceAction)
     }
 
 }

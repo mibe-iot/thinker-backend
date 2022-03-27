@@ -14,8 +14,8 @@ class DeviceActionsDispatcher(
     private val jsonMapper: ObjectMapper
 ) : ControlDeviceActionPort {
 
-    override fun activateAction(action: DeviceAction) {
-        mqttPublisher.publish("/mibe/${action.deviceName}",
+    override fun activateAction(deviceName: String, action: DeviceAction) {
+        mqttPublisher.publish("/mibe/${action}",
             MqttQos.AT_LEAST_ONCE,
             jsonMapper.writeValueAsString(ActionInvocation(action.name)))
     }

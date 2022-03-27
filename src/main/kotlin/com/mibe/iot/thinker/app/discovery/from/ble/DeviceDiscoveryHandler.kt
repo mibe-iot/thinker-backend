@@ -70,7 +70,7 @@ class DeviceDiscoveryHandler
         requireNotNull(discoveryDataHolder.connectionData)
         discoveryStartTime = LocalDateTime.now()
         isActive.set(true)
-        central.scanForPeripherals()
+        central.scanForPeripheralsWithServices(allowedUUIDs.toTypedArray())
     }
 
     override suspend fun updateConnectionData(connectionData: DeviceConnectionData) {
