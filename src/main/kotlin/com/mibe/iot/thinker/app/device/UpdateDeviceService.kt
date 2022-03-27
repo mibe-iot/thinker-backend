@@ -34,7 +34,7 @@ class UpdateDeviceService
         val device = getDevicePort.getDevice(deviceUpdates.id)
             ?: throw DeviceNotFoundException(deviceUpdates.id)
         val updatedDevice = device.receiveUpdates(deviceUpdates)
-        validateDevice(updatedDevice).throwOnInvalid()
+//        validateDevice(updatedDevice).throwOnInvalid()
         return updateDevicePort.updateDevice(updatedDevice)
     }
 
