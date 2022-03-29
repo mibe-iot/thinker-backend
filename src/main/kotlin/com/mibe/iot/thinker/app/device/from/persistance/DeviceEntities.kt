@@ -27,7 +27,8 @@ fun Device.toDeviceEntity() = DeviceEntity(
     actions = actions.map { it.toDeviceActionEntity() }.toSet(),
     status = status,
     connectType = connectType,
-    configurationHash = configurationHash
+    configurationHash = configurationHash,
+    deviceClass = deviceClass
 )
 
 fun DeviceEntity.toDevice() = Device(
@@ -38,7 +39,8 @@ fun DeviceEntity.toDevice() = Device(
     actions = actions.map { it.toDeviceAction() }.toSet(),
     status = status,
     connectType = connectType,
-    configurationHash = configurationHash
+    configurationHash = configurationHash,
+    deviceClass = deviceClass
 )
 
 fun DeviceReport.toDeviceReportEntity() = DeviceReportEntity(
