@@ -53,6 +53,12 @@ class DevicePersistenceAdapter
         reactiveMongoTemplate.updateMulti(query, update, DeviceEntity::class.java)
     }
 
+    override suspend fun updateActions(deviceId: String, actions: Set<DeviceAction>) {
+        val query = Query.query(Criteria.where("id").`is`(deviceId))
+        val update = Update().apply { set("actions", HashSet(actions)) }
+        reactiveMongoTemplate.updateFirst(query, update, DeviceEntity::class.java)
+    }
+
     /**
      * Gets all devices from repository.
      *

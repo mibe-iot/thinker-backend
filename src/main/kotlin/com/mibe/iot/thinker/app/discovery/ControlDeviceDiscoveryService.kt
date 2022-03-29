@@ -48,7 +48,6 @@ class ControlDeviceDiscoveryService
     override suspend fun refreshDeviceConnectionData() {
         val connectionData = getConnectionData()
         log.info { "New connectionData: $connectionData" }
-        updateDeviceUseCase.resetAllUnconfiguredWithHashNot(connectionData.hashCode())
         val connectableDevices = getSavedDevicePort.getByStatus(DeviceStatus.WAITING_CONFIGURATION)
         connectDiscoveredDeviceUseCase.setConnectableDevices(connectableDevices)
         controlDeviceDiscoveryPort.updateConnectionData(connectionData)
