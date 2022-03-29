@@ -16,5 +16,5 @@ interface UpdateDeviceUseCase {
      */
     suspend fun updateDevice(deviceUpdates: DeviceUpdates): Device
 
-    suspend fun updateDeviceActions(deviceId: String, actions: Set<DeviceAction>)
+    suspend fun updateDeviceActionsAndClass(deviceId: String, deviceClass: String, actions: Set<DeviceAction>)
 }

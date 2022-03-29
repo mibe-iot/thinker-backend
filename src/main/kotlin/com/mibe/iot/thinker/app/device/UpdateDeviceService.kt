@@ -4,11 +4,7 @@ import com.mibe.iot.thinker.domain.device.*
 import com.mibe.iot.thinker.service.device.port.UpdateDevicePort
 import com.mibe.iot.thinker.service.device.UpdateDeviceUseCase
 import com.mibe.iot.thinker.service.device.exception.DeviceNotFoundException
-import com.mibe.iot.thinker.domain.device.validation.validateDevice
 import com.mibe.iot.thinker.service.device.port.GetDevicePort
-import com.mibe.iot.thinker.validation.application.throwOnInvalid
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.map
 import mu.KotlinLogging
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -34,10 +30,10 @@ class UpdateDeviceService
         return updateDevicePort.updateDevice(updatedDevice)
     }
 
-    override suspend fun updateDeviceActions(deviceId: String, actions: Set<DeviceAction>) {
+    override suspend fun updateDeviceActionsAndClass(deviceId: String, deviceClass: String, actions: Set<DeviceAction>) {
         val device = getDevicePort.getDevice(deviceId)
             ?: throw DeviceNotFoundException(deviceId)
-        updateDevicePort.updateActions(deviceId, actions)
+        updateDevicePort.updateActionsAndClass(deviceId, deviceClass, actions)
     }
 
 }
