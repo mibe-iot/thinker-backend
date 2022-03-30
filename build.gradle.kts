@@ -66,9 +66,6 @@ dependencies {
     implementation("org.springdoc:springdoc-openapi-webflux-ui:$openApiVersion")
     implementation("org.springdoc:springdoc-openapi-kotlin:$openApiVersion")
 
-    // Cache
-    implementation("io.github.reactivecircus.cache4k:cache4k:0.3.0")
-
     // JSON
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
     runtimeOnly("com.fasterxml.jackson.module:jackson-modules-java8:$jacksonVersion")
