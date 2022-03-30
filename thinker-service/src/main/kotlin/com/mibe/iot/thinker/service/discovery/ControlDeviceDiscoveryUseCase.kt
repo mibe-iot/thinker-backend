@@ -5,6 +5,8 @@ package com.mibe.iot.thinker.service.discovery
  */
 interface ControlDeviceDiscoveryUseCase {
 
+    fun isDiscovering(): Boolean
+
     /**
      * Starts discovery process.
      */
@@ -16,4 +18,6 @@ interface ControlDeviceDiscoveryUseCase {
      * Stops discovery process
      */
     fun stopDiscovery()
+
+    fun restartDiscovery()
 }

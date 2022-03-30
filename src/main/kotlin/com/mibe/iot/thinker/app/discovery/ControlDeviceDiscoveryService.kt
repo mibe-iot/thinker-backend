@@ -31,10 +31,13 @@ class ControlDeviceDiscoveryService
 
     private val discoveryScope = CoroutineScope(Executors.newSingleThreadExecutor().asCoroutineDispatcher())
 
+    override fun isDiscovering(): Boolean {
+        return controlDeviceDiscoveryPort.isDiscovering()
+    }
+
     override fun startDiscovery() {
         if (!controlDeviceDiscoveryPort.isDiscovering()) {
             log.debug("Starting discovery")
-
             discoveryScope.launch {
                 refreshDeviceConnectionData()
                 controlDeviceDiscoveryPort.startDiscovery()
@@ -54,11 +57,19 @@ class ControlDeviceDiscoveryService
     }
 
     override fun stopDiscovery() {
-        log.debug { "Stopping discovery" }
+        if (controlDeviceDiscoveryPort.isDiscovering())  {
+            log.debug { "Stopping discovery" }
+            controlDeviceDiscoveryPort.stopDiscovery()
+            log.info { "Discovery stopped" }
+        } else {
+            log.warn { "Discovery isn't active" }
+        }
 
-        if (controlDeviceDiscoveryPort.isDiscovering()) controlDeviceDiscoveryPort.stopDiscovery()
+    }
 
-        log.info { "Discovery stopped" }
+    override fun restartDiscovery() {
+        stopDiscovery()
+        startDiscovery()
     }
 
     private suspend fun getConnectionData() = wifiConfigurationUseCase.get()
