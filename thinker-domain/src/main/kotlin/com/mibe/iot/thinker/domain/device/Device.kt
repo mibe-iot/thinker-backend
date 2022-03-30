@@ -11,7 +11,8 @@ data class Device(
     var status: DeviceStatus = DeviceStatus.WAITING_CONFIGURATION,
     var connectType: DeviceConnectType = DeviceConnectType.MANUAL,
     var configurationHash: Int? = null,
-    var actions: Set<DeviceAction> = emptySet()
+    var actions: Set<DeviceAction> = emptySet(),
+    var deviceClass: String = UNCLASSIFIED
 ) : Comparable<Device> {
     override fun compareTo(other: Device): Int {
         return other.id?.let { id?.compareTo(it) } ?: 0

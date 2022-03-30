@@ -15,8 +15,6 @@ import kotlinx.coroutines.reactor.awaitSingleOrNull
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
-import org.springframework.data.mongodb.core.query.Criteria
-import org.springframework.data.mongodb.core.query.Query
 import org.springframework.stereotype.Component
 
 @Component
@@ -40,7 +38,7 @@ class DeviceReportPersistenceAdapter
     }
 
     override suspend fun getLatestDeviceReport(deviceId: String): DeviceReport? {
-        return deviceReportRepository.findTopByDeviceIdOrderByDateTimeCreated(deviceId).awaitSingleOrNull()
+        return deviceReportRepository.findTopByDeviceIdOrderByDateTimeCreatedDesc(deviceId).awaitSingleOrNull()
             ?.toDeviceReport()
     }
 

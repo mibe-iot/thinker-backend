@@ -9,14 +9,14 @@ import com.mibe.iot.thinker.persistence.entity.DeviceReportEntity
 
 fun DeviceAction.toDeviceActionEntity() = DeviceActionEntity(
     name = name,
-    deviceName = deviceName,
-    descriptionKey = descriptionKey
+    displayName = displayName,
+    description = description
 )
 
 fun DeviceActionEntity.toDeviceAction() = DeviceAction(
     name = name,
-    deviceName = deviceName,
-    descriptionKey = descriptionKey
+    displayName = displayName,
+    description = description
 )
 
 fun Device.toDeviceEntity() = DeviceEntity(
@@ -27,7 +27,8 @@ fun Device.toDeviceEntity() = DeviceEntity(
     actions = actions.map { it.toDeviceActionEntity() }.toSet(),
     status = status,
     connectType = connectType,
-    configurationHash = configurationHash
+    configurationHash = configurationHash,
+    deviceClass = deviceClass
 )
 
 fun DeviceEntity.toDevice() = Device(
@@ -38,7 +39,8 @@ fun DeviceEntity.toDevice() = Device(
     actions = actions.map { it.toDeviceAction() }.toSet(),
     status = status,
     connectType = connectType,
-    configurationHash = configurationHash
+    configurationHash = configurationHash,
+    deviceClass = deviceClass
 )
 
 fun DeviceReport.toDeviceReportEntity() = DeviceReportEntity(

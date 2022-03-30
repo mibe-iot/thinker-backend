@@ -1,17 +1,10 @@
 package com.mibe.iot.thinker.app.device
 
+import com.mibe.iot.thinker.domain.device.*
 import com.mibe.iot.thinker.service.device.port.UpdateDevicePort
 import com.mibe.iot.thinker.service.device.UpdateDeviceUseCase
 import com.mibe.iot.thinker.service.device.exception.DeviceNotFoundException
-import com.mibe.iot.thinker.domain.device.Device
-import com.mibe.iot.thinker.domain.device.DeviceStatus
-import com.mibe.iot.thinker.domain.device.DeviceUpdates
-import com.mibe.iot.thinker.domain.device.receiveUpdates
-import com.mibe.iot.thinker.domain.device.validation.validateDevice
 import com.mibe.iot.thinker.service.device.port.GetDevicePort
-import com.mibe.iot.thinker.validation.application.throwOnInvalid
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.map
 import mu.KotlinLogging
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -34,17 +27,13 @@ class UpdateDeviceService
         val device = getDevicePort.getDevice(deviceUpdates.id)
             ?: throw DeviceNotFoundException(deviceUpdates.id)
         val updatedDevice = device.receiveUpdates(deviceUpdates)
-        validateDevice(updatedDevice).throwOnInvalid()
         return updateDevicePort.updateDevice(updatedDevice)
     }
 
-    override suspend fun resetAllUnconfiguredWithHashNot(configurationHash: Int) {
-//        val devicesToBeReconfigured = getDevicePort.getAllWithDifferentHash(configurationHash)
-//
-//        log.info { "Found devices with old configuration:" }
-//        devicesToBeReconfigured.collect{log.info { it }}
-//
-//        val deviceIds = devicesToBeReconfigured.map { it.id!! }
-//        updateDevicePort.updateStatusByIds(deviceIds, DeviceStatus.WAITING_CONFIGURATION)
+    override suspend fun updateDeviceActionsAndClass(deviceId: String, deviceClass: String, actions: Set<DeviceAction>) {
+        val device = getDevicePort.getDevice(deviceId)
+            ?: throw DeviceNotFoundException(deviceId)
+        updateDevicePort.updateActionsAndClass(deviceId, deviceClass, actions)
     }
+
 }

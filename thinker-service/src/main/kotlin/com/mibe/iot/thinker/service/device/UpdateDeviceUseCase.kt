@@ -1,6 +1,7 @@
 package com.mibe.iot.thinker.service.device
 
 import com.mibe.iot.thinker.domain.device.Device
+import com.mibe.iot.thinker.domain.device.DeviceAction
 import com.mibe.iot.thinker.domain.device.DeviceUpdates
 
 /**
@@ -15,5 +16,5 @@ interface UpdateDeviceUseCase {
      */
     suspend fun updateDevice(deviceUpdates: DeviceUpdates): Device
 
-    suspend fun resetAllUnconfiguredWithHashNot(configurationHash: Int)
+    suspend fun updateDeviceActionsAndClass(deviceId: String, deviceClass: String, actions: Set<DeviceAction>)
 }

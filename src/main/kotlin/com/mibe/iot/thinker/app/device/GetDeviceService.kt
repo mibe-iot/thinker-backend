@@ -6,7 +6,7 @@ import com.mibe.iot.thinker.service.device.exception.DeviceNotFoundException
 import com.mibe.iot.thinker.app.discovery.domain.validation.validateAddress
 import com.mibe.iot.thinker.domain.device.Device
 import com.mibe.iot.thinker.domain.device.DeviceAction
-import com.mibe.iot.thinker.domain.device.DeviceReport
+import com.mibe.iot.thinker.domain.device.DeviceStatus
 import com.mibe.iot.thinker.domain.device.DeviceWithReport
 import com.mibe.iot.thinker.service.device.port.GetDeviceReportPort
 import com.mibe.iot.thinker.validation.application.throwOnInvalid
@@ -60,12 +60,12 @@ class GetDeviceService
      *
      * @return [Flow] of all persisted [Device]s
      */
-    override fun getAllDevices(): Flow<Device> {
-        return getDevicePort.getAllDevices()
+    override suspend fun getAllActiveDevices(): Flow<Device> {
+        return getDevicePort.getAllDevicesByStatusIn(setOf(DeviceStatus.CONFIGURED, DeviceStatus.WAITING_CONFIGURATION))
     }
 
     override suspend fun getAllDevicesWithLatestReports(): Flow<DeviceWithReport> {
-        return getAllDevices().map { device ->
+        return getAllActiveDevices().map { device ->
             DeviceWithReport(device, getDeviceReportPort.getLatestDeviceReport(device.id!!))
         }
     }

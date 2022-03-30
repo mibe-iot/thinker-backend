@@ -30,7 +30,7 @@ interface GetDeviceUseCase {
      *
      * @return [Flow] of [Device]s
      */
-    fun getAllDevices(): Flow<Device>
+    suspend fun getAllActiveDevices(): Flow<Device>
 
     suspend fun getAllDevicesWithLatestReports(): Flow<DeviceWithReport>
 }

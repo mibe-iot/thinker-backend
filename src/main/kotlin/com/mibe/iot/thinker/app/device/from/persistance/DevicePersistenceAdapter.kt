@@ -53,6 +53,15 @@ class DevicePersistenceAdapter
         reactiveMongoTemplate.updateMulti(query, update, DeviceEntity::class.java)
     }
 
+    override suspend fun updateActionsAndClass(deviceId: String, deviceClass: String, actions: Set<DeviceAction>) {
+        val query = Query.query(Criteria.where("id").`is`(deviceId))
+        val update = Update().apply {
+            set("actions", HashSet(actions))
+            set("deviceClass", deviceClass)
+        }
+        reactiveMongoTemplate.updateFirst(query, update, DeviceEntity::class.java)
+    }
+
     /**
      * Gets all devices from repository.
      *
@@ -76,5 +85,9 @@ class DevicePersistenceAdapter
 
     override suspend fun getAllWithDifferentHash(configurationHash: Int): Flow<Device> {
         return deviceRepository.findAllByConfigurationHashNot(configurationHash).asFlow().map { it.toDevice() }
+    }
+
+    override suspend fun getAllDevicesByStatusIn(allowedStatuses: Set<DeviceStatus>): Flow<Device> {
+        return deviceRepository.findAllByStatusIn(allowedStatuses).asFlow().map(DeviceEntity::toDevice)
     }
 }

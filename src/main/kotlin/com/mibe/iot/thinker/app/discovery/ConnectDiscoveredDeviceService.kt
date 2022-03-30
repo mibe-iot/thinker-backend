@@ -1,5 +1,6 @@
 package com.mibe.iot.thinker.app.discovery
 
+import com.mibe.iot.thinker.app.discovery.exception.DeviceIsAlreadyInConnections
 import com.mibe.iot.thinker.app.discovery.exception.DiscoveredDeviceNotFoundException
 import com.mibe.iot.thinker.domain.device.Device
 import com.mibe.iot.thinker.domain.device.DeviceStatus
@@ -11,7 +12,6 @@ import com.mibe.iot.thinker.service.discovery.port.GetDiscoveredDevicePort
 import com.mibe.iot.thinker.service.discovery.port.GetSavedDevicePort
 import com.mibe.iot.thinker.service.discovery.port.SaveDiscoveredDevicePort
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
@@ -32,6 +32,7 @@ class ConnectDiscoveredDeviceService
     override suspend fun connectDeviceByAddress(address: String) {
         val discoveredDevice = getDiscoveredDevicePort.getConnectedDeviceByAddress(address)
             ?: throw DiscoveredDeviceNotFoundException(address)
+        if (getDiscoveredDevicePort.isDeviceWaitingConfiguration(address)) throw DeviceIsAlreadyInConnections()
 
         val device = if (getSavedDevicePort.existsByAddress(address)) {
             val savedDevice = getSavedDevicePort.getDeviceByAddress(address)
@@ -69,7 +70,7 @@ class ConnectDiscoveredDeviceService
         runBlocking {
             saveDiscoveredDevicePort.updateDeviceStatus(
                 device.id!!,
-                DeviceStatus.WIFI_SHARED,
+                DeviceStatus.CONFIGURED,
                 configurationHash
             )
             connectDiscoveredDevicePort.removeConnectableDevice(device)
@@ -81,7 +82,7 @@ class ConnectDiscoveredDeviceService
         runBlocking {
             saveDiscoveredDevicePort.updateDeviceStatus(
                 device.id!!,
-                DeviceStatus.WIFI_SHARING_FAILED
+                DeviceStatus.FAILED_TO_CONFIGURE
             )
             connectDiscoveredDevicePort.removeConnectableDevice(device)
         }
