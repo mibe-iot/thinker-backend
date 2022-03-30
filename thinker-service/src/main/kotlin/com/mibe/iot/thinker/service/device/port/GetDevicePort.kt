@@ -2,6 +2,7 @@ package com.mibe.iot.thinker.service.device.port
 
 import com.mibe.iot.thinker.domain.device.Device
 import com.mibe.iot.thinker.domain.device.DeviceAction
+import com.mibe.iot.thinker.domain.device.DeviceStatus
 import kotlinx.coroutines.flow.Flow
 import reactor.core.publisher.Mono
 
@@ -16,4 +17,5 @@ interface GetDevicePort {
     suspend fun existsWithId(id: String): Boolean
     fun existsWithName(name: String): Mono<Boolean>
     suspend fun getAllWithDifferentHash(configurationHash: Int): Flow<Device>
+    suspend fun getAllDevicesByStatusIn(allowedStatuses: Set<DeviceStatus>): Flow<Device>
 }

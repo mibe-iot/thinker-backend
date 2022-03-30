@@ -24,7 +24,6 @@ import java.time.LocalDateTime
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.annotation.PostConstruct
 
-
 @Component
 @Profile(PROFILE_PROD, PROFILE_DEFAULT)
 class DeviceDiscoveryHandler
@@ -98,23 +97,15 @@ class DeviceDiscoveryHandler
         }
     }
 
-    override fun isDiscovering(): Boolean {
-        return isActive.get()
-    }
+    override fun isDiscovering() = isActive.get()
 
-    override suspend fun getDiscoveredDevices(): Flow<DiscoveredDevice> {
-        return discoveryDataHolder.discoveredDevices.values.asFlow()
-    }
+    override suspend fun getDiscoveredDevices() = discoveryDataHolder.discoveredDevices.values.asFlow()
 
-    override suspend fun getConnectedDeviceByAddress(address: String): DiscoveredDevice? {
-        return discoveryDataHolder.discoveredDevices[address]
-    }
+    override suspend fun getConnectedDeviceByAddress(address: String) = discoveryDataHolder.discoveredDevices[address]
 
-    override fun removeConnectableDevice(device: Device) {
-        discoveryDataHolder.removeConnectableDevice(device)
-    }
+    override suspend fun isDeviceWaitingConfiguration(address: String) = discoveryDataHolder.shouldBeConfigured(address)
 
-    override fun getDiscoveryStartedTime(): LocalDateTime {
-        return discoveryStartTime
-    }
+    override fun removeConnectableDevice(device: Device) = discoveryDataHolder.removeConnectableDevice(device)
+
+    override fun getDiscoveryStartedTime() = discoveryStartTime
 }

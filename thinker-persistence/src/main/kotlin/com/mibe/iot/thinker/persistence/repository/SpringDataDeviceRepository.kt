@@ -15,4 +15,5 @@ interface SpringDataDeviceRepository : ReactiveMongoRepository<DeviceEntity, Str
     fun findByAddress(address: String): Mono<DeviceEntity>
     fun findByStatus(status: DeviceStatus): Flux<DeviceEntity>
     fun findAllByConfigurationHashNot(exceptThisHash: Int): Flux<DeviceEntity>
+    fun findAllByStatusIn(allowedStatuses: Set<DeviceStatus>): Flux<DeviceEntity>
 }

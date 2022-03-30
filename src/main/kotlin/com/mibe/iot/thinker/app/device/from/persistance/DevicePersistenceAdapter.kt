@@ -86,4 +86,8 @@ class DevicePersistenceAdapter
     override suspend fun getAllWithDifferentHash(configurationHash: Int): Flow<Device> {
         return deviceRepository.findAllByConfigurationHashNot(configurationHash).asFlow().map { it.toDevice() }
     }
+
+    override suspend fun getAllDevicesByStatusIn(allowedStatuses: Set<DeviceStatus>): Flow<Device> {
+        return deviceRepository.findAllByStatusIn(allowedStatuses).asFlow().map(DeviceEntity::toDevice)
+    }
 }
