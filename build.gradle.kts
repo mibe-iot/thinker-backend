@@ -22,6 +22,7 @@ val webmvcVersion = "5.3.9"
 val logbackVersion = "1.2.10"
 val blessedVersion = "0.61.2"
 val openApiVersion = "1.4.3"
+val jacksonVersion = "2.13.2"
 
 allprojects {
     group = "com.mibe.iot"
@@ -69,7 +70,8 @@ dependencies {
     implementation("io.github.reactivecircus.cache4k:cache4k:0.3.0")
 
     // JSON
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
+    runtimeOnly("com.fasterxml.jackson.module:jackson-modules-java8:$jacksonVersion")
 
     // Logging
     implementation("io.github.microutils:kotlin-logging:2.0.11")
