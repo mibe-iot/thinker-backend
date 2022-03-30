@@ -2,6 +2,7 @@ package com.mibe.iot.thinker.app.discovery.to.web
 
 import com.mibe.iot.thinker.app.discovery.domain.validation.validateAddress
 import com.mibe.iot.thinker.app.validation.domain.ValidationException
+import com.mibe.iot.thinker.app.web.model.DiscoveryStatusModel
 import com.mibe.iot.thinker.domain.discovery.DiscoveredDevice
 import com.mibe.iot.thinker.service.discovery.ConnectDiscoveredDeviceUseCase
 import com.mibe.iot.thinker.service.discovery.ControlDeviceDiscoveryUseCase
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/discovery")
 class DeviceDiscoveryController
 @Autowired constructor(
-    private val controlDeviceDiscoveryUseCase: ControlDeviceDiscoveryUseCase,
+    private val controlDiscoveryUseCase: ControlDeviceDiscoveryUseCase,
     private val connectDiscoveredDeviceUseCase: ConnectDiscoveredDeviceUseCase,
     private val getDeviceDiscoveryUseCase: GetDiscoveredDeviceUseCase
 ) {
@@ -29,18 +30,31 @@ class DeviceDiscoveryController
         return getDeviceDiscoveryUseCase.getDiscoveredDevices()
     }
 
-    @GetMapping("/start", produces = [MediaType.APPLICATION_JSON_VALUE])
+    @GetMapping("/status", produces = [MediaType.APPLICATION_JSON_VALUE])
     @ResponseStatus(HttpStatus.OK)
-    fun startDiscovery(): ResponseEntity<String> {
-        controlDeviceDiscoveryUseCase.startDiscovery()
-        return ResponseEntity.ok("Discovery started")
+    fun getDiscoveryStatus(): DiscoveryStatusModel {
+        return DiscoveryStatusModel(controlDiscoveryUseCase.isDiscovering())
     }
 
-    @GetMapping("/stop")
+    @PostMapping("/start", produces = [MediaType.APPLICATION_JSON_VALUE])
     @ResponseStatus(HttpStatus.OK)
-    fun stopDiscovery(): String {
-        controlDeviceDiscoveryUseCase.stopDiscovery()
-        return "Discovery stopped"
+    fun startDiscovery(): DiscoveryStatusModel {
+        controlDiscoveryUseCase.startDiscovery()
+        return DiscoveryStatusModel(controlDiscoveryUseCase.isDiscovering())
+    }
+
+    @PostMapping("/stop", produces = [MediaType.APPLICATION_JSON_VALUE])
+    @ResponseStatus(HttpStatus.OK)
+    fun stopDiscovery(): DiscoveryStatusModel {
+        controlDiscoveryUseCase.stopDiscovery()
+        return DiscoveryStatusModel(controlDiscoveryUseCase.isDiscovering())
+    }
+
+    @PostMapping("/restart", produces = [MediaType.APPLICATION_JSON_VALUE])
+    @ResponseStatus(HttpStatus.OK)
+    fun restartDiscovery(): DiscoveryStatusModel {
+        controlDiscoveryUseCase.restartDiscovery()
+        return DiscoveryStatusModel(controlDiscoveryUseCase.isDiscovering())
     }
 
     /**
