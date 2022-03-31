@@ -14,6 +14,7 @@ import java.time.LocalDateTime
 data class DeviceReport(
     var id: String?,
     val deviceId: String,
+    val reportType: String,
     val reportData: Map<String, String>,
-    val dateTimeCreated: LocalDateTime
+    var dateTimeCreated: LocalDateTime? = null
 )

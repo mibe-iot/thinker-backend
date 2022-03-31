@@ -8,7 +8,9 @@ data class DeviceUpdates(
     val name: String? = null,
     val address: String? = null,
     val description: String? = null,
-    val actions: Set<DeviceAction>? = null
+    val actions: Set<DeviceAction>? = null,
+    val deviceClass: String? = null,
+    val reportTypes: Set<String>? = null
 )
 
 fun Device.receiveUpdates(deviceUpdates: DeviceUpdates) = Device(
@@ -16,5 +18,7 @@ fun Device.receiveUpdates(deviceUpdates: DeviceUpdates) = Device(
     name = deviceUpdates.name ?: name,
     address = deviceUpdates.address ?: address,
     description = deviceUpdates.description ?: description,
-    actions = deviceUpdates.actions ?: actions
+    actions = deviceUpdates.actions ?: actions,
+    deviceClass = deviceUpdates.deviceClass ?: deviceClass,
+    reportTypes = deviceUpdates.reportTypes ?: reportTypes
 )

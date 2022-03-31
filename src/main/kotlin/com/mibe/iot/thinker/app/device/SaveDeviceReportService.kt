@@ -17,15 +17,10 @@ class SaveDeviceReportService
     private val saveDeviceReportPort: SaveDeviceReportPort
 ) : SaveDeviceReportUseCase {
 
-    override suspend fun saveReport(deviceId: String, reportData: Map<String, String>): DeviceReport {
-        if (getDevicePort.existsWithId(deviceId).not()) { throw DeviceNotFoundException(deviceId) }
-        if (reportData.isEmpty()) { throw ReportCreationException("Report's data is empty") }
-        val deviceReport = DeviceReport(
-            id = null,
-            deviceId = deviceId,
-            reportData = reportData,
-            dateTimeCreated = LocalDateTime.now()
-        )
-        return saveDeviceReportPort.saveReport(deviceReport)
+    override suspend fun saveReport(report: DeviceReport): DeviceReport {
+        if (getDevicePort.existsWithId(report.deviceId).not()) { throw DeviceNotFoundException(report.deviceId) }
+        if (report.reportData.isEmpty()) { throw ReportCreationException("Report's data is empty") }
+        report.dateTimeCreated = LocalDateTime.now()
+        return saveDeviceReportPort.saveReport(report)
     }
 }

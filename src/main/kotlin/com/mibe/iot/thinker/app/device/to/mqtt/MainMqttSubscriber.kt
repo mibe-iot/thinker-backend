@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.hivemq.client.mqtt.datatypes.MqttQos.AT_LEAST_ONCE
 import com.hivemq.client.mqtt.datatypes.MqttTopic
 import com.mibe.iot.thinker.domain.device.DeviceAction
+import com.mibe.iot.thinker.domain.device.DeviceReport
+import com.mibe.iot.thinker.domain.device.DeviceUpdates
 import com.mibe.iot.thinker.service.device.SaveDeviceReportUseCase
 import com.mibe.iot.thinker.service.device.UpdateDeviceUseCase
 import de.smartsquare.starter.mqtt.MqttSubscribe
@@ -28,11 +30,7 @@ class MainMqttSubscriber
         log.info { "Got actions from topic $topic" }
         log.info { "Actions: $actions" }
         runBlocking {
-            updateDeviceUseCase.updateDeviceActionsAndClass(
-                deviceActionsData.deviceId,
-                deviceActionsData.deviceClass,
-                actions
-            )
+            updateDeviceUseCase.updateDeviceAdditionalData(deviceActionsData.toDeviceUpdates())
         }
     }
 
@@ -40,8 +38,21 @@ class MainMqttSubscriber
     fun handleReportsSharing(reportModelJson: String, topic: MqttTopic) {
         val reportModel = jsonMapper.readValue(reportModelJson, DeviceReportModel::class.java)
         log.info { "Got report from topic $topic" }
-        runBlocking { saveDeviceReportUseCase.saveReport(topic.levels.last(), reportModel.reportData) }
+        val deviceReport = DeviceReport(
+            id = null,
+            deviceId = topic.levels.last(),
+            reportType = reportModel.reportType,
+            reportData = reportModel.reportData
+        )
+        log.info { "report: $deviceReport" }
+        runBlocking { saveDeviceReportUseCase.saveReport(deviceReport) }
     }
 
+    fun DeviceActionsDataModel.toDeviceUpdates() = DeviceUpdates(
+        id = deviceId,
+        deviceClass = deviceClass,
+        actions = actions.map { DeviceAction(it.name) }.toSet(),
+        reportTypes = HashSet(reportTypes),
+    )
 
 }

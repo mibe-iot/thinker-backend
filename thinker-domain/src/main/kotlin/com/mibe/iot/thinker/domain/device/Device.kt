@@ -12,7 +12,8 @@ data class Device(
     var connectType: DeviceConnectType = DeviceConnectType.MANUAL,
     var configurationHash: Int? = null,
     var actions: Set<DeviceAction> = emptySet(),
-    var deviceClass: String = UNCLASSIFIED
+    var deviceClass: String = UNCLASSIFIED,
+    val reportTypes: Set<String> = emptySet()
 ) : Comparable<Device> {
     override fun compareTo(other: Device): Int {
         return other.id?.let { id?.compareTo(it) } ?: 0

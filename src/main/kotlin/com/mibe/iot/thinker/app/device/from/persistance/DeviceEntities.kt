@@ -28,7 +28,8 @@ fun Device.toDeviceEntity() = DeviceEntity(
     status = status,
     connectType = connectType,
     configurationHash = configurationHash,
-    deviceClass = deviceClass
+    deviceClass = deviceClass,
+    reportTypes = reportTypes
 )
 
 fun DeviceEntity.toDevice() = Device(
@@ -40,13 +41,15 @@ fun DeviceEntity.toDevice() = Device(
     status = status,
     connectType = connectType,
     configurationHash = configurationHash,
-    deviceClass = deviceClass
+    deviceClass = deviceClass,
+    reportTypes = reportTypes
 )
 
 fun DeviceReport.toDeviceReportEntity() = DeviceReportEntity(
     id = id,
     deviceId = deviceId,
     reportData = HashMap(reportData),
+    reportType = reportType,
     dateTimeCreated = dateTimeCreated
 )
 
@@ -54,5 +57,6 @@ fun DeviceReportEntity.toDeviceReport() = DeviceReport(
     id = id,
     deviceId = deviceId,
     reportData = HashMap(reportData),
+    reportType = reportType,
     dateTimeCreated = dateTimeCreated
 )

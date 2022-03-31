@@ -3,6 +3,7 @@ package com.mibe.iot.thinker.app.device.from.persistance
 import com.mibe.iot.thinker.domain.device.Device
 import com.mibe.iot.thinker.domain.device.DeviceAction
 import com.mibe.iot.thinker.domain.device.DeviceStatus
+import com.mibe.iot.thinker.domain.device.DeviceUpdates
 import com.mibe.iot.thinker.persistence.entity.DeviceEntity
 import com.mibe.iot.thinker.persistence.repository.SpringDataDeviceRepository
 import com.mibe.iot.thinker.service.device.port.DeleteDevicePort
@@ -53,13 +54,15 @@ class DevicePersistenceAdapter
         reactiveMongoTemplate.updateMulti(query, update, DeviceEntity::class.java)
     }
 
-    override suspend fun updateActionsAndClass(deviceId: String, deviceClass: String, actions: Set<DeviceAction>) {
-        val query = Query.query(Criteria.where("id").`is`(deviceId))
-        val update = Update().apply {
-            set("actions", HashSet(actions))
-            set("deviceClass", deviceClass)
+    override suspend fun updateAdditionalData( deviceAdditionalData: DeviceUpdates) {
+        deviceAdditionalData.run {
+            val query = Query.query(Criteria.where("id").`is`(id))
+            val update = Update().apply {
+                set("actions", HashSet(actions ?: emptySet()))
+                set("deviceClass", deviceClass)
+            }
+            reactiveMongoTemplate.updateFirst(query, update, DeviceEntity::class.java)
         }
-        reactiveMongoTemplate.updateFirst(query, update, DeviceEntity::class.java)
     }
 
     /**

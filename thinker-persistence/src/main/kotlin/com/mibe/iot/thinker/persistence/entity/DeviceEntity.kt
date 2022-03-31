@@ -19,5 +19,6 @@ class DeviceEntity(
     var connectType: DeviceConnectType = DeviceConnectType.MANUAL,
     var configurationHash: Int? = null,
     var actions: Set<DeviceActionEntity> = emptySet(),
-    var deviceClass: String = UNCLASSIFIED
+    var deviceClass: String = UNCLASSIFIED,
+    var reportTypes: Set<String> = emptySet()
 )

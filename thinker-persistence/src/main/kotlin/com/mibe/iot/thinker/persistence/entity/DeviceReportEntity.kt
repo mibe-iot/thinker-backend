@@ -10,5 +10,6 @@ class DeviceReportEntity(
     var id: String?,
     val deviceId: String,
     val reportData: Map<String, String>,
-    val dateTimeCreated: LocalDateTime
+    val reportType: String,
+    val dateTimeCreated: LocalDateTime?
 )

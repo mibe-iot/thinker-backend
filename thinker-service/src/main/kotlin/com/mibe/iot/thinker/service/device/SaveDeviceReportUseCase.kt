@@ -7,5 +7,5 @@ import com.mibe.iot.thinker.domain.device.DeviceReport
  */
 interface SaveDeviceReportUseCase {
 
-    suspend fun saveReport(deviceId: String, reportData: Map<String, String>): DeviceReport
+    suspend fun saveReport(report: DeviceReport): DeviceReport
 }

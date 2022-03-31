@@ -30,10 +30,10 @@ class UpdateDeviceService
         return updateDevicePort.updateDevice(updatedDevice)
     }
 
-    override suspend fun updateDeviceActionsAndClass(deviceId: String, deviceClass: String, actions: Set<DeviceAction>) {
-        val device = getDevicePort.getDevice(deviceId)
-            ?: throw DeviceNotFoundException(deviceId)
-        updateDevicePort.updateActionsAndClass(deviceId, deviceClass, actions)
+    override suspend fun updateDeviceAdditionalData(deviceAdditionalData: DeviceUpdates) {
+        val device = getDevicePort.getDevice(deviceAdditionalData.id)
+            ?: throw DeviceNotFoundException(deviceAdditionalData.id)
+        updateDevicePort.updateAdditionalData(deviceAdditionalData)
     }
 
 }
