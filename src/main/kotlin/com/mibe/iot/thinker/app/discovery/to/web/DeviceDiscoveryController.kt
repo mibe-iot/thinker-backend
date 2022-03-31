@@ -29,23 +29,20 @@ class DeviceDiscoveryController
         return getDeviceDiscoveryUseCase.getDiscoveredDevices().toList()
     }
 
+    @PostMapping("", produces = [MediaType.APPLICATION_JSON_VALUE])
+    @ResponseStatus(HttpStatus.OK)
+    fun setDiscoveryActive(@RequestParam(name = "setDiscoveryActive") isActivateDiscovery: Boolean): DiscoveryStatusModel {
+        if (isActivateDiscovery) {
+            controlDiscoveryUseCase.startDiscovery()
+        } else {
+            controlDiscoveryUseCase.stopDiscovery()
+        }
+        return DiscoveryStatusModel(controlDiscoveryUseCase.isDiscovering())
+    }
+
     @GetMapping("/status", produces = [MediaType.APPLICATION_JSON_VALUE])
     @ResponseStatus(HttpStatus.OK)
     fun getDiscoveryStatus(): DiscoveryStatusModel {
-        return DiscoveryStatusModel(controlDiscoveryUseCase.isDiscovering())
-    }
-
-    @PostMapping("/start", produces = [MediaType.APPLICATION_JSON_VALUE])
-    @ResponseStatus(HttpStatus.OK)
-    fun startDiscovery(): DiscoveryStatusModel {
-        controlDiscoveryUseCase.startDiscovery()
-        return DiscoveryStatusModel(controlDiscoveryUseCase.isDiscovering())
-    }
-
-    @PostMapping("/stop", produces = [MediaType.APPLICATION_JSON_VALUE])
-    @ResponseStatus(HttpStatus.OK)
-    fun stopDiscovery(): DiscoveryStatusModel {
-        controlDiscoveryUseCase.stopDiscovery()
         return DiscoveryStatusModel(controlDiscoveryUseCase.isDiscovering())
     }
 
