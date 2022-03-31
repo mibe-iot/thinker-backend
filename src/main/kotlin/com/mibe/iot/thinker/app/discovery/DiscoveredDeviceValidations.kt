@@ -1,4 +1,4 @@
-package com.mibe.iot.thinker.app.discovery.domain.validation
+package com.mibe.iot.thinker.app.discovery
 
 import com.mibe.iot.thinker.domain.MAC_ADDRESS_PATTERN
 import io.konform.validation.Validation

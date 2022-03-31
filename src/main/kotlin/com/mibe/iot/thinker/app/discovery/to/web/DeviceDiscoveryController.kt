@@ -1,6 +1,6 @@
 package com.mibe.iot.thinker.app.discovery.to.web
 
-import com.mibe.iot.thinker.app.discovery.domain.validation.validateAddress
+import com.mibe.iot.thinker.app.discovery.validateAddress
 import com.mibe.iot.thinker.app.validation.domain.ValidationException
 import com.mibe.iot.thinker.app.web.model.DiscoveryStatusModel
 import com.mibe.iot.thinker.domain.discovery.DiscoveredDevice
@@ -8,11 +8,10 @@ import com.mibe.iot.thinker.service.discovery.ConnectDiscoveredDeviceUseCase
 import com.mibe.iot.thinker.service.discovery.ControlDeviceDiscoveryUseCase
 import com.mibe.iot.thinker.service.discovery.GetDiscoveredDeviceUseCase
 import com.mibe.iot.thinker.validation.application.throwOnInvalid
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.toList
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
-import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -24,10 +23,10 @@ class DeviceDiscoveryController
     private val getDeviceDiscoveryUseCase: GetDiscoveredDeviceUseCase
 ) {
 
-    @GetMapping("", produces = [MediaType.APPLICATION_NDJSON_VALUE])
+    @GetMapping("", produces = [MediaType.APPLICATION_JSON_VALUE])
     @ResponseStatus(HttpStatus.OK)
-    suspend fun getDevices(): Flow<DiscoveredDevice> {
-        return getDeviceDiscoveryUseCase.getDiscoveredDevices()
+    suspend fun getDevices(): List<DiscoveredDevice> {
+        return getDeviceDiscoveryUseCase.getDiscoveredDevices().toList()
     }
 
     @GetMapping("/status", produces = [MediaType.APPLICATION_JSON_VALUE])
