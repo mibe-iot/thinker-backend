@@ -32,8 +32,8 @@ class BlePeripheralCallback
             BluetoothGattCharacteristic.WriteType.WITHOUT_RESPONSE
         )
 
-        val name = discoveryDataHolder.discoveredDevices[peripheral.address]?.name!!
-        peripheral.writeCharacteristic(BIT_CHARACTERISTIC_NAME, name.toByteArray())
+        val id = discoveryDataHolder.connectableDevices.first { peripheral.address == it.address }.id!!
+        peripheral.writeCharacteristic(BIT_CHARACTERISTIC_NAME, id.toByteArray())
         peripheral.writeCharacteristic(BIT_CHARACTERISTIC_SSID, connectionData.ssid)
         peripheral.writeCharacteristic(BIT_CHARACTERISTIC_PASSWORD, connectionData.password)
     }

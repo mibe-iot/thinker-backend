@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.index.Indexed
 import org.springframework.data.mongodb.core.mapping.Document
 
 @Document("devices")
-class DeviceEntity(
+data class DeviceEntity(
     @Id
     var id: String? = null,
     @Indexed(unique = true)

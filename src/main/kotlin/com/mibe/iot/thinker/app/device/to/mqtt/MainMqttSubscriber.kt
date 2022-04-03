@@ -29,6 +29,7 @@ class MainMqttSubscriber
         val actions = deviceActionsData.actions.map { DeviceAction(it.name) }.toSet()
         log.info { "Got actions from topic $topic" }
         log.info { "Actions: $actions" }
+        log.info { "Device actions data: $deviceActionsData" }
         runBlocking {
             updateDeviceUseCase.updateDeviceAdditionalData(deviceActionsData.toDeviceUpdates())
         }
@@ -37,14 +38,14 @@ class MainMqttSubscriber
     @MqttSubscribe(topic = "/mibe/reports/+", qos = AT_LEAST_ONCE)
     fun handleReportsSharing(reportModelJson: String, topic: MqttTopic) {
         val reportModel = jsonMapper.readValue(reportModelJson, DeviceReportModel::class.java)
-        log.info { "Got report from topic $topic" }
+        log.debug { "Got report from topic $topic" }
         val deviceReport = DeviceReport(
             id = null,
             deviceId = topic.levels.last(),
             reportType = reportModel.reportType,
             reportData = reportModel.reportData
         )
-        log.info { "report: $deviceReport" }
+        log.debug { "report: $deviceReport" }
         runBlocking { saveDeviceReportUseCase.saveReport(deviceReport) }
     }
 

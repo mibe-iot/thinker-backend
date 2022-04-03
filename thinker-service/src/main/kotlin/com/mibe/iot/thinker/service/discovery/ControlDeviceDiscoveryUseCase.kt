@@ -10,7 +10,7 @@ interface ControlDeviceDiscoveryUseCase {
     /**
      * Starts discovery process.
      */
-    fun startDiscovery()
+    suspend fun startDiscovery()
 
     suspend fun refreshDeviceConnectionData()
 
@@ -19,5 +19,5 @@ interface ControlDeviceDiscoveryUseCase {
      */
     fun stopDiscovery()
 
-    fun restartDiscovery()
+    suspend fun restartDiscovery()
 }

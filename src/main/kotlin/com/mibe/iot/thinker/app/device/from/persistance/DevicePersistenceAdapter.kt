@@ -14,8 +14,12 @@ import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.reactive.asFlow
+import kotlinx.coroutines.reactive.awaitFirstOrNull
+import kotlinx.coroutines.reactive.awaitSingle
+import kotlinx.coroutines.reactive.awaitSingleOrNull
 import kotlinx.coroutines.reactor.awaitSingle
 import kotlinx.coroutines.reactor.awaitSingleOrNull
+import mu.KotlinLogging
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate
 import org.springframework.data.mongodb.core.query.Criteria
@@ -33,6 +37,7 @@ class DevicePersistenceAdapter
     private val deviceRepository: SpringDataDeviceRepository,
     private val reactiveMongoTemplate: ReactiveMongoTemplate
 ) : UpdateDevicePort, GetDevicePort, DeleteDevicePort {
+    private val log = KotlinLogging.logger {}
 
     override suspend fun getDevice(id: String): Device? = deviceRepository.findById(id).awaitSingleOrNull()?.toDevice()
 
@@ -54,15 +59,15 @@ class DevicePersistenceAdapter
         reactiveMongoTemplate.updateMulti(query, update, DeviceEntity::class.java)
     }
 
-    override suspend fun updateAdditionalData( deviceAdditionalData: DeviceUpdates) {
-        deviceAdditionalData.run {
-            val query = Query.query(Criteria.where("id").`is`(id))
-            val update = Update().apply {
-                set("actions", HashSet(actions ?: emptySet()))
-                set("deviceClass", deviceClass)
-            }
-            reactiveMongoTemplate.updateFirst(query, update, DeviceEntity::class.java)
+    override suspend fun updateAdditionalData(deviceAdditionalData: DeviceUpdates) {
+        log.debug { "deviceAdditionalData: $deviceAdditionalData" }
+        val query = Query.query(Criteria.where("id").`in`(listOf(deviceAdditionalData.id)))
+        val update = Update().apply {
+            set("actions", HashSet(deviceAdditionalData.actions?.map { it.toDeviceActionEntity() }?.toSet() ?: emptySet()))
+            set("deviceClass", deviceAdditionalData.deviceClass)
+            set("reportTypes", deviceAdditionalData.reportTypes)
         }
+        reactiveMongoTemplate.updateFirst(query, update, DeviceEntity::class.java).awaitSingleOrNull()
     }
 
     /**

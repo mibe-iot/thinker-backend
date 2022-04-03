@@ -35,13 +35,11 @@ class ControlDeviceDiscoveryService
         return controlDeviceDiscoveryPort.isDiscovering()
     }
 
-    override fun startDiscovery() {
+    override suspend fun startDiscovery() {
         if (!controlDeviceDiscoveryPort.isDiscovering()) {
             log.debug("Starting discovery")
-            discoveryScope.launch {
-                refreshDeviceConnectionData()
-                controlDeviceDiscoveryPort.startDiscovery()
-            }
+            refreshDeviceConnectionData()
+            controlDeviceDiscoveryPort.startDiscovery()
             log.info { "Discovery started" }
         } else {
             log.info("Discovery is already launched")
@@ -57,7 +55,7 @@ class ControlDeviceDiscoveryService
     }
 
     override fun stopDiscovery() {
-        if (controlDeviceDiscoveryPort.isDiscovering())  {
+        if (controlDeviceDiscoveryPort.isDiscovering()) {
             log.debug { "Stopping discovery" }
             controlDeviceDiscoveryPort.stopDiscovery()
             log.info { "Discovery stopped" }
@@ -67,7 +65,7 @@ class ControlDeviceDiscoveryService
 
     }
 
-    override fun restartDiscovery() {
+    override suspend fun restartDiscovery() {
         stopDiscovery()
         startDiscovery()
     }
