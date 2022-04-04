@@ -8,6 +8,7 @@ import com.mibe.iot.thinker.domain.device.DeviceReport
 import com.mibe.iot.thinker.domain.device.DeviceUpdates
 import com.mibe.iot.thinker.service.device.SaveDeviceReportUseCase
 import com.mibe.iot.thinker.service.device.UpdateDeviceUseCase
+import com.mibe.iot.thinker.service.device.exception.DeviceNotFoundException
 import de.smartsquare.starter.mqtt.MqttSubscribe
 import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
@@ -31,7 +32,11 @@ class MainMqttSubscriber
         log.info { "Actions: $actions" }
         log.info { "Device actions data: $deviceActionsData" }
         runBlocking {
-            updateDeviceUseCase.updateDeviceAdditionalData(deviceActionsData.toDeviceUpdates())
+            try {
+                updateDeviceUseCase.updateDeviceAdditionalData(deviceActionsData.toDeviceUpdates())
+            } catch (e: DeviceNotFoundException) {
+                log.debug { "Got unknown device actions: $actions" }
+            }
         }
     }
 
@@ -46,7 +51,13 @@ class MainMqttSubscriber
             reportData = reportModel.reportData
         )
         log.debug { "report: $deviceReport" }
-        runBlocking { saveDeviceReportUseCase.saveReport(deviceReport) }
+        runBlocking {
+            try {
+                saveDeviceReportUseCase.saveReport(deviceReport)
+            } catch (e: DeviceNotFoundException) {
+                log.debug { "Got unknown device report: $deviceReport" }
+            }
+        }
     }
 
     fun DeviceActionsDataModel.toDeviceUpdates() = DeviceUpdates(

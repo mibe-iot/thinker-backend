@@ -13,7 +13,7 @@ interface UpdateDeviceUseCase {
      * @param deviceUpdates [DeviceUpdates]
      * @return updated [Device]
      */
-    suspend fun updateDevice(deviceUpdates: DeviceUpdates): Device
+    suspend fun updateDevicePartially(deviceId: String, deviceUpdates: DeviceUpdates)
 
     suspend fun updateDeviceAdditionalData(deviceAdditionalData: DeviceUpdates)
 }

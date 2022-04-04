@@ -4,7 +4,7 @@ import com.mibe.iot.thinker.domain.device.Device
 import com.mibe.iot.thinker.domain.device.DeviceAction
 
 data class DeviceUpdates(
-    val id: String,
+    val id: String? = null,
     val name: String? = null,
     val address: String? = null,
     val description: String? = null,

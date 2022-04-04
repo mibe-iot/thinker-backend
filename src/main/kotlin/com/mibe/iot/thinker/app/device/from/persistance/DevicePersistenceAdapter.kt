@@ -14,9 +14,6 @@ import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.reactive.asFlow
-import kotlinx.coroutines.reactive.awaitFirstOrNull
-import kotlinx.coroutines.reactive.awaitSingle
-import kotlinx.coroutines.reactive.awaitSingleOrNull
 import kotlinx.coroutines.reactor.awaitSingle
 import kotlinx.coroutines.reactor.awaitSingleOrNull
 import mu.KotlinLogging
@@ -53,6 +50,14 @@ class DevicePersistenceAdapter
         return deviceRepository.save(device.toDeviceEntity()).awaitSingle().toDevice()
     }
 
+    override suspend fun updateDevicePartially(deviceId: String, updateData: Map<*, *>) {
+        val query = Query.query(Criteria.where("id").`is`(deviceId))
+        val update = Update().apply {
+            updateData.forEach { set(it.key as String, it.value) }
+        }
+        reactiveMongoTemplate.updateFirst(query, update, DeviceEntity::class.java).awaitSingleOrNull()
+    }
+
     override suspend fun updateStatusByIds(deviceIds: Flow<String>, newStatus: DeviceStatus) {
         val query = Query.query(Criteria.where("id").`in`(deviceIds.toList()))
         val update = Update().apply { set("status", newStatus) }
@@ -61,9 +66,12 @@ class DevicePersistenceAdapter
 
     override suspend fun updateAdditionalData(deviceAdditionalData: DeviceUpdates) {
         log.debug { "deviceAdditionalData: $deviceAdditionalData" }
-        val query = Query.query(Criteria.where("id").`in`(listOf(deviceAdditionalData.id)))
+        val query = Query.query(Criteria.where("id").`is`(deviceAdditionalData.id))
         val update = Update().apply {
-            set("actions", HashSet(deviceAdditionalData.actions?.map { it.toDeviceActionEntity() }?.toSet() ?: emptySet()))
+            set(
+                "actions",
+                HashSet(deviceAdditionalData.actions?.map { it.toDeviceActionEntity() }?.toSet() ?: emptySet())
+            )
             set("deviceClass", deviceAdditionalData.deviceClass)
             set("reportTypes", deviceAdditionalData.reportTypes)
         }

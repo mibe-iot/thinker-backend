@@ -59,9 +59,9 @@ class DeviceController
     suspend fun updateDevice(
         @PathVariable(name = "id") deviceId: String,
         @RequestBody deviceDto: DeviceDto
-    ): Device? {
-        val updates = deviceDto.apply { id = deviceId }.toDeviceUpdates()
-        return updateDeviceUseCase.updateDevice(updates)
+    ) {
+        val updates = deviceDto.toDeviceUpdates()
+        updateDeviceUseCase.updateDevicePartially(deviceId, updates)
     }
 
     @PostMapping("/{id}/{actionName}")

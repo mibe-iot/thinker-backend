@@ -45,7 +45,7 @@ class DeviceDiscoveryHandler
     private fun initCentralManager() {
         val bleCentralCallback = object : BluetoothCentralManagerCallback() {
             override fun onDiscoveredPeripheral(peripheral: BluetoothPeripheral, scanResult: ScanResult) {
-                val isKnownDevice = peripheral.services.map{it.uuid}.any { allowedUUIDs.contains(it) }
+                val isKnownDevice = peripheral.device?.uuids?.any { allowedUUIDs.contains(it) } ?: false
                 val discoveredDevice =
                     DiscoveredDevice(
                         address = peripheral.address,
@@ -56,7 +56,8 @@ class DeviceDiscoveryHandler
                     )
 
                 log.trace {
-                    "Discovered device: address=${discoveredDevice.address} " + "name=${peripheral.name} uuids=${peripheral.device?.uuids}"
+                    "Discovered device: address=${discoveredDevice.address} " +
+                            "name=${peripheral.name} uuids=${peripheral.device?.uuids}"
                 }
 
                 discoveryDataHolder.run {

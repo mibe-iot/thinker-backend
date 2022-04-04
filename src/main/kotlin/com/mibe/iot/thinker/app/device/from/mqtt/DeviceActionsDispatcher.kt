@@ -1,7 +1,6 @@
 package com.mibe.iot.thinker.app.device.from.mqtt
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.json.JsonMapper
 import com.hivemq.client.mqtt.datatypes.MqttQos
 import com.mibe.iot.thinker.domain.device.DeviceAction
 import com.mibe.iot.thinker.service.device.port.ControlDeviceActionPort
@@ -14,8 +13,8 @@ class DeviceActionsDispatcher(
     private val jsonMapper: ObjectMapper
 ) : ControlDeviceActionPort {
 
-    override fun activateAction(deviceName: String, action: DeviceAction) {
-        mqttPublisher.publish("/mibe/${action}",
+    override fun activateAction(deviceId: String, action: DeviceAction) {
+        mqttPublisher.publish("/mibe/${deviceId}/${action}",
             MqttQos.AT_LEAST_ONCE,
             jsonMapper.writeValueAsString(ActionInvocation(action.name)))
     }

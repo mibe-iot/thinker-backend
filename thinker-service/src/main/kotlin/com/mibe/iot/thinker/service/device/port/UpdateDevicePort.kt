@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.Flow
  */
 interface UpdateDevicePort {
     suspend fun updateDevice(device: Device): Device
+    suspend fun updateDevicePartially(deviceId: String, updateData: Map<*, *>)
     suspend fun updateStatusByIds(deviceIds: Flow<String>, newStatus: DeviceStatus)
     suspend fun updateAdditionalData(deviceAdditionalData: DeviceUpdates)
 }
