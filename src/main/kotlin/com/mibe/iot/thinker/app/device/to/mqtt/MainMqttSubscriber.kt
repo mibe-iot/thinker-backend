@@ -3,6 +3,7 @@ package com.mibe.iot.thinker.app.device.to.mqtt
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.hivemq.client.mqtt.datatypes.MqttQos.AT_LEAST_ONCE
 import com.hivemq.client.mqtt.datatypes.MqttTopic
+import com.mibe.iot.thinker.app.validation.domain.ValidationException
 import com.mibe.iot.thinker.domain.device.DeviceAction
 import com.mibe.iot.thinker.domain.device.DeviceReport
 import com.mibe.iot.thinker.domain.device.DeviceUpdates
@@ -28,9 +29,7 @@ class MainMqttSubscriber
     fun handleActionsSharing(actionsJson: String, topic: MqttTopic) {
         val deviceActionsData = jsonMapper.readValue(actionsJson, DeviceActionsDataModel::class.java)
         val actions = deviceActionsData.actions.map { DeviceAction(it.name) }.toSet()
-        log.info { "Got actions from topic $topic" }
-        log.info { "Actions: $actions" }
-        log.info { "Device actions data: $deviceActionsData" }
+        log.info { "Got actions from topic $topic; Actions: $actions; Device actions data: $deviceActionsData" }
         runBlocking {
             try {
                 updateDeviceUseCase.updateDeviceAdditionalData(deviceActionsData.toDeviceUpdates())

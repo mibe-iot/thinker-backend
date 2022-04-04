@@ -56,8 +56,7 @@ class DefaultErrorHandlingAdvice
     @ExceptionHandler(ValidationException::class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     suspend fun handleValidationError(ex: ValidationException, locale: Locale): Flow<ValidationErrorModel> {
-        log.error { "Validation error: ${ex.errors}" }
-        return ex.errors.asFlow()
+        val errorData = ex.errors.asFlow()
             .map { error ->
                 val messageAndParameters = error.message.split("|||")
                 val messageKey = messageAndParameters[0]
@@ -73,6 +72,8 @@ class DefaultErrorHandlingAdvice
                     message
                 )
             }
+        log.error { "Validation error: ${ex.errors}; ErrorData: $errorData" }
+        return errorData
     }
 
     /**
@@ -85,7 +86,7 @@ class DefaultErrorHandlingAdvice
     @Order(Ordered.LOWEST_PRECEDENCE)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     fun defaultExceptionHandler(exception: Exception, locale: Locale): ErrorData {
-        log.error(exception) { "Unhandled exception" }
+        log.error(exception) { "Unhandled exception: ${exception.message}" }
         return ErrorData(
             description = messageService.getErrorMessage(UNHANDLED_EXCEPTION, locale),
             descriptionKey = UNHANDLED_EXCEPTION,
