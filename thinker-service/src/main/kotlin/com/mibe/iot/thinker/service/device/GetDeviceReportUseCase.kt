@@ -16,4 +16,6 @@ interface GetDeviceReportUseCase {
      * Gets several device reports.
      */
     suspend fun getDeviceReportsByDeviceId(deviceId: String, page: Int, pageSize: Int): Flow<DeviceReport>
+
+    suspend fun getReportsCountByDeviceId(deviceId: String): Long
 }

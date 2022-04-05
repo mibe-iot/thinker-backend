@@ -1,8 +1,8 @@
 package com.mibe.iot.thinker.app.device
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.mibe.iot.thinker.domain.device.DeviceUpdates
 import com.mibe.iot.thinker.app.validation.validateDeviceUpdates
+import com.mibe.iot.thinker.domain.device.DeviceUpdates
 import com.mibe.iot.thinker.service.device.UpdateDeviceUseCase
 import com.mibe.iot.thinker.service.device.exception.DeviceNotFoundException
 import com.mibe.iot.thinker.service.device.port.GetDevicePort
