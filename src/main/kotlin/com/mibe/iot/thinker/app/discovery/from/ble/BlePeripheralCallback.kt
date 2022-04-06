@@ -66,4 +66,8 @@ class BlePeripheralCallback
         }
     }
 
+    override fun onBondingFailed(peripheral: BluetoothPeripheral) {
+        log.error { "Error while trying to connect to peripheral. Removing this device from connectable list" }
+        discoveryDataHolder.deviceConfigurationCallbacks[peripheral.address]?.let { it.onConfigurationFailed() }
+    }
 }

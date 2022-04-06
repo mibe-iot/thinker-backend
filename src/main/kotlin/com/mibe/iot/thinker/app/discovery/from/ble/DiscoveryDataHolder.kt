@@ -37,7 +37,7 @@ class DiscoveryDataHolder(
         connectableDevices -= device
         deviceCharacteristicsConfigured -= device.address
         deviceConfigurationCallbacks -= device.address
-        log.debug { "Connectable devices: $connectableDevices" }
+        log.debug { "Connectable devices removed: $connectableDevices" }
     }
 
     data class CharacteristicsState(

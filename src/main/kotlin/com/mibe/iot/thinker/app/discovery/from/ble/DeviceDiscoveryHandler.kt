@@ -9,10 +9,7 @@ import com.mibe.iot.thinker.domain.discovery.DiscoveredDevice
 import com.mibe.iot.thinker.service.discovery.port.ConnectDiscoveredDevicePort
 import com.mibe.iot.thinker.service.discovery.port.ControlDeviceDiscoveryPort
 import com.mibe.iot.thinker.service.discovery.port.GetDiscoveredDevicePort
-import com.welie.blessed.BluetoothCentralManager
-import com.welie.blessed.BluetoothCentralManagerCallback
-import com.welie.blessed.BluetoothPeripheral
-import com.welie.blessed.ScanResult
+import com.welie.blessed.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import mu.KotlinLogging
@@ -25,7 +22,6 @@ import java.util.concurrent.atomic.AtomicBoolean
 import javax.annotation.PostConstruct
 
 @Component
-@Profile(PROFILE_PROD, PROFILE_DEFAULT)
 class DeviceDiscoveryHandler
 @Autowired constructor(
     private val discoveryDataHolder: DiscoveryDataHolder,
@@ -66,6 +62,12 @@ class DeviceDiscoveryHandler
                         central.connectPeripheral(peripheral, blePeripheralCallback)
                     }
                 }
+
+            }
+
+            override fun onConnectionFailed(peripheral: BluetoothPeripheral, status: BluetoothCommandStatus) {
+                log.warn{ "Device connection failed. Removing it from connectable list" }
+                discoveryDataHolder.deviceConfigurationCallbacks[peripheral.address]?.let { it.onConfigurationFailed() }
             }
         }
         central = BluetoothCentralManager(bleCentralCallback)
