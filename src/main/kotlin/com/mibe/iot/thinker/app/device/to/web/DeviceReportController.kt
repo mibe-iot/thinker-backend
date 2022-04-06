@@ -8,6 +8,7 @@ import com.mibe.iot.thinker.service.device.DeleteDeviceReportUseCase
 import com.mibe.iot.thinker.service.device.GetDeviceReportUseCase
 import com.mibe.iot.thinker.service.device.exception.DeviceReportNotFoundException
 import kotlinx.coroutines.flow.toList
+import mu.KotlinLogging
 import java.util.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -29,6 +30,7 @@ internal class DeviceReportController
     private val deleteDeviceReportUseCase: DeleteDeviceReportUseCase,
     private val messageService: MessageService
 ) {
+    private val log = KotlinLogging.logger {}
 
     @GetMapping("")
     @ResponseStatus(HttpStatus.OK)
@@ -38,7 +40,8 @@ internal class DeviceReportController
         @RequestParam(required = false, defaultValue = "10") pageSize: Int
     ): ReportsPageModel {
         val reportsCount = getDeviceReportUseCase.getReportsCountByDeviceId(deviceId)
-        if (page < 0 || page > ceil(reportsCount/pageSize.toDouble())) {
+        log.debug{"device id = $deviceId, reports count: $reportsCount"}
+        if (page < 1 || page > ceil(reportsCount/pageSize.toDouble())) {
             throw DeviceReportIllegalPageException(page, deviceId)
         }
         val reports = getDeviceReportUseCase.getDeviceReportsByDeviceId(deviceId, page, pageSize)

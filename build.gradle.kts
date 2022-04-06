@@ -26,7 +26,7 @@ val jacksonVersion = "2.13.2"
 
 allprojects {
     group = "com.mibe.iot"
-    version = "0.2"
+    version = "0.3"
 
     tasks.withType<KotlinCompile> {
         kotlinOptions {
