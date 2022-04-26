@@ -50,10 +50,10 @@ class DevicePersistenceAdapter
         return deviceRepository.save(device.toDeviceEntity()).awaitSingle().toDevice()
     }
 
-    override suspend fun updateDevicePartially(deviceId: String, updateData: Map<*, *>) {
+    override suspend fun updateDevicePartially(deviceId: String, updateData: Map<String, String?>) {
         val query = Query.query(Criteria.where("id").`is`(deviceId))
         val update = Update().apply {
-            updateData.forEach { set(it.key as String, it.value) }
+            updateData.forEach { set(it.key, it.value) }
         }
         reactiveMongoTemplate.updateFirst(query, update, DeviceEntity::class.java).awaitSingleOrNull()
     }

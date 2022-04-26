@@ -10,4 +10,5 @@ interface SpringDataDeviceReportRepository : ReactiveMongoRepository<DeviceRepor
     fun findByIdAndDeviceId(reportId: String, deviceId: String): Mono<DeviceReportEntity>
     fun findByDeviceId(deviceId: String, pageable: Pageable): Flux<DeviceReportEntity>
     fun findTopByDeviceIdOrderByDateTimeCreatedDesc(deviceId: String): Mono<DeviceReportEntity>
+    fun countByDeviceId(deviceId: String): Mono<Long>
 }

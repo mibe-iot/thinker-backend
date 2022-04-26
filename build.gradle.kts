@@ -26,7 +26,7 @@ val jacksonVersion = "2.13.2"
 
 allprojects {
     group = "com.mibe.iot"
-    version = "0.2"
+    version = "0.3"
 
     tasks.withType<KotlinCompile> {
         kotlinOptions {
@@ -99,4 +99,6 @@ dependencies {
     testRuntimeOnly("io.kotest:kotest-assertions-core-jvm:$kotestVersion")
 
     testImplementation("io.mockk:mockk:$mockkVersion")
+
+    implementation("org.reflections:reflections:0.10.2")
 }

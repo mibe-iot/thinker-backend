@@ -32,7 +32,7 @@ class DeviceReportPersistenceAdapter
     }
 
     override fun getByDeviceId(deviceId: String, itemsPage: ItemsPage): Flow<DeviceReport> {
-        val pageable = PageRequest.of(itemsPage.page, itemsPage.pageSize, Sort.by("dateTimeCreated"))
+        val pageable = PageRequest.of(itemsPage.page, itemsPage.pageSize, Sort.by("dateTimeCreated").descending())
         return deviceReportRepository.findByDeviceId(deviceId, pageable).asFlow()
             .map(DeviceReportEntity::toDeviceReport)
     }
@@ -44,6 +44,8 @@ class DeviceReportPersistenceAdapter
 
     override suspend fun existsById(reportId: String): Boolean =
         deviceReportRepository.existsById(reportId).awaitSingle()
+
+    override suspend fun getCountByDeviceId(deviceId: String) = deviceReportRepository.countByDeviceId(deviceId).awaitSingle()
 
     override suspend fun deleteReport(reportId: String) {
         deviceReportRepository.deleteById(reportId).awaitSingle()

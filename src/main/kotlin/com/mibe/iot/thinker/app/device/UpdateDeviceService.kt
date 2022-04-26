@@ -1,8 +1,8 @@
 package com.mibe.iot.thinker.app.device
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.mibe.iot.thinker.domain.device.DeviceUpdates
 import com.mibe.iot.thinker.app.validation.validateDeviceUpdates
+import com.mibe.iot.thinker.domain.device.DeviceUpdates
 import com.mibe.iot.thinker.service.device.UpdateDeviceUseCase
 import com.mibe.iot.thinker.service.device.exception.DeviceNotFoundException
 import com.mibe.iot.thinker.service.device.port.GetDevicePort
@@ -32,9 +32,14 @@ class UpdateDeviceService
             throw DeviceNotFoundException(deviceId)
         }
         validateDeviceUpdates(deviceUpdates).throwOnInvalid()
-        val properties: Map<*, *> = objectMapper.convertValue(deviceUpdates, Map::class.java)
-        log.debug { "Receive update properties: $properties" }
-        updateDevicePort.updateDevicePartially(deviceId, properties)
+        val properties = mapOf(
+            "name" to deviceUpdates.name,
+            "description" to deviceUpdates.description
+        ).filter { it.value != null }
+        log.info { "Receive update properties: $properties" }
+        if (properties.isNotEmpty()) {
+            updateDevicePort.updateDevicePartially(deviceId, properties)
+        }
     }
 
     override suspend fun updateDeviceAdditionalData(deviceAdditionalData: DeviceUpdates) {

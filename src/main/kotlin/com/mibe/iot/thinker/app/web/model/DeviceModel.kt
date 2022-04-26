@@ -11,6 +11,7 @@ data class DeviceModel (
     var status: DeviceStatus,
     var connectType: DeviceConnectType,
     var actions: Set<DeviceAction>,
+    val reportTypes: Set<String>,
     var latestReport: DeviceReport?
 ) {
     companion object{
@@ -25,6 +26,7 @@ data class DeviceModel (
                     status = status,
                     connectType = connectType,
                     actions = actions.toSet(),
+                    reportTypes = HashSet(reportTypes),
                     latestReport = deviceWithReport.deviceReport
                 )
             }
