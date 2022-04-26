@@ -99,4 +99,6 @@ dependencies {
     testRuntimeOnly("io.kotest:kotest-assertions-core-jvm:$kotestVersion")
 
     testImplementation("io.mockk:mockk:$mockkVersion")
+
+    implementation("org.reflections:reflections:0.10.2")
 }
