@@ -18,3 +18,7 @@ dependencies {
     // Kotlin
     implementation(kotlin("stdlib"))
 }
+
+tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootJar> {
+    dependsOn(":thinker-domain:build")
+}
