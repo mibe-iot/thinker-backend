@@ -17,3 +17,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
 }
+
+tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootJar> {
+    dependsOn(":thinker-domain:build")
+}

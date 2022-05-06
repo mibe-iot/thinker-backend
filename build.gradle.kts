@@ -45,6 +45,10 @@ subprojects {
     tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootJar> {
         enabled = false
     }
+
+    tasks.withType<Jar> {
+        archiveClassifier.set("")
+    }
 }
 
 dependencies {
