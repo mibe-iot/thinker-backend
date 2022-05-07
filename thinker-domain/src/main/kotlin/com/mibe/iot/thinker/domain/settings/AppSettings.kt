@@ -4,10 +4,9 @@ package com.mibe.iot.thinker.domain.settings
  * The application settings like Wi-Fi configuration
  */
 data class AppSettings(
-    val ssid: ByteArray,
-    val password: ByteArray
-): Settings(SettingsType.APPLICATION) {
-
+    val ssid: CharArray,
+    val password: CharArray
+) : Settings(SettingsType.APPLICATION) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
@@ -25,5 +24,4 @@ data class AppSettings(
         result = 31 * result + password.contentHashCode()
         return result
     }
-
 }

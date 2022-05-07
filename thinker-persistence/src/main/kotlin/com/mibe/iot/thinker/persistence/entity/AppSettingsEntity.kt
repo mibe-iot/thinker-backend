@@ -7,9 +7,9 @@ import org.springframework.data.mongodb.core.mapping.Document
 @Document("settings")
 data class AppSettingsEntity(
     @Id
-    var id: String?,
-    var ssid: ByteArray,
-    var password: ByteArray,
+    var id: String? = null,
+    var ssid: CharArray = CharArray(0),
+    var password: CharArray = CharArray(0),
     val type: SettingsType
 ) {
     override fun equals(other: Any?): Boolean {
@@ -18,7 +18,7 @@ data class AppSettingsEntity(
 
         other as AppSettingsEntity
 
-       return id == other.id
+        return id == other.id
     }
 
     override fun hashCode(): Int {
