@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 
-@Repository
 interface SpringDataDeviceRepository : ReactiveMongoRepository<DeviceEntity, String> {
     fun existsByName(name: String): Mono<Boolean>
     fun existsByAddress(address: String): Mono<Boolean>

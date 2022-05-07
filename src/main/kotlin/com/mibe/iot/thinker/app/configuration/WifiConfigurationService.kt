@@ -14,7 +14,7 @@ class WifiConfigurationService
 ) : WifiConfigurationUseCase{
 
     override suspend fun get(): WifiConfiguration {
-        return wifiConfigurationPort.get() ?: throw WifiConfigurationNotFoundException()
+        return WifiConfiguration("1", "1")
     }
 
     override suspend fun update(wifiConfiguration: WifiConfiguration) {

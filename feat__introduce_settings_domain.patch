@@ -1,0 +1,172 @@
+Index: _config.yml
+===================================================================
+diff --git a/_config.yml b/_config.yml
+deleted file mode 100644
+--- a/_config.yml	(revision a4025adca44300dad260de29f427487578a46e99)
++++ /dev/null	(revision a4025adca44300dad260de29f427487578a46e99)
+@@ -1,1 +0,0 @@
+-theme: jekyll-theme-cayman
+\ No newline at end of file
+Index: src/main/kotlin/com/mibe/iot/thinker/app/configuration/WifiConfigurationService.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/kotlin/com/mibe/iot/thinker/app/configuration/WifiConfigurationService.kt b/src/main/kotlin/com/mibe/iot/thinker/app/configuration/WifiConfigurationService.kt
+--- a/src/main/kotlin/com/mibe/iot/thinker/app/configuration/WifiConfigurationService.kt	(revision a4025adca44300dad260de29f427487578a46e99)
++++ b/src/main/kotlin/com/mibe/iot/thinker/app/configuration/WifiConfigurationService.kt	(revision 54a0dc2a0f6dceb9aa4f1e23a198b6324854a29d)
+@@ -14,7 +14,7 @@
+ ) : WifiConfigurationUseCase{
+ 
+     override suspend fun get(): WifiConfiguration {
+-        return wifiConfigurationPort.get() ?: throw WifiConfigurationNotFoundException()
++        return WifiConfiguration("1", "1")
+     }
+ 
+     override suspend fun update(wifiConfiguration: WifiConfiguration) {
+Index: thinker-domain/src/main/kotlin/com/mibe/iot/thinker/domain/settings/AppSettings.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/thinker-domain/src/main/kotlin/com/mibe/iot/thinker/domain/settings/AppSettings.kt b/thinker-domain/src/main/kotlin/com/mibe/iot/thinker/domain/settings/AppSettings.kt
+new file mode 100644
+--- /dev/null	(revision 54a0dc2a0f6dceb9aa4f1e23a198b6324854a29d)
++++ b/thinker-domain/src/main/kotlin/com/mibe/iot/thinker/domain/settings/AppSettings.kt	(revision 54a0dc2a0f6dceb9aa4f1e23a198b6324854a29d)
+@@ -0,0 +1,29 @@
++package com.mibe.iot.thinker.domain.settings
++
++/**
++ * The application settings like Wi-Fi configuration
++ */
++data class AppSettings(
++    val ssid: ByteArray,
++    val password: ByteArray
++): Settings(SettingsType.APPLICATION) {
++
++    override fun equals(other: Any?): Boolean {
++        if (this === other) return true
++        if (javaClass != other?.javaClass) return false
++
++        other as AppSettings
++
++        if (!ssid.contentEquals(other.ssid)) return false
++        if (!password.contentEquals(other.password)) return false
++
++        return true
++    }
++
++    override fun hashCode(): Int {
++        var result = ssid.contentHashCode()
++        result = 31 * result + password.contentHashCode()
++        return result
++    }
++
++}
+Index: thinker-domain/src/main/kotlin/com/mibe/iot/thinker/domain/settings/Settings.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/thinker-domain/src/main/kotlin/com/mibe/iot/thinker/domain/settings/Settings.kt b/thinker-domain/src/main/kotlin/com/mibe/iot/thinker/domain/settings/Settings.kt
+new file mode 100644
+--- /dev/null	(revision 54a0dc2a0f6dceb9aa4f1e23a198b6324854a29d)
++++ b/thinker-domain/src/main/kotlin/com/mibe/iot/thinker/domain/settings/Settings.kt	(revision 54a0dc2a0f6dceb9aa4f1e23a198b6324854a29d)
+@@ -0,0 +1,5 @@
++package com.mibe.iot.thinker.domain.settings
++
++open class Settings(
++    val type: SettingsType
++)
+\ No newline at end of file
+Index: thinker-domain/src/main/kotlin/com/mibe/iot/thinker/domain/settings/SettingsType.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/thinker-domain/src/main/kotlin/com/mibe/iot/thinker/domain/settings/SettingsType.kt b/thinker-domain/src/main/kotlin/com/mibe/iot/thinker/domain/settings/SettingsType.kt
+new file mode 100644
+--- /dev/null	(revision 54a0dc2a0f6dceb9aa4f1e23a198b6324854a29d)
++++ b/thinker-domain/src/main/kotlin/com/mibe/iot/thinker/domain/settings/SettingsType.kt	(revision 54a0dc2a0f6dceb9aa4f1e23a198b6324854a29d)
+@@ -0,0 +1,8 @@
++package com.mibe.iot.thinker.domain.settings
++
++/**
++ * Represents different types of settings inside app
++ */
++enum class SettingsType {
++    APPLICATION
++}
+\ No newline at end of file
+Index: thinker-persistence/src/main/kotlin/com/mibe/iot/thinker/persistence/entity/AppSettingsEntity.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/thinker-persistence/src/main/kotlin/com/mibe/iot/thinker/persistence/entity/AppSettingsEntity.kt b/thinker-persistence/src/main/kotlin/com/mibe/iot/thinker/persistence/entity/AppSettingsEntity.kt
+new file mode 100644
+--- /dev/null	(revision 54a0dc2a0f6dceb9aa4f1e23a198b6324854a29d)
++++ b/thinker-persistence/src/main/kotlin/com/mibe/iot/thinker/persistence/entity/AppSettingsEntity.kt	(revision 54a0dc2a0f6dceb9aa4f1e23a198b6324854a29d)
+@@ -0,0 +1,27 @@
++package com.mibe.iot.thinker.persistence.entity
++
++import com.mibe.iot.thinker.domain.settings.SettingsType
++import org.springframework.data.annotation.Id
++import org.springframework.data.mongodb.core.mapping.Document
++
++@Document("settings")
++data class AppSettingsEntity(
++    @Id
++    var id: String?,
++    var ssid: ByteArray,
++    var password: ByteArray,
++    val type: SettingsType
++) {
++    override fun equals(other: Any?): Boolean {
++        if (this === other) return true
++        if (javaClass != other?.javaClass) return false
++
++        other as AppSettingsEntity
++
++       return id == other.id
++    }
++
++    override fun hashCode(): Int {
++        return id?.hashCode() ?: 0
++    }
++}
+\ No newline at end of file
+Index: thinker-persistence/src/main/kotlin/com/mibe/iot/thinker/persistence/repository/SpringDataDeviceRepository.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/thinker-persistence/src/main/kotlin/com/mibe/iot/thinker/persistence/repository/SpringDataDeviceRepository.kt b/thinker-persistence/src/main/kotlin/com/mibe/iot/thinker/persistence/repository/SpringDataDeviceRepository.kt
+--- a/thinker-persistence/src/main/kotlin/com/mibe/iot/thinker/persistence/repository/SpringDataDeviceRepository.kt	(revision a4025adca44300dad260de29f427487578a46e99)
++++ b/thinker-persistence/src/main/kotlin/com/mibe/iot/thinker/persistence/repository/SpringDataDeviceRepository.kt	(revision 54a0dc2a0f6dceb9aa4f1e23a198b6324854a29d)
+@@ -8,7 +8,6 @@
+ import reactor.core.publisher.Flux
+ import reactor.core.publisher.Mono
+ 
+-@Repository
+ interface SpringDataDeviceRepository : ReactiveMongoRepository<DeviceEntity, String> {
+     fun existsByName(name: String): Mono<Boolean>
+     fun existsByAddress(address: String): Mono<Boolean>
+Index: thinker-persistence/src/main/kotlin/com/mibe/iot/thinker/persistence/repository/SpringDataSettingsRepository.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/thinker-persistence/src/main/kotlin/com/mibe/iot/thinker/persistence/repository/SpringDataSettingsRepository.kt b/thinker-persistence/src/main/kotlin/com/mibe/iot/thinker/persistence/repository/SpringDataSettingsRepository.kt
+new file mode 100644
+--- /dev/null	(revision 54a0dc2a0f6dceb9aa4f1e23a198b6324854a29d)
++++ b/thinker-persistence/src/main/kotlin/com/mibe/iot/thinker/persistence/repository/SpringDataSettingsRepository.kt	(revision 54a0dc2a0f6dceb9aa4f1e23a198b6324854a29d)
+@@ -0,0 +1,7 @@
++package com.mibe.iot.thinker.persistence.repository
++
++import com.mibe.iot.thinker.persistence.entity.AppSettingsEntity
++import org.springframework.data.mongodb.repository.ReactiveMongoRepository
++
++interface SpringDataSettingsRepository : ReactiveMongoRepository<AppSettingsEntity, String> {
++}
+\ No newline at end of file
