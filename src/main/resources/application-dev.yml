@@ -1,0 +1,36 @@
+messages:
+  folderPath: classpath:messages
+  encoding: UTF-8
+  file:
+    common: messages
+    error: errorMessages
+
+spring:
+  output:
+    ansi:
+      enabled: ALWAYS
+
+springdoc:
+  show-actuator: true
+  use-management-port: true
+  swagger-ui:
+    path: /docs/swagger-ui
+  api-docs:
+    path: /docs/v3/api
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: openapi, swaggerui
+  server:
+    port: 9090
+
+mqtt:
+  enabled: true
+  host: localhost
+
+thinker:
+  ble:
+    rssiThreshold: -120
+    rediscoveryTimeout: 20
