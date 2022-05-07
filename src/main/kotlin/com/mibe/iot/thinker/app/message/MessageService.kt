@@ -34,4 +34,19 @@ class MessageService
     ): String {
         return errorMessageSource.getMessage(messageKey, messageParameters, defaultMessage, locale)!!
     }
+
+    override fun getTemplatedMessage(
+        templatedMessage: String,
+        locale: Locale
+    ): String {
+        val messageAndParameters = templatedMessage.split("|||")
+        val messageKey = messageAndParameters[0]
+        val messageParameters = messageAndParameters.drop(1)
+        return getErrorMessageOrDefault(
+            messageKey,
+            messageKey,
+            locale,
+            *messageParameters.toTypedArray()
+        )
+    }
 }

@@ -5,7 +5,7 @@ import java.time.LocalDateTime
 
 interface ControlDeviceDiscoveryPort {
     suspend fun startDiscovery()
-    suspend fun updateConnectionData(connectionData: DeviceConnectionData)
+    suspend fun updateConnectionData(connectionData: DeviceConnectionData?)
     fun stopDiscovery()
     fun isDiscovering(): Boolean
     fun getDiscoveryStartedTime(): LocalDateTime
