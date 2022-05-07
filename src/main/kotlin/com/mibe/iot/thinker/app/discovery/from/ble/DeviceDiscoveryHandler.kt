@@ -21,6 +21,7 @@ import java.time.LocalDateTime
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.annotation.PostConstruct
 
+@Profile(PROFILE_DEFAULT, PROFILE_PROD)
 @Component
 class DeviceDiscoveryHandler
 @Autowired constructor(
