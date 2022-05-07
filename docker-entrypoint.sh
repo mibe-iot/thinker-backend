@@ -19,8 +19,6 @@ echo -e "\r$msg done! (in $time s)"
 # reset bluetooth adapter by restarting it
 sudo hciconfig hci0 down
 sudo hciconfig hci0 up
-sudo ln -s java /usr/bin/java
-which java
 
 # start application
-sudo /opt/java/openjdk/bin/java -jar thinker.jar
+sudo $(which java) -jar ~/thinker.jar

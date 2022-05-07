@@ -43,7 +43,8 @@ allprojects {
 
 subprojects {
     tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootJar> {
-        enabled = false
+        enabled = true
+        mainClass.set("NONE")
     }
 
     tasks.withType<Jar> {
