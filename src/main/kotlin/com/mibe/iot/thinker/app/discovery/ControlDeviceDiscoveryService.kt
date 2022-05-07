@@ -2,30 +2,25 @@ package com.mibe.iot.thinker.app.discovery
 
 import com.mibe.iot.thinker.domain.device.DeviceStatus
 import com.mibe.iot.thinker.domain.discovery.DeviceConnectionData
-import com.mibe.iot.thinker.service.configuration.WifiConfigurationUseCase
-import com.mibe.iot.thinker.service.device.UpdateDeviceUseCase
 import com.mibe.iot.thinker.service.discovery.ConnectDiscoveredDeviceUseCase
 import com.mibe.iot.thinker.service.discovery.ControlDeviceDiscoveryUseCase
 import com.mibe.iot.thinker.service.discovery.port.ControlDeviceDiscoveryPort
 import com.mibe.iot.thinker.service.discovery.port.GetSavedDevicePort
-import java.util.concurrent.Executors
+import com.mibe.iot.thinker.service.settings.AppSettingsUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.asCoroutineDispatcher
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.launch
 import mu.KotlinLogging
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.util.concurrent.Executors
 
 @Service
 class ControlDeviceDiscoveryService
 @Autowired constructor(
     private val connectDiscoveredDeviceUseCase: ConnectDiscoveredDeviceUseCase,
-    private val updateDeviceUseCase: UpdateDeviceUseCase,
-    private val wifiConfigurationUseCase: WifiConfigurationUseCase,
     private val getSavedDevicePort: GetSavedDevicePort,
-    private val controlDeviceDiscoveryPort: ControlDeviceDiscoveryPort
+    private val controlDeviceDiscoveryPort: ControlDeviceDiscoveryPort,
+    private val appSettingsUseCase: AppSettingsUseCase
 ) : ControlDeviceDiscoveryUseCase {
     private val log = KotlinLogging.logger {}
 
@@ -48,7 +43,7 @@ class ControlDeviceDiscoveryService
 
     override suspend fun refreshDeviceConnectionData() {
         val connectionData = getConnectionData()
-        log.info { "New connectionData: $connectionData" }
+        log.info { "Got connection data from persistence. Connection data == null : ${connectionData == null}" }
         val connectableDevices = getSavedDevicePort.getByStatus(DeviceStatus.WAITING_CONFIGURATION)
         connectDiscoveredDeviceUseCase.setConnectableDevices(connectableDevices)
         controlDeviceDiscoveryPort.updateConnectionData(connectionData)
@@ -70,6 +65,6 @@ class ControlDeviceDiscoveryService
         startDiscovery()
     }
 
-    private suspend fun getConnectionData() = wifiConfigurationUseCase.get()
-        .let { DeviceConnectionData(ssid = it.ssid.toByteArray(), password = it.password.toByteArray()) }
+    private suspend fun getConnectionData() = appSettingsUseCase.getAppSettings()
+        ?.let { DeviceConnectionData(ssid = it.ssid.copyOf(), password = it.password.copyOf()) }
 }

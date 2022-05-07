@@ -1,14 +1,10 @@
 package com.mibe.iot.thinker.app.discovery.from.ble
 
-import com.welie.blessed.BluetoothCommandStatus
-import com.welie.blessed.BluetoothGattCharacteristic
-import com.welie.blessed.BluetoothGattService
-import com.welie.blessed.BluetoothPeripheral
-import com.welie.blessed.BluetoothPeripheralCallback
-import java.util.*
+import com.welie.blessed.*
 import mu.KotlinLogging
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
+import java.util.*
 
 @Component
 class BlePeripheralCallback
@@ -23,7 +19,13 @@ class BlePeripheralCallback
     ) {
         log.info { "Discovered services for ${peripheral.address}: ${services.map { it.uuid }}" }
 
-        val connectionData = discoveryDataHolder.connectionData!!
+        val connectionData = discoveryDataHolder.connectionData
+
+        if (connectionData == null) {
+            log.warn { "Connection data is uninitialized. Please configure application settings" }
+            return
+        }
+
 
         fun BluetoothPeripheral.writeCharacteristic(uuid: String, value: ByteArray) = this.writeCharacteristic(
             UUID.fromString(BIT_SERVICE),
@@ -34,8 +36,8 @@ class BlePeripheralCallback
 
         val id = discoveryDataHolder.connectableDevices.first { peripheral.address == it.address }.id!!
         peripheral.writeCharacteristic(BIT_CHARACTERISTIC_NAME, id.toByteArray())
-        peripheral.writeCharacteristic(BIT_CHARACTERISTIC_SSID, connectionData.ssid)
-        peripheral.writeCharacteristic(BIT_CHARACTERISTIC_PASSWORD, connectionData.password)
+        peripheral.writeCharacteristic(BIT_CHARACTERISTIC_SSID, String(connectionData.ssid).toByteArray())
+        peripheral.writeCharacteristic(BIT_CHARACTERISTIC_PASSWORD, String(connectionData.password).toByteArray())
     }
 
     override fun onCharacteristicWrite(

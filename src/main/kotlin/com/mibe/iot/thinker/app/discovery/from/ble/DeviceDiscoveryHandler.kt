@@ -82,7 +82,7 @@ class DeviceDiscoveryHandler
         central.scanForPeripherals()
     }
 
-    override suspend fun updateConnectionData(connectionData: DeviceConnectionData) {
+    override suspend fun updateConnectionData(connectionData: DeviceConnectionData?) {
         discoveryDataHolder.connectionData = connectionData
     }
 

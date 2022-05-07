@@ -6,6 +6,7 @@ import com.mibe.iot.thinker.app.settings.exception.InvalidAppSettingsException
 import com.mibe.iot.thinker.app.validation.domain.ValidationErrorModel
 import com.mibe.iot.thinker.app.web.ErrorData
 import com.mibe.iot.thinker.domain.settings.AppSettings
+import com.mibe.iot.thinker.service.discovery.ControlDeviceDiscoveryUseCase
 import com.mibe.iot.thinker.service.settings.AppSettingsUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
@@ -19,6 +20,7 @@ import java.util.*
 @RequestMapping("api/settings")
 class AppSettingsController(
     private val appSettingsUseCase: AppSettingsUseCase,
+    private val controlDeviceDiscoveryUseCase: ControlDeviceDiscoveryUseCase,
     private val messageService: MessageService
 ) {
     private val log = KotlinLogging.logger {}
@@ -28,6 +30,11 @@ class AppSettingsController(
         log.info { "Update application settings" }
         appSettingsUseCase.updateSettings(appSettings)
         log.info { "Application settings updated have been updated successfully" }
+
+        // Connection data depends on application settings
+        if (controlDeviceDiscoveryUseCase.isDiscovering()) {
+            controlDeviceDiscoveryUseCase.refreshDeviceConnectionData()
+        }
     }
 
     @GetMapping("")

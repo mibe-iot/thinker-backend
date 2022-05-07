@@ -36,7 +36,7 @@ class DeviceDiscoveryHandlerMock() : GetDiscoveredDevicePort, ControlDeviceDisco
         log.warn { "dev mode: startDiscovery()" }
     }
 
-    override suspend fun updateConnectionData(connectionData: DeviceConnectionData) {
+    override suspend fun updateConnectionData(connectionData: DeviceConnectionData?) {
         log.warn { "dev mode: updateConnectionData()" }
     }
 
