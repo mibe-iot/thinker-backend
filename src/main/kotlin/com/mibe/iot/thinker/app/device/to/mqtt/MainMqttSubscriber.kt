@@ -3,7 +3,8 @@ package com.mibe.iot.thinker.app.device.to.mqtt
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.hivemq.client.mqtt.datatypes.MqttQos.AT_LEAST_ONCE
 import com.hivemq.client.mqtt.datatypes.MqttTopic
-import com.mibe.iot.thinker.app.validation.domain.ValidationException
+import com.mibe.iot.thinker.PROFILE_DEFAULT
+import com.mibe.iot.thinker.PROFILE_PROD
 import com.mibe.iot.thinker.domain.device.DeviceAction
 import com.mibe.iot.thinker.domain.device.DeviceReport
 import com.mibe.iot.thinker.domain.device.DeviceUpdates
@@ -14,8 +15,10 @@ import de.smartsquare.starter.mqtt.MqttSubscribe
 import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 
+@Profile(PROFILE_DEFAULT, PROFILE_PROD)
 @Component
 class MainMqttSubscriber
 @Autowired constructor(

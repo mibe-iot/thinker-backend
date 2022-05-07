@@ -14,6 +14,9 @@ spring:
       username: root
       password: root
       authentication-database: admin
+  output:
+    ansi:
+      enabled: ALWAYS
 
 springdoc:
   show-actuator: true
