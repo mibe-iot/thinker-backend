@@ -14,7 +14,7 @@ repositories {
 
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 
-val kotestVersion = "4.6.1"
+val kotestVersion = "5.3.0"
 val mockkVersion = "1.12.0"
 val embeddedMongodbVersion = "3.0.0"
 val hateoasVersion = "1.3.3"
@@ -79,7 +79,6 @@ dependencies {
     implementation("io.github.microutils:kotlin-logging:2.0.11")
     implementation("ch.qos.logback:logback-core:$logbackVersion")
     implementation("ch.qos.logback:logback-classic:$logbackVersion")
-    testImplementation("org.slf4j:slf4j-simple:1.7.32")
 
     // Kotlin
     implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -100,10 +99,9 @@ dependencies {
     testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
     testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
     testImplementation("io.kotest:kotest-property:$kotestVersion")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.1")
     testImplementation("io.kotest.extensions:kotest-assertions-konform:1.0.0")
     testRuntimeOnly("io.kotest:kotest-assertions-core-jvm:$kotestVersion")
 
     testImplementation("io.mockk:mockk:$mockkVersion")
-
-    implementation("org.reflections:reflections:0.10.2")
 }
