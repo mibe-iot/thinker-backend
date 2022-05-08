@@ -4,7 +4,7 @@ import com.mibe.iot.thinker.domain.hooks.Hook
 
 interface HookPort {
 
-    fun getHookById(id: String): Hook
+    fun getHookById(id: String): Hook?
 
     fun createHook(hook: Hook)
 
