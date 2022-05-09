@@ -13,7 +13,7 @@ class HookExecutorService(
     private val hookPort: HookPort
 ) : HookExecutorUseCase {
 
-    override fun executeHookById(hookId: String) {
+    override suspend fun executeHookById(hookId: String) {
         val hook = hookPort.getHookById(hookId)
             ?: throw HookNotFoundException(hookId)
         val executor = hookExecutors.firstOrNull { it.hookType == hook::class }

@@ -13,6 +13,7 @@ import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import org.junit.jupiter.api.Test
 
 class HookExecutorServiceTest : FreeSpec ({
 
@@ -72,6 +73,6 @@ class HookExecutorServiceTest : FreeSpec ({
     }
 
 }) {
-    class HookSubclass() : Hook("2", "", "")
-    class HookAnotherSubclass() : Hook("3", "", "")
+    class HookSubclass() : Hook("2", "", "", "subclass")
+    class HookAnotherSubclass() : Hook("3", "", "", "anotherSubclass")
 }
