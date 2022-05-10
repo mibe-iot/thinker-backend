@@ -22,7 +22,7 @@ class TriggerService(
             deviceId = deviceReport.deviceId,
             reportType = deviceReport.reportType
         ) ?: return
-        hookExecutorUseCase.executeHookById(trigger.hookId)
+        hookExecutorUseCase.executeHookById(trigger.hookId, deviceReport)
     }
 
     override suspend fun getAllTriggers(): Flow<Trigger> {

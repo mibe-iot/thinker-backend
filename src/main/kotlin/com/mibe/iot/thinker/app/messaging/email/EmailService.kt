@@ -1,5 +1,6 @@
 package com.mibe.iot.thinker.app.messaging.email
 
+import com.mibe.iot.thinker.domain.data.EmailAddress
 import com.mibe.iot.thinker.service.messaging.email.EmailUseCase
 import org.springframework.mail.SimpleMailMessage
 import org.springframework.mail.javamail.JavaMailSender
@@ -10,12 +11,11 @@ class EmailService(
     private val javaMailSender: JavaMailSender
 ): EmailUseCase {
 
-    override fun sendEmail() {
+    override fun sendEmail(to: EmailAddress, subject: String, body: String) {
         val message = SimpleMailMessage().apply {
-            setFrom("noreply@thinker.com")
-            setTo("ilboogl@gmail.com")
-            setSubject("test")
-            setText("Ho-ho-ho")
+            setTo(to.address)
+            setSubject(subject)
+            setText(body)
         }
         javaMailSender.send(message)
     }

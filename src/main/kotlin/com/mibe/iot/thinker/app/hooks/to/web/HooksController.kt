@@ -28,11 +28,4 @@ class HooksController(
         return hookUseCase.getHookById(id)
     }
 
-    @PostMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    suspend fun executeHook(@PathVariable id: String) {
-        emailUseCase.sendEmail()
-        hookExecutorUseCase.executeHookById(id)
-    }
-
 }
