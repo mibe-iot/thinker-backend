@@ -5,6 +5,7 @@ import com.mibe.iot.thinker.domain.hooks.Hook
 import com.mibe.iot.thinker.domain.hooks.Trigger
 import com.mibe.iot.thinker.service.hooks.HookExecutorUseCase
 import com.mibe.iot.thinker.service.hooks.HookUseCase
+import com.mibe.iot.thinker.service.messaging.email.EmailUseCase
 import kotlinx.coroutines.flow.Flow
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
@@ -13,7 +14,8 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/hooks")
 class HooksController(
     private val hookExecutorUseCase: HookExecutorUseCase,
-    private val hookUseCase: HookUseCase
+    private val hookUseCase: HookUseCase,
+    private val emailUseCase: EmailUseCase
 ) {
 
     @GetMapping("")
@@ -29,6 +31,7 @@ class HooksController(
     @PostMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     suspend fun executeHook(@PathVariable id: String) {
+        emailUseCase.sendEmail()
         hookExecutorUseCase.executeHookById(id)
     }
 
