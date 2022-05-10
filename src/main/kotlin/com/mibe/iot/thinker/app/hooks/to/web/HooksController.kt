@@ -1,8 +1,8 @@
 package com.mibe.iot.thinker.app.hooks.to.web
 
-import com.mibe.iot.thinker.domain.data.EmailAddress
+import com.mibe.iot.thinker.app.hooks.to.web.model.DeviceHooksAndReportTypesModel
 import com.mibe.iot.thinker.domain.hooks.Hook
-import com.mibe.iot.thinker.domain.hooks.SendEmailHook
+import com.mibe.iot.thinker.domain.hooks.Trigger
 import com.mibe.iot.thinker.service.hooks.HookExecutorUseCase
 import com.mibe.iot.thinker.service.hooks.HookUseCase
 import kotlinx.coroutines.flow.Flow
@@ -20,15 +20,28 @@ class HooksController(
     suspend fun getAll(): Flow<Hook> {
         return hookUseCase.getHooks()
     }
+
     @GetMapping("/{id}")
-    fun execute(@PathVariable id: String): Hook {
-        return SendEmailHook("1", "1", "1", EmailAddress("1"))
+    suspend fun getById(@PathVariable id: String): Hook {
+        return hookUseCase.getHookById(id)
     }
 
     @PostMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     suspend fun executeHook(@PathVariable id: String) {
         hookExecutorUseCase.executeHookById(id)
+    }
+
+    @PostMapping("/{id}/triggers")
+    suspend fun createTriggers(
+        @PathVariable id: String,
+        @RequestBody model: DeviceHooksAndReportTypesModel
+    ): Flow<Trigger> {
+        return hookUseCase.createTriggersIfNotExist(
+            deviceId = id,
+            hookIds = model.hookIds,
+            reportTypes = model.reportTypes
+        )
     }
 
 

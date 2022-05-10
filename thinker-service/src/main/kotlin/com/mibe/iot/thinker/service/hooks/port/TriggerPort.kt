@@ -1,0 +1,12 @@
+package com.mibe.iot.thinker.service.hooks.port
+
+import com.mibe.iot.thinker.domain.hooks.Trigger
+import kotlinx.coroutines.flow.Flow
+
+interface TriggerPort {
+
+    fun getTriggersByDeviceIdAndHookIds(deviceId: String, hookIds: List<String>): Flow<Trigger>
+
+    fun createTriggers(triggers: Flow<Trigger>): Flow<Trigger>
+
+}
