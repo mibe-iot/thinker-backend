@@ -7,6 +7,12 @@ interface TriggerPort {
 
     fun getTriggersByDeviceIdAndHookIds(deviceId: String, hookIds: List<String>): Flow<Trigger>
 
+    suspend fun getByDeviceIdAndReportType(deviceId: String, reportType: String): Trigger?
+
+    suspend fun getAllTriggers(): Flow<Trigger>
+
+    suspend fun getAllDeviceTriggers(deviceId: String): Flow<Trigger>
+
     fun createTriggers(triggers: Flow<Trigger>): Flow<Trigger>
 
 }

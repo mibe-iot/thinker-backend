@@ -11,6 +11,7 @@ import com.mibe.iot.thinker.domain.device.DeviceUpdates
 import com.mibe.iot.thinker.service.device.SaveDeviceReportUseCase
 import com.mibe.iot.thinker.service.device.UpdateDeviceUseCase
 import com.mibe.iot.thinker.service.device.exception.DeviceNotFoundException
+import com.mibe.iot.thinker.service.hooks.TriggerUseCase
 import de.smartsquare.starter.mqtt.MqttSubscribe
 import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
@@ -24,6 +25,7 @@ class MainMqttSubscriber
 @Autowired constructor(
     private val updateDeviceUseCase: UpdateDeviceUseCase,
     private val saveDeviceReportUseCase: SaveDeviceReportUseCase,
+    private val triggerUseCase: TriggerUseCase,
     private val jsonMapper: ObjectMapper
 ) {
     private val log = KotlinLogging.logger {}
@@ -56,6 +58,7 @@ class MainMqttSubscriber
         runBlocking {
             try {
                 saveDeviceReportUseCase.saveReport(deviceReport)
+                triggerUseCase.executeHookForReport(deviceReport)
             } catch (e: DeviceNotFoundException) {
                 log.debug { "Got unknown device report: $deviceReport" }
             }

@@ -32,17 +32,4 @@ class HooksController(
         hookExecutorUseCase.executeHookById(id)
     }
 
-    @PostMapping("/{id}/triggers")
-    suspend fun createTriggers(
-        @PathVariable id: String,
-        @RequestBody model: DeviceHooksAndReportTypesModel
-    ): Flow<Trigger> {
-        return hookUseCase.createTriggersIfNotExist(
-            deviceId = id,
-            hookIds = model.hookIds,
-            reportTypes = model.reportTypes
-        )
-    }
-
-
 }
