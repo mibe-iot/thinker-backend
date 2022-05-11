@@ -7,15 +7,14 @@ import com.mibe.iot.thinker.persistence.entity.AppSettingsEntity
 import com.mibe.iot.thinker.persistence.repository.SpringDataAppSettingsRepository
 import com.mibe.iot.thinker.service.settings.port.AppSettingsPort
 import kotlinx.coroutines.reactive.awaitFirstOrNull
+import kotlinx.coroutines.reactor.awaitSingle
 import kotlinx.coroutines.reactor.awaitSingleOrNull
 import mu.KotlinLogging
 import org.bson.Document
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate
-import org.springframework.data.mongodb.core.query
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.data.mongodb.core.query.Update
-import org.springframework.data.mongodb.core.updateFirst
 import org.springframework.stereotype.Component
 
 @Component
@@ -56,5 +55,12 @@ class AppSettingsAdapter(
     }
 
     private fun getSettingsByTypeQuery(type: SettingsType) = Query.query(Criteria.where("type").`is`(type))
+
+    override suspend fun settingsWithTypeExist(type: SettingsType): Boolean {
+        return reactiveMongoTemplate.exists(
+            Query.query(Criteria.where("type").`is`(type)),
+            "settings"
+        ).awaitSingleOrNull() ?: false
+    }
 }
 

@@ -6,31 +6,27 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.mail.javamail.JavaMailSenderImpl
 import java.util.*
 
-//@Configuration
-//class EmailConfiguration {
-//
-//    @Bean
-//    fun javaMailSender(
-//        @Value("\${thinker.mail.host}") host: String,
-//        @Value("\${thinker.mail.host}") port: Int,
-//        @Value("\${thinker.mail.username}") username: String,
-//        @Value("\${thinker.mail.password}") password: String,
-//    ): JavaMailSenderImpl {
-//        val mailSender = JavaMailSenderImpl()
-//        mailSender.host = "smtp.gmail.com"
-//        mailSender.port = 587
-//
-//        mailSender.username = "my.gmail@gmail.com"
-//        mailSender.password = "password"
-//
-//        val props: Properties = mailSender.javaMailProperties.apply {
-//            put("mail.transport.protocol", "smtp")
-//            put("mail.smtp.auth", "true")
-//            put("mail.smtp.starttls.enable", "true")
-//            put("mail.debug", "true")
-//        }
-//
-//        return mailSender
-//    }
-//
-//}
+@Configuration
+class EmailConfiguration {
+
+    @Bean
+    fun javaMailSenderImpl(
+        @Value("\${spring.mail.host}") host: String,
+        @Value("\${spring.mail.port}") port: Int,
+        @Value("\${spring.mail.properties.mail.smtp.auth}") auth: Boolean,
+        @Value("\${spring.mail.properties.mail.smtp.starttls.enable}") startTlsEnabled: Boolean,
+    ): JavaMailSenderImpl {
+        val mailSender = JavaMailSenderImpl()
+        mailSender.host = host
+        mailSender.port = port
+
+        mailSender.javaMailProperties.apply {
+            put("mail.transport.protocol", "smtp")
+            put("mail.smtp.auth", auth)
+            put("mail.smtp.starttls.enable", startTlsEnabled)
+        }
+
+        return mailSender
+    }
+
+}

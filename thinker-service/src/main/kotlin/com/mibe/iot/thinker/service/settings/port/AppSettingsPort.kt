@@ -33,4 +33,6 @@ interface AppSettingsPort {
      */
     suspend fun getSettingsByType(type: SettingsType): Settings?
 
+    suspend fun settingsWithTypeExist(type: SettingsType): Boolean
+
 }

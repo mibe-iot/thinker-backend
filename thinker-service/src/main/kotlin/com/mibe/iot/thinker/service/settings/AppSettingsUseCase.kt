@@ -29,4 +29,7 @@ interface AppSettingsUseCase {
      * @return settings or null
      */
     suspend fun getSettings(type: SettingsType): Settings?
+
+    suspend fun settingsWithTypeExist(type: SettingsType): Boolean
+
 }
