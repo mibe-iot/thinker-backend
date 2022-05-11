@@ -3,8 +3,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id("org.springframework.boot") version "2.5.3"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
-    kotlin("jvm") version "1.5.21"
-    kotlin("plugin.spring") version "1.5.21"
+    kotlin("jvm") version "1.6.21"
+    kotlin("plugin.spring") version "1.6.21"
 }
 
 repositories {
@@ -14,7 +14,7 @@ repositories {
 
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 
-val kotestVersion = "4.6.1"
+val kotestVersion = "5.0.0"
 val mockkVersion = "1.12.0"
 val embeddedMongodbVersion = "3.0.0"
 val hateoasVersion = "1.3.3"
@@ -26,7 +26,7 @@ val jacksonVersion = "2.13.2"
 
 allprojects {
     group = "com.mibe.iot"
-    version = "0.3"
+    version = "0.4"
 
     tasks.withType<KotlinCompile> {
         kotlinOptions {
@@ -35,7 +35,7 @@ allprojects {
         }
     }
 
-    tasks.withType<Test> {
+    tasks.withType<Test>().configureEach {
         useJUnitPlatform()
     }
 
@@ -65,6 +65,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
+    implementation("org.springframework.boot:spring-boot-starter-mail")
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
 
     // Open API
@@ -79,7 +80,6 @@ dependencies {
     implementation("io.github.microutils:kotlin-logging:2.0.11")
     implementation("ch.qos.logback:logback-core:$logbackVersion")
     implementation("ch.qos.logback:logback-classic:$logbackVersion")
-    testImplementation("org.slf4j:slf4j-simple:1.7.32")
 
     // Kotlin
     implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -97,13 +97,13 @@ dependencies {
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.projectreactor:reactor-test")
-    testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
-    testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
-    testImplementation("io.kotest:kotest-property:$kotestVersion")
-    testImplementation("io.kotest.extensions:kotest-assertions-konform:1.0.0")
-    testRuntimeOnly("io.kotest:kotest-assertions-core-jvm:$kotestVersion")
+
+    testImplementation("io.kotest:kotest-runner-junit5-jvm:$kotestVersion")
+    testImplementation("io.kotest:kotest-assertions-core-jvm:$kotestVersion")
+    testImplementation("io.kotest:kotest-framework-engine-jvm:$kotestVersion")
+    testImplementation("io.kotest:kotest-property-jvm:$kotestVersion")
+    testImplementation("io.kotest.extensions:kotest-assertions-konform:1.0.1")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.1")
 
     testImplementation("io.mockk:mockk:$mockkVersion")
-
-    implementation("org.reflections:reflections:0.10.2")
 }

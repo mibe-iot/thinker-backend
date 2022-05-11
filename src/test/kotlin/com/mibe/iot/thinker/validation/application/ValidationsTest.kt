@@ -1,6 +1,6 @@
 package com.mibe.iot.thinker.validation.application
 
-import com.mibe.iot.thinker.app.discovery.domain.validation.validateAddress
+import com.mibe.iot.thinker.app.discovery.validateAddress
 import io.kotest.assertions.konform.shouldBeInvalid
 import io.kotest.assertions.konform.shouldBeValid
 import io.kotest.core.spec.style.FreeSpec
@@ -10,6 +10,9 @@ class ValidationsTest : FreeSpec({
         "when address is correct" - {
             "should be valid" - {
                 validateAddress shouldBeValid "AA:BB:CC:DD:EE:FF"
+            }
+            "lowercase" - {
+                validateAddress shouldBeValid "aa:bb:cc:dd:ee:ff"
             }
         }
         "when incorrect address is" - {
@@ -57,9 +60,6 @@ class ValidationsTest : FreeSpec({
                 validateAddress shouldBeInvalid "AA:BB:CC:DDEEFF"
                 validateAddress shouldBeInvalid "AA:BB:CC:DD:EEFF"
                 validateAddress shouldBeInvalid "AA:BB:CC:DD::EEFF"
-            }
-            "lowercase" - {
-                validateAddress shouldBeValid "aa:bb:cc:dd:ee:ff"
             }
         }
     }

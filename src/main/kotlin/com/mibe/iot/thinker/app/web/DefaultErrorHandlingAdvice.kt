@@ -58,18 +58,9 @@ class DefaultErrorHandlingAdvice
     suspend fun handleValidationError(ex: ValidationException, locale: Locale): Flow<ValidationErrorModel> {
         val errorData = ex.errors.asFlow()
             .map { error ->
-                val messageAndParameters = error.message.split("|||")
-                val messageKey = messageAndParameters[0]
-                val messageParameters = messageAndParameters.drop(1)
-                val message = messageService.getErrorMessageOrDefault(
-                    messageKey,
-                    messageKey,
-                    locale,
-                    *messageParameters.toTypedArray()
-                )
                 ValidationErrorModel(
                     error.dataPath,
-                    message
+                    messageService.getTemplatedMessage(error.message, locale)
                 )
             }
         log.error { "Validation error: ${ex.errors}; ErrorData: $errorData" }

@@ -16,4 +16,6 @@ interface GetErrorMessageUseCase {
         locale: Locale = Locale.getDefault(),
         vararg messageParameters: Any = emptyArray()
     ): String
+
+    fun getTemplatedMessage(templatedMessage: String, locale: Locale): String
 }

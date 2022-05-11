@@ -1,8 +1,8 @@
 package com.mibe.iot.thinker.domain.discovery
 
 data class DeviceConnectionData(
-    val ssid: ByteArray,
-    val password: ByteArray
+    val ssid: CharArray,
+    val password: CharArray
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
