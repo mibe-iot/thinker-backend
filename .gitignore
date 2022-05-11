@@ -46,9 +46,5 @@ gradle-app.setting
 *.jar
 *.war
 *.nar
-*.ear
-*.zip
-*.tar.gz
-*.rar
-hs_err_pid*
+*.gz
 !gradle-wrapper.jar

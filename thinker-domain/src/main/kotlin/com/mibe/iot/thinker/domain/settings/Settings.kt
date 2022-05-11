@@ -1,5 +1,5 @@
 package com.mibe.iot.thinker.domain.settings
 
 open class Settings(
-    val type: SettingsType
+    var type: SettingsType
 )

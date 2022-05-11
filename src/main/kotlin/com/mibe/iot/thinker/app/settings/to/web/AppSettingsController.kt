@@ -3,9 +3,15 @@ package com.mibe.iot.thinker.app.settings.to.web
 import com.mibe.iot.thinker.app.message.MessageService
 import com.mibe.iot.thinker.app.settings.exception.AppSettingsNotFoundException
 import com.mibe.iot.thinker.app.settings.exception.InvalidAppSettingsException
+import com.mibe.iot.thinker.app.settings.exception.SettingsNotFoundException
+import com.mibe.iot.thinker.app.settings.validateMailPassword
 import com.mibe.iot.thinker.app.validation.domain.ValidationErrorModel
+import com.mibe.iot.thinker.app.validation.validateEmailAddress
 import com.mibe.iot.thinker.app.web.ErrorData
 import com.mibe.iot.thinker.domain.settings.AppSettings
+import com.mibe.iot.thinker.domain.settings.MailSettings
+import com.mibe.iot.thinker.domain.settings.Settings
+import com.mibe.iot.thinker.domain.settings.SettingsType
 import com.mibe.iot.thinker.service.discovery.ControlDeviceDiscoveryUseCase
 import com.mibe.iot.thinker.service.settings.AppSettingsUseCase
 import kotlinx.coroutines.flow.Flow
@@ -43,6 +49,26 @@ class AppSettingsController(
         return appSettingsUseCase.getAppSettings() ?: throw AppSettingsNotFoundException()
     }
 
+    @GetMapping("/{settingsType}")
+    suspend fun getSettings(@PathVariable settingsType: SettingsType): Settings {
+        log.info { "Obtaining $settingsType settings" }
+        return appSettingsUseCase.getSettings(settingsType) ?: throw SettingsNotFoundException(settingsType)
+    }
+
+    @GetMapping("/status")
+    suspend fun getAllSettingsStatuses(): Map<SettingsType, Boolean> {
+        return appSettingsUseCase.getSettingStatuses()
+    }
+
+    @PostMapping("/mail")
+    suspend fun sendMailSettings(@RequestBody settings: MailSettings) {
+        log.info { "Update mail settings" }
+        validateEmailAddress(String(settings.mailUsername))
+        validateMailPassword(settings)
+        appSettingsUseCase.updateSettings(settings)
+        log.info { "Mail settings updated have been updated successfully" }
+    }
+
     @ExceptionHandler(AppSettingsNotFoundException::class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     fun handleAppSettingsNotFound(locale: Locale): ErrorData {
@@ -50,6 +76,17 @@ class AppSettingsController(
         return ErrorData(
             description = messageService.getErrorMessage(APP_SETTINGS_NOT_FOUND, locale),
             descriptionKey = APP_SETTINGS_NOT_FOUND,
+            httpStatus = HttpStatus.NOT_FOUND.value()
+        )
+    }
+
+    @ExceptionHandler(SettingsNotFoundException::class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    fun handleSettingsNotFound(exception: SettingsNotFoundException, locale: Locale): ErrorData {
+        log.error { "Settings not found" }
+        return ErrorData(
+            description = messageService.getErrorMessage(SETTINGS_NOT_FOUND, locale),
+            descriptionKey = SETTINGS_NOT_FOUND,
             httpStatus = HttpStatus.NOT_FOUND.value()
         )
     }
@@ -70,6 +107,7 @@ class AppSettingsController(
 
     companion object {
         const val APP_SETTINGS_NOT_FOUND = "settings.app.not.found"
+        const val SETTINGS_NOT_FOUND = "settings.not.found"
     }
 
 }
