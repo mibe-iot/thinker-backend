@@ -32,4 +32,6 @@ interface AppSettingsUseCase {
 
     suspend fun settingsWithTypeExist(type: SettingsType): Boolean
 
+    suspend fun getSettingStatuses(): Map<SettingsType, Boolean>
+
 }

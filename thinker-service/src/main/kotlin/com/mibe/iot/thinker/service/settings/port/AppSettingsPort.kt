@@ -3,6 +3,7 @@ package com.mibe.iot.thinker.service.settings.port
 import com.mibe.iot.thinker.domain.settings.AppSettings
 import com.mibe.iot.thinker.domain.settings.Settings
 import com.mibe.iot.thinker.domain.settings.SettingsType
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Adapts service calls to persistence layer
@@ -34,5 +35,7 @@ interface AppSettingsPort {
     suspend fun getSettingsByType(type: SettingsType): Settings?
 
     suspend fun settingsWithTypeExist(type: SettingsType): Boolean
+
+    suspend fun getAllConfiguredSettingTypes(): Flow<SettingsType>
 
 }

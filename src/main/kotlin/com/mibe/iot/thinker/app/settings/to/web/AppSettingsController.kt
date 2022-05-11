@@ -55,6 +55,11 @@ class AppSettingsController(
         return appSettingsUseCase.getSettings(settingsType) ?: throw SettingsNotFoundException(settingsType)
     }
 
+    @GetMapping("/status")
+    suspend fun getAllSettingsStatuses(): Map<SettingsType, Boolean> {
+        return appSettingsUseCase.getSettingStatuses()
+    }
+
     @PostMapping("/mail")
     suspend fun sendMailSettings(@RequestBody settings: MailSettings) {
         log.info { "Update mail settings" }
@@ -63,8 +68,6 @@ class AppSettingsController(
         appSettingsUseCase.updateSettings(settings)
         log.info { "Mail settings updated have been updated successfully" }
     }
-
-
 
     @ExceptionHandler(AppSettingsNotFoundException::class)
     @ResponseStatus(HttpStatus.NOT_FOUND)

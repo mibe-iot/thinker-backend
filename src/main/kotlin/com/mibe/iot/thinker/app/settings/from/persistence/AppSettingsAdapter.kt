@@ -6,6 +6,8 @@ import com.mibe.iot.thinker.domain.settings.SettingsType
 import com.mibe.iot.thinker.persistence.entity.AppSettingsEntity
 import com.mibe.iot.thinker.persistence.repository.SpringDataAppSettingsRepository
 import com.mibe.iot.thinker.service.settings.port.AppSettingsPort
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.reactive.asFlow
 import kotlinx.coroutines.reactive.awaitFirstOrNull
 import kotlinx.coroutines.reactor.awaitSingle
 import kotlinx.coroutines.reactor.awaitSingleOrNull
@@ -61,6 +63,12 @@ class AppSettingsAdapter(
             Query.query(Criteria.where("type").`is`(type)),
             "settings"
         ).awaitSingleOrNull() ?: false
+    }
+
+    override suspend fun getAllConfiguredSettingTypes(): Flow<SettingsType> {
+        val q = Query()
+        q.fields().include("type")
+        return reactiveMongoTemplate.findDistinct(q, "type", "settings", SettingsType::class.java).asFlow()
     }
 }
 

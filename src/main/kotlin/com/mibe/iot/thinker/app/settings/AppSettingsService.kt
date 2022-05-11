@@ -7,6 +7,7 @@ import com.mibe.iot.thinker.domain.settings.Settings
 import com.mibe.iot.thinker.domain.settings.SettingsType
 import com.mibe.iot.thinker.service.settings.AppSettingsUseCase
 import com.mibe.iot.thinker.service.settings.port.AppSettingsPort
+import kotlinx.coroutines.flow.toSet
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
 
@@ -38,5 +39,10 @@ class AppSettingsService(
 
     override suspend fun settingsWithTypeExist(type: SettingsType): Boolean {
         return appSettingsPort.settingsWithTypeExist(type)
+    }
+
+    override suspend fun getSettingStatuses(): Map<SettingsType, Boolean> {
+        val existingSettings = appSettingsPort.getAllConfiguredSettingTypes().toSet()
+        return SettingsType.values().associateWith { existingSettings.contains(it) }
     }
 }
