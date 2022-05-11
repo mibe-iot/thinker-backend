@@ -16,7 +16,5 @@ import kotlin.reflect.KClass
 class ThinkerApplication
 
 fun main(args: Array<String>) {
-    val hook : Hook = SendEmailHook("1", "1", "1", EmailAddress("1"))
-    val a: KClass<out Hook> = hook::class
     runApplication<ThinkerApplication>(*args)
 }
