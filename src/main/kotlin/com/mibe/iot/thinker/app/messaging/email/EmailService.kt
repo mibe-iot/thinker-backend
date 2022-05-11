@@ -4,6 +4,7 @@ import com.mibe.iot.thinker.domain.data.EmailAddress
 import com.mibe.iot.thinker.service.messaging.email.EmailUseCase
 import org.springframework.mail.SimpleMailMessage
 import org.springframework.mail.javamail.JavaMailSender
+import org.springframework.mail.javamail.JavaMailSenderImpl
 import org.springframework.stereotype.Service
 
 @Service
