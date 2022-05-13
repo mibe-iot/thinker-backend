@@ -14,7 +14,6 @@ dependencies {
 
     // Spring
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
-    implementation("de.flapdoodle.embed:de.flapdoodle.embed.mongo:3.4.5")
 
     // Kotlin
     implementation(kotlin("stdlib"))
