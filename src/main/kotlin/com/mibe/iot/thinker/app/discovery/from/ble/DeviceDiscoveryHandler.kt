@@ -10,7 +10,6 @@ import com.mibe.iot.thinker.service.discovery.port.ConnectDiscoveredDevicePort
 import com.mibe.iot.thinker.service.discovery.port.ControlDeviceDiscoveryPort
 import com.mibe.iot.thinker.service.discovery.port.GetDiscoveredDevicePort
 import com.welie.blessed.*
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import mu.KotlinLogging
 import org.springframework.beans.factory.annotation.Autowired
@@ -54,7 +53,7 @@ class DeviceDiscoveryHandler
 
                 log.trace {
                     "Discovered device: address=${discoveredDevice.address} " +
-                            "name=${peripheral.name} uuids=${peripheral.device?.uuids}"
+                            "name=${peripheral.name} uuids=${peripheral.device?.uuids} Is known: $isKnownDevice"
                 }
 
                 discoveryDataHolder.run {
@@ -67,7 +66,7 @@ class DeviceDiscoveryHandler
             }
 
             override fun onConnectionFailed(peripheral: BluetoothPeripheral, status: BluetoothCommandStatus) {
-                log.warn{ "Device connection failed. Removing it from connectable list" }
+                log.warn { "Device connection failed. Removing it from connectable list" }
                 discoveryDataHolder.deviceConfigurationCallbacks[peripheral.address]?.let { it.onConfigurationFailed() }
             }
         }
@@ -76,7 +75,6 @@ class DeviceDiscoveryHandler
     }
 
     override suspend fun startDiscovery() {
-        requireNotNull(discoveryDataHolder.connectionData)
         discoveryStartTime = LocalDateTime.now()
         isActive.set(true)
         central.scanForPeripherals()

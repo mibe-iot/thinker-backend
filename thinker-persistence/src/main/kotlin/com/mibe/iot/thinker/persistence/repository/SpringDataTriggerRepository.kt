@@ -10,4 +10,8 @@ interface SpringDataTriggerRepository: ReactiveMongoRepository<TriggerEntity, St
     fun findByDeviceIdAndReportType(deviceId: String, reportType: String): Mono<TriggerEntity>
 
     fun findAllByDeviceId(deviceId: String): Flux<TriggerEntity>
+
+    fun deleteAllByHookId(hookId: String): Mono<Void>
+
+    fun deleteAllByDeviceId(deviceId: String): Mono<Void>
 }

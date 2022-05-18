@@ -34,4 +34,8 @@ class TriggerService(
 
         return triggerPort.getAllDeviceTriggers(deviceId)
     }
+
+    override suspend fun deleteTrigger(triggerId: String) {
+        triggerPort.deleteTriggerById(triggerId)
+    }
 }

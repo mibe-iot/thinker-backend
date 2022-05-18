@@ -11,20 +11,16 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/api/triggers")
 class TriggersController(
-    private val hookUseCase: HookUseCase,
-    private val triggerUseCase: TriggerUseCase
+    private val hookUseCase: HookUseCase, private val triggerUseCase: TriggerUseCase
 ) {
 
     @PostMapping("/{deviceId}")
     @ResponseStatus(HttpStatus.CREATED)
     suspend fun createTriggers(
-        @PathVariable deviceId: String,
-        @RequestBody model: DeviceHooksAndReportTypesModel
+        @PathVariable deviceId: String, @RequestBody model: DeviceHooksAndReportTypesModel
     ): Flow<Trigger> {
         return hookUseCase.createTriggersIfNotExist(
-            deviceId = deviceId,
-            hookIds = model.hookIds,
-            reportTypes = model.reportTypes
+            deviceId = deviceId, hookIds = model.hookIds, reportTypes = model.reportTypes
         )
     }
 
@@ -36,5 +32,13 @@ class TriggersController(
     @ResponseStatus(HttpStatus.OK)
     suspend fun getAllTriggers(@PathVariable deviceId: String): Flow<Trigger> =
         triggerUseCase.getAllDeviceTriggers(deviceId)
+
+    @DeleteMapping("/{triggerId}")
+    @ResponseStatus(HttpStatus.CREATED)
+    suspend fun deleteTrigger(
+        @PathVariable triggerId: String
+    ) {
+        triggerUseCase.deleteTrigger(triggerId)
+    }
 
 }

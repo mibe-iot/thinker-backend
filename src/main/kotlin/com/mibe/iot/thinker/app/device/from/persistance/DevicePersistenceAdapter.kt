@@ -9,6 +9,8 @@ import com.mibe.iot.thinker.persistence.repository.SpringDataDeviceRepository
 import com.mibe.iot.thinker.service.device.port.DeleteDevicePort
 import com.mibe.iot.thinker.service.device.port.GetDevicePort
 import com.mibe.iot.thinker.service.device.port.UpdateDevicePort
+import com.mibe.iot.thinker.service.hooks.port.HookPort
+import com.mibe.iot.thinker.service.hooks.port.TriggerPort
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.map
@@ -31,6 +33,8 @@ import reactor.core.publisher.Mono
 @Component
 class DevicePersistenceAdapter
 @Autowired constructor(
+    private val hookPort: HookPort,
+    private val triggerPort: TriggerPort,
     private val deviceRepository: SpringDataDeviceRepository,
     private val reactiveMongoTemplate: ReactiveMongoTemplate
 ) : UpdateDevicePort, GetDevicePort, DeleteDevicePort {
@@ -88,6 +92,7 @@ class DevicePersistenceAdapter
     }
 
     override suspend fun deleteDevice(id: String) {
+        triggerPort.deleteAllTriggersByDeviceId(id)
         deviceRepository.deleteById(id).awaitSingleOrNull()
     }
 

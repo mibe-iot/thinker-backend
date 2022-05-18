@@ -39,4 +39,16 @@ class TriggerAdapter(
             .asFlow()
             .map { it.toTrigger() }
     }
+
+    override fun deleteTriggerById(id: String) {
+        triggerRepository.deleteById(id).subscribe()
+    }
+
+    override fun deleteAllTriggersByHookId(hookId: String) {
+        triggerRepository.deleteAllByHookId(hookId).subscribe()
+    }
+
+    override fun deleteAllTriggersByDeviceId(deviceId: String) {
+        triggerRepository.deleteAllByDeviceId(deviceId).subscribe()
+    }
 }

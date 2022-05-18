@@ -28,4 +28,8 @@ class HookAdapter(
         hook.id = null
         reactiveMongoTemplate.save(hook, "hooks").subscribe()
     }
+
+    override suspend fun deleteHookById(id: String) {
+        reactiveMongoTemplate.remove(Query.query(Criteria.where("id").`is`(id)), "hooks").subscribe()
+    }
 }

@@ -12,4 +12,6 @@ interface HookUseCase {
 
     suspend fun createTriggersIfNotExist(deviceId: String, hookIds: List<String>, reportTypes: List<String>): Flow<Trigger>
 
+    suspend fun deleteHook(hookId: String)
+
 }

@@ -15,4 +15,10 @@ interface TriggerPort {
 
     fun createTriggers(triggers: Flow<Trigger>): Flow<Trigger>
 
+    fun deleteTriggerById(id: String)
+
+    fun deleteAllTriggersByHookId(hookId: String)
+
+    fun deleteAllTriggersByDeviceId(deviceId: String)
+
 }

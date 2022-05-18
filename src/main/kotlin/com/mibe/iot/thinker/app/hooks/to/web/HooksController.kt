@@ -34,4 +34,9 @@ class HooksController(
         hookExecutorUseCase.executeHookById(id, DeviceReport("123123", id, "Hello", mapOf("a" to "b")))
     }
 
+    @DeleteMapping("/{id}")
+    suspend fun deleteHook(@PathVariable id: String) {
+        hookUseCase.deleteHook(id)
+    }
+
 }

@@ -48,4 +48,9 @@ class HookService(
 
         return triggerPort.createTriggers(newTriggers)
     }
+
+    override suspend fun deleteHook(hookId: String) {
+        triggerPort.deleteAllTriggersByHookId(hookId)
+        hookPort.deleteHookById(hookId)
+    }
 }

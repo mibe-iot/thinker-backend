@@ -9,4 +9,5 @@ interface TriggerUseCase {
     suspend fun executeHookForReport(deviceReport: DeviceReport)
     suspend fun getAllTriggers(): Flow<Trigger>
     suspend fun getAllDeviceTriggers(deviceId: String): Flow<Trigger>
+    suspend fun deleteTrigger(triggerId: String)
 }

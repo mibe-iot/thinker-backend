@@ -11,4 +11,6 @@ interface HookPort {
 
     suspend fun createHook(hook: Hook)
 
+    suspend fun deleteHookById(id: String)
+
 }
