@@ -1,14 +1,12 @@
 package com.mibe.iot.thinker.app.hooks.to.web
 
-import com.mibe.iot.thinker.app.hooks.to.web.model.DeviceHooksAndReportTypesModel
 import com.mibe.iot.thinker.domain.device.DeviceReport
 import com.mibe.iot.thinker.domain.hooks.Hook
-import com.mibe.iot.thinker.domain.hooks.Trigger
 import com.mibe.iot.thinker.service.hooks.HookExecutorUseCase
 import com.mibe.iot.thinker.service.hooks.HookUseCase
 import com.mibe.iot.thinker.service.messaging.email.EmailUseCase
 import kotlinx.coroutines.flow.Flow
-import org.springframework.http.HttpStatus
+import mu.KotlinLogging
 import org.springframework.web.bind.annotation.*
 
 @RestController

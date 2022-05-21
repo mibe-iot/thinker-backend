@@ -6,6 +6,7 @@ import com.mibe.iot.thinker.service.hooks.port.TriggerPort
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.reactive.asFlow
+import kotlinx.coroutines.reactive.awaitFirstOrNull
 import kotlinx.coroutines.reactor.asFlux
 import kotlinx.coroutines.reactor.awaitSingleOrNull
 import org.springframework.stereotype.Component
@@ -40,15 +41,15 @@ class TriggerAdapter(
             .map { it.toTrigger() }
     }
 
-    override fun deleteTriggerById(id: String) {
-        triggerRepository.deleteById(id).subscribe()
+    override suspend fun deleteTriggerById(id: String) {
+        triggerRepository.deleteById(id).awaitFirstOrNull()
     }
 
-    override fun deleteAllTriggersByHookId(hookId: String) {
-        triggerRepository.deleteAllByHookId(hookId).subscribe()
+    override suspend fun deleteAllTriggersByHookId(hookId: String) {
+        triggerRepository.deleteAllByHookId(hookId).awaitSingleOrNull()
     }
 
-    override fun deleteAllTriggersByDeviceId(deviceId: String) {
-        triggerRepository.deleteAllByDeviceId(deviceId).subscribe()
+    override suspend fun deleteAllTriggersByDeviceId(deviceId: String) {
+        triggerRepository.deleteAllByDeviceId(deviceId).awaitFirstOrNull()
     }
 }
