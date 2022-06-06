@@ -8,7 +8,7 @@ messages:
 spring:
   data:
     mongodb:
-      host: mongo
+      host: localhost
       port: 27017
       database: mibe
       username: ${MONGO_INITDB_ROOT_USERNAME}
