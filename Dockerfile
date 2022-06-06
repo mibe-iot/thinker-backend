@@ -28,4 +28,4 @@ COPY app/thinker-*.jar /home/bluezuser/thinker.jar
 USER bluezuser
 
 # setup startup script
-CMD ./docker-entrypoint.sh
+CMD  ["/bin/bash", "-c", "./docker-entrypoint.sh"]
