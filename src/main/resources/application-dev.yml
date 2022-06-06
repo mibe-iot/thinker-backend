@@ -12,8 +12,6 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: ${THINKER_MAIL_USERNAME}
-    password: ${THINKER_MAIL_PASSWORD}
     properties:
       mail:
         smtp:

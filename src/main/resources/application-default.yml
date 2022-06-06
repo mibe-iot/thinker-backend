@@ -8,11 +8,11 @@ messages:
 spring:
   data:
     mongodb:
-      host: 127.0.0.1
+      host: mongo
       port: 27017
       database: mibe
-      username: root
-      password: root
+      username: ${MONGO_INITDB_ROOT_USERNAME}
+      password: ${MONGO_INITDB_ROOT_PASSWORD}
       authentication-database: admin
   output:
     ansi:
