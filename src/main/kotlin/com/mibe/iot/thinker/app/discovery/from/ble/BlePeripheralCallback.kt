@@ -25,6 +25,10 @@ class BlePeripheralCallback
             log.warn { "Connection data is uninitialized. Please configure application settings" }
             return
         }
+        if (!services.any { it.uuid == UUID.fromString(BIT_SERVICE) }) {
+            log.error { "Can't connect to ${peripheral.address}: doesn't have main connection service" }
+            invalidateDevice(peripheral)
+        }
 
 
         fun BluetoothPeripheral.writeCharacteristic(uuid: String, value: ByteArray) = this.writeCharacteristic(
@@ -63,13 +67,17 @@ class BlePeripheralCallback
             }
         } else {
             log.error { "Error while trying to write characteristics" }
-            discoveryDataHolder.deviceConfigurationCallbacks[address]?.let { it.onConfigurationFailed() }
-            peripheral.cancelConnection()
+            invalidateDevice(peripheral)
         }
     }
 
     override fun onBondingFailed(peripheral: BluetoothPeripheral) {
         log.error { "Error while trying to connect to peripheral. Removing this device from connectable list" }
+        invalidateDevice(peripheral)
+    }
+
+    private fun invalidateDevice(peripheral: BluetoothPeripheral) {
         discoveryDataHolder.deviceConfigurationCallbacks[peripheral.address]?.let { it.onConfigurationFailed() }
+        peripheral.cancelConnection()
     }
 }
