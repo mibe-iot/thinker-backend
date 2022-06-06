@@ -27,17 +27,12 @@ class ConnectedDevicePersistenceAdapter
     private val log = KotlinLogging.logger{}
 
     override suspend fun saveDiscoveredDevice(discoveredDevice: DiscoveredDevice): Device {
-        val entity = DeviceEntity(address = discoveredDevice.address)
+        val entity = DeviceEntity(address = discoveredDevice.address, name = discoveredDevice.name)
         return repository.save(entity).awaitSingle().toDevice()
     }
 
     override suspend fun updateDeviceStatus(deviceId: String, deviceStatus: DeviceStatus, configurationHash: Int?) {
         log.info { "Updating device status by id=$deviceId" }
-//        val device = repository.findById(deviceId).awaitSingle()
-//        log.info { "found device: $device" }
-//        device.status = deviceStatus
-//        device.configurationHash = configurationHash
-//        repository.save(device).awaitSingle()
 
         val query = Query.query(Criteria.where("id").`is`(deviceId))
         val update = Update().apply { set("status", deviceStatus); set("configurationHash", configurationHash) }
