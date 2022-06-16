@@ -17,4 +17,8 @@ class DeviceActionsDispatcherMock : ControlDeviceActionPort {
     override fun activateAction(deviceId: String, action: DeviceAction) {
         log.warn { "dev mode: activateAction(deviceId = $deviceId, action = $action)" }
     }
+
+    override fun activateActionReliably(deviceId: String, action: DeviceAction) {
+        TODO("Not yet implemented")
+    }
 }
