@@ -14,21 +14,11 @@ import org.springframework.core.env.Environment
 import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRepositories
 import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.transaction.annotation.EnableTransactionManagement
-import kotlin.reflect.KClass
 
 @SpringBootApplication
 @EnableScheduling
 @EnableReactiveMongoRepositories(basePackageClasses = [PersistenceBeanScanMarker::class])
-class ThinkerApplication {
-
-    @Autowired
-    lateinit var aaa: Environment
-
-    @Bean
-    fun cmd() = CommandLineRunner {
-        println(aaa.getProperty("MONGO_INITDB_ROOT_USERNAME"))
-    }
-}
+class ThinkerApplication 
 
 fun main(args: Array<String>) {
     runApplication<ThinkerApplication>(*args)
