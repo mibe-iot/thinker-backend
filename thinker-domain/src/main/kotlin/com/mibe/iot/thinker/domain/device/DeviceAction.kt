@@ -4,4 +4,8 @@ data class DeviceAction(
     val name: String,
     var displayName: String = "",
     var description: String = ""
-)
+) {
+    companion object {
+        val delete = DeviceAction("delete")
+    }
+}
