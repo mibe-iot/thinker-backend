@@ -21,4 +21,5 @@ sudo hciconfig hci0 down
 sudo hciconfig hci0 up
 
 # start application
-$(which java) -jar ~/thinker.jar
+cd ~
+$(which java) -jar ./thinker.jar
