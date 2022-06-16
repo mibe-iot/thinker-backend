@@ -19,7 +19,7 @@ class DeviceActionsDispatcher(
 
     override fun activateAction(deviceId: String, action: DeviceAction) {
         mqttPublisher.publish(
-            "/mibe/${deviceId}/${action}",
+            "/mibe/${deviceId}/${action.name}",
             MqttQos.AT_LEAST_ONCE,
             jsonMapper.writeValueAsString(ActionInvocation(action.name))
         )
