@@ -23,7 +23,7 @@ class DeleteDeviceService(
 
     override suspend fun deleteDevice(id: String) {
         if (getDevicePort.existsWithId(id)) {
-            controlDeviceActionPort.activateActionReliably(id, DeviceAction.delete)
+            controlDeviceActionPort.activateActionReliably(id, DeviceAction.remove)
             deleteDevicePort.deleteDevice(id)
         } else {
             throw DeviceNotFoundException(id)

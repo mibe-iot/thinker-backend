@@ -6,6 +6,6 @@ data class DeviceAction(
     var description: String = ""
 ) {
     companion object {
-        val delete = DeviceAction("delete")
+        val remove = DeviceAction("remove")
     }
 }
