@@ -72,8 +72,8 @@ jobs:
         with:
           context: .
           push: true
-          tags: arm
-          labels: arm
+          tags: ${{ steps.meta.outputs.tags }}-arm, ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:arm
+          labels: ${{ steps.meta.outputs.labels }}-arm
 
   build-x64-image:
     name: Build x64 image
@@ -107,5 +107,5 @@ jobs:
         with:
           context: .
           push: true
-          tags: latest x64
-          labels: latest x64
+          tags: ${{ steps.meta.outputs.tags }}-latest, ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+            labels: ${{ steps.meta.outputs.labels }}-latest
