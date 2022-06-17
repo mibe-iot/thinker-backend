@@ -41,7 +41,7 @@ jobs:
 
 
   build-arm-image:
-    name: Build image
+    name: Build ARM image
     needs: [ build ]
     runs-on: self-hosted
 
@@ -72,8 +72,8 @@ jobs:
         with:
           context: .
           push: true
-          tags: [ arm ]
-          labels: [ arm ]
+          tags: arm
+          labels: arm
 
   build-x64-image:
     name: Build x64 image
@@ -107,5 +107,5 @@ jobs:
         with:
           context: .
           push: true
-          tags: [ latest, x64 ]
-          labels: [ latest, x64 ]
+          tags: latest x64
+          labels: latest x64
