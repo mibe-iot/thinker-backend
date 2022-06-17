@@ -4,8 +4,6 @@ on:
   label:
     types:
       - created
-  push:
-    branches: [ master ]
 
 env:
   REGISTRY: ghcr.io
