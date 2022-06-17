@@ -55,6 +55,9 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Get tag name
+        uses: olegtarasov/get-tag@v2.1.1
+
       - name: Setup QEMU
         uses: docker/setup-qemu-action@v2
 
@@ -81,5 +84,5 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64/v8
           push: true
-          tags: ${{ steps.meta.outputs.tags }}, ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ steps.meta.outputs.tags }}, ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest, ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{GIT_TAG_NAME}}
+          labels: ${{ steps.meta.outputs.labels }}, ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{GIT_TAG_NAME}}
