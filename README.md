@@ -73,6 +73,38 @@ Action name could be any String, except reserved ones:
   call means this device's id is banned, and it couldn't communicate with thinker anymore. Device could want to turn on
   Bluetooth adapter again after receiving this action call to be able to be reconnected to the iot-network.**
 
+All MQTT communications are in JSON format. There are schemas of possible messages:
+- Sharing device data after it is configured is done using following object (`DeviceActionsDataModel`):
+
+    ```json
+    {
+      "deviceId": "String",
+      "deviceClass": "String",
+      "actions": [ "actionName1: String", "actionName2: String" ],
+      "reportTypes": [ "reportType1: String", "reportType2: String" ]
+    }
+    ```
+
+- Reports are shared using `DeviceReportModel`:
+
+    ```json
+    {
+      "reportType": "String",
+      "reportData": {
+        "key1: String": "value1: Any",
+        "key2: String": "value2: Any"
+      }
+    }
+    ```
+  
+- When Thinker sends an action to device, it uses `ActionInvocation`:
+
+    ```json
+    {
+      "actionName": "String"
+    }
+    ```
+
 ## System requirements
 
 Application is designed to be run on Linux system. It requires Bluetooth adapter like hci0 to be available for use.
