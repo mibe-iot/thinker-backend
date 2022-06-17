@@ -140,8 +140,8 @@ This will build a ready-to-launch jar, that you can find inside `./build/libs`.
 - [.dockerignore](./.dockerignore) - docker ignore file for all build-unrelated files.
 - [docker-entrypoint.sh](./docker-entrypoint.sh) - docker entrypoint. Manages dbus and bluetooth services on container
   start, resets hci0 adapter and then runs thinker jar.
-- [Dockerfile](./Dockerfile-) - docker file for x64 systems
-- [Dockerfile](./Dockerfile-arm) - docker file for ARM systems
+- [Dockerfile](./Dockerfile) - docker file for x64 systems
+- [Dockerfile-arm](./Dockerfile-arm) - docker file for ARM systems
 
 ## Running application
 
@@ -159,6 +159,10 @@ network mode!** If you are interested in running the whole iot-system (front-end
 and mongo DB) **on ARM-based hardware like Raspberry PI**, see
 [thinker's docker-compose script](https://github.com/mibe-iot/thinker/blob/master/docker-compose.yml). This compose
 file uses special front-end and back-end images built for ARM architecture.
+
+To run application inside docker container, use this image: https://github.com/mibe-iot/thinker-backend/pkgs/container/thinker-backend
+
+Use tag `arm` for ARM-based systems and tag `latest` or `x64` for x64 systems.
 
 ### Running application from sources
 
