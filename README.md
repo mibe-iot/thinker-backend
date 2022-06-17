@@ -140,7 +140,8 @@ This will build a ready-to-launch jar, that you can find inside `./build/libs`.
 - [.dockerignore](./.dockerignore) - docker ignore file for all build-unrelated files.
 - [docker-entrypoint.sh](./docker-entrypoint.sh) - docker entrypoint. Manages dbus and bluetooth services on container
   start, resets hci0 adapter and then runs thinker jar.
-- [Dockerfile](./Dockerfile) - docker file
+- [Dockerfile](./Dockerfile-) - docker file for x64 systems
+- [Dockerfile](./Dockerfile-arm) - docker file for ARM systems
 
 ## Running application
 

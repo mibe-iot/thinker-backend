@@ -1,4 +1,4 @@
-FROM openjdk:11.0-jdk-buster
+FROM arm64v8/openjdk:11.0-jdk-buster
 
 # install bluez related packages
 RUN apt update
