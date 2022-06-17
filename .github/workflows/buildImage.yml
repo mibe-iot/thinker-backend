@@ -61,8 +61,8 @@ jobs:
           platforms: amd64,arm
 
       - name: Set up Docker Buildx
-          id: buildx
-          uses: docker/setup-buildx-action@master
+        id: buildx
+        uses: docker/setup-buildx-action@master
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
