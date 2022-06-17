@@ -28,10 +28,10 @@ class GetDeviceReportService
 
     override suspend fun getDeviceReportsByDeviceId(deviceId: String, page: Int, pageSize: Int): Flow<DeviceReport> {
         if (!getDevicePort.existsWithId(deviceId)) throw DeviceNotFoundException(deviceId)
-        return getDeviceReportPort.getByDeviceId(deviceId, ItemsPage(page-1, pageSize))
+        return getDeviceReportPort.getByDeviceId(deviceId, ItemsPage(page - 1, pageSize))
     }
 
-    override suspend fun getReportsCountByDeviceId(deviceId: String):Long {
+    override suspend fun getReportsCountByDeviceId(deviceId: String): Long {
         if (!getDevicePort.existsWithId(deviceId)) throw DeviceNotFoundException(deviceId)
         return getDeviceReportPort.getCountByDeviceId(deviceId)
     }

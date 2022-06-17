@@ -7,15 +7,13 @@ import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.launch
 import mu.KotlinLogging
 import org.springframework.mail.SimpleMailMessage
-import org.springframework.mail.javamail.JavaMailSender
-import org.springframework.mail.javamail.JavaMailSenderImpl
 import org.springframework.stereotype.Service
 import java.util.concurrent.Executors
 
 @Service
 class EmailService(
     private val mailSender: ConfigurableMailSender
-): EmailUseCase {
+) : EmailUseCase {
     private val log = KotlinLogging.logger {}
     private val sendEmailScope = CoroutineScope(Executors.newSingleThreadExecutor().asCoroutineDispatcher())
 

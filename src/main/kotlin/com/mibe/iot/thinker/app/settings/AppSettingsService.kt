@@ -2,7 +2,6 @@ package com.mibe.iot.thinker.app.settings
 
 import com.mibe.iot.thinker.app.messaging.email.EmailSettingsUpdatedEvent
 import com.mibe.iot.thinker.domain.settings.AppSettings
-import com.mibe.iot.thinker.domain.settings.MailSettings
 import com.mibe.iot.thinker.domain.settings.Settings
 import com.mibe.iot.thinker.domain.settings.SettingsType
 import com.mibe.iot.thinker.service.settings.AppSettingsUseCase

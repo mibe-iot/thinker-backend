@@ -8,7 +8,11 @@ import com.mibe.iot.thinker.service.device.port.ControlDeviceActionPort
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
-import io.mockk.*
+import io.mockk.Called
+import io.mockk.coEvery
+import io.mockk.coVerifyAll
+import io.mockk.confirmVerified
+import io.mockk.mockk
 import kotlinx.coroutines.flow.flowOf
 
 class ControlDeviceActionServiceTest : FreeSpec({

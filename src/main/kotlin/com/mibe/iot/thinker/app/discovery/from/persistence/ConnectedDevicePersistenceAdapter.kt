@@ -1,21 +1,19 @@
 package com.mibe.iot.thinker.app.discovery.from.persistence
 
 import com.mibe.iot.thinker.app.device.from.persistance.toDevice
-import com.mibe.iot.thinker.service.discovery.port.SaveDiscoveredDevicePort
-import com.mibe.iot.thinker.domain.discovery.DiscoveredDevice
 import com.mibe.iot.thinker.domain.device.Device
 import com.mibe.iot.thinker.domain.device.DeviceStatus
+import com.mibe.iot.thinker.domain.discovery.DiscoveredDevice
 import com.mibe.iot.thinker.persistence.entity.DeviceEntity
 import com.mibe.iot.thinker.persistence.repository.SpringDataDeviceRepository
+import com.mibe.iot.thinker.service.discovery.port.SaveDiscoveredDevicePort
 import kotlinx.coroutines.reactor.awaitSingle
 import mu.KotlinLogging
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.data.mongodb.core.query.Update
-import org.springframework.data.mongodb.core.updateFirst
 import org.springframework.stereotype.Component
 
 @Component
@@ -24,7 +22,7 @@ class ConnectedDevicePersistenceAdapter
     private val repository: SpringDataDeviceRepository,
     private val reactiveMongoTemplate: ReactiveMongoTemplate
 ) : SaveDiscoveredDevicePort {
-    private val log = KotlinLogging.logger{}
+    private val log = KotlinLogging.logger {}
 
     override suspend fun saveDiscoveredDevice(discoveredDevice: DiscoveredDevice): Device {
         val entity = DeviceEntity(address = discoveredDevice.address, name = discoveredDevice.name)

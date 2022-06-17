@@ -12,7 +12,7 @@ import kotlin.reflect.KClass
 @Component
 class SendEmailHookExecutor(
     private val emailUseCase: EmailUseCase
-): HookExecutor {
+) : HookExecutor {
     private val log = KotlinLogging.logger {}
 
     override val hookType: KClass<out Hook>

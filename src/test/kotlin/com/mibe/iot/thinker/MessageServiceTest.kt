@@ -8,7 +8,6 @@ import io.mockk.every
 import io.mockk.mockk
 import org.springframework.context.MessageSource
 import org.springframework.context.NoSuchMessageException
-import java.lang.IllegalStateException
 import java.util.*
 
 class MessageServiceTest : FreeSpec({

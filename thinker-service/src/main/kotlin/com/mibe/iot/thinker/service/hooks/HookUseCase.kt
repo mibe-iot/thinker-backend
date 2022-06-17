@@ -10,7 +10,11 @@ interface HookUseCase {
 
     suspend fun getHookById(id: String): Hook
 
-    suspend fun createTriggersIfNotExist(deviceId: String, hookIds: List<String>, reportTypes: List<String>): Flow<Trigger>
+    suspend fun createTriggersIfNotExist(
+        deviceId: String,
+        hookIds: List<String>,
+        reportTypes: List<String>
+    ): Flow<Trigger>
 
     suspend fun deleteHook(hookId: String)
 

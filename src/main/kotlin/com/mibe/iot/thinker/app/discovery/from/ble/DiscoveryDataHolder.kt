@@ -1,16 +1,16 @@
 package com.mibe.iot.thinker.app.discovery.from.ble
 
-import com.mibe.iot.thinker.domain.discovery.DeviceConnectionData
-import com.mibe.iot.thinker.domain.discovery.DiscoveredDevice
 import com.mibe.iot.thinker.domain.device.Device
 import com.mibe.iot.thinker.domain.device.DeviceConnectType
 import com.mibe.iot.thinker.domain.device.DeviceStatus
 import com.mibe.iot.thinker.domain.discovery.DeviceConfigurationCallbacks
+import com.mibe.iot.thinker.domain.discovery.DeviceConnectionData
+import com.mibe.iot.thinker.domain.discovery.DiscoveredDevice
 import mu.KotlinLogging
+import org.springframework.stereotype.Component
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentSkipListSet
-import org.springframework.stereotype.Component
 
 @Component
 class DiscoveryDataHolder(

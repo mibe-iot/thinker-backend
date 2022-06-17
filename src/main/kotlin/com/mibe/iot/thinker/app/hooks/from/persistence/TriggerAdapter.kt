@@ -28,11 +28,11 @@ class TriggerAdapter(
     }
 
     override suspend fun getAllTriggers(): Flow<Trigger> {
-        return triggerRepository.findAll().map{ it.toTrigger() }.asFlow()
+        return triggerRepository.findAll().map { it.toTrigger() }.asFlow()
     }
 
     override suspend fun getAllDeviceTriggers(deviceId: String): Flow<Trigger> {
-        return triggerRepository.findAllByDeviceId(deviceId).map{ it.toTrigger() }.asFlow()
+        return triggerRepository.findAllByDeviceId(deviceId).map { it.toTrigger() }.asFlow()
     }
 
     override fun createTriggers(triggers: Flow<Trigger>): Flow<Trigger> {

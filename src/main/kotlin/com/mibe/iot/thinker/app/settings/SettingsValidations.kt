@@ -1,10 +1,8 @@
 package com.mibe.iot.thinker.app.settings
 
 import com.mibe.iot.thinker.app.settings.exception.InvalidAppSettingsException
-import com.mibe.iot.thinker.app.validation.DEVICE_NAME_MIN_LENGTH
 import com.mibe.iot.thinker.domain.settings.AppSettings
 import com.mibe.iot.thinker.domain.settings.MailSettings
-import io.konform.validation.Validation
 
 const val WIFI_PASSWORD_MIN_LENGTH = 8
 const val WIFI_SSID_MIN_LENGTH = 2
