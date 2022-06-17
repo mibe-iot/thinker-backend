@@ -1,9 +1,9 @@
 name: Build docker image
 
 on:
-  label:
-    types:
-      - created
+  push:
+    tags:
+      - v*
 
 env:
   REGISTRY: ghcr.io
