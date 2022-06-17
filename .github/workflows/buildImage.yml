@@ -73,7 +73,8 @@ jobs:
           context: .
           file: Dockerfile-arm
           push: true
-          tags: ${{ steps.meta.outputs.tags }}-arm, ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:arm
+          tags: ${{ steps.meta.outputs.tags }}-arm,
+          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:arm
           labels: ${{ steps.meta.outputs.labels }}-arm
 
   build-x64-image:
@@ -109,5 +110,11 @@ jobs:
           context: .
           file: Dockerfile
           push: true
-          tags: ${{ steps.meta.outputs.tags }}-latest, ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
-          labels: ${{ steps.meta.outputs.labels }}-latest
+          tags: ${{ steps.meta.outputs.tags }}-latest,
+          ${{ steps.meta.outputs.tags }}-x64
+          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest,
+          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:x64
+          labels: ${{ steps.meta.outputs.labels }}-latest,
+          ${{ steps.meta.outputs.labels }}-x64
+          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest,
+          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:x64
