@@ -6,7 +6,6 @@ import com.mibe.iot.thinker.service.settings.AppSettingsUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
 import org.springframework.context.ApplicationListener
 import org.springframework.context.ApplicationStartupAware
@@ -19,7 +18,7 @@ class MailSettingsUpdateListener(
     private val configurableMailSender: ConfigurableMailSender,
     private val appSettingsUseCase: AppSettingsUseCase
 ) : ApplicationStartupAware, ApplicationListener<EmailSettingsUpdatedEvent> {
-    private val log = KotlinLogging.logger{}
+    private val log = KotlinLogging.logger {}
 
     private val updateSettingsScope = CoroutineScope(Executors.newSingleThreadExecutor().asCoroutineDispatcher())
 

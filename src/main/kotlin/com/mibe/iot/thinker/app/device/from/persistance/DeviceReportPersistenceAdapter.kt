@@ -45,7 +45,8 @@ class DeviceReportPersistenceAdapter
     override suspend fun existsById(reportId: String): Boolean =
         deviceReportRepository.existsById(reportId).awaitSingle()
 
-    override suspend fun getCountByDeviceId(deviceId: String) = deviceReportRepository.countByDeviceId(deviceId).awaitSingle()
+    override suspend fun getCountByDeviceId(deviceId: String) =
+        deviceReportRepository.countByDeviceId(deviceId).awaitSingle()
 
     override suspend fun deleteReport(reportId: String) {
         deviceReportRepository.deleteById(reportId).awaitSingle()

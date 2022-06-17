@@ -1,8 +1,12 @@
 package com.mibe.iot.thinker.app.web.model
 
-import com.mibe.iot.thinker.domain.device.*
+import com.mibe.iot.thinker.domain.device.DeviceAction
+import com.mibe.iot.thinker.domain.device.DeviceConnectType
+import com.mibe.iot.thinker.domain.device.DeviceReport
+import com.mibe.iot.thinker.domain.device.DeviceStatus
+import com.mibe.iot.thinker.domain.device.DeviceWithReport
 
-data class DeviceModel (
+data class DeviceModel(
     var id: String,
     val name: String,
     val address: String,
@@ -14,7 +18,7 @@ data class DeviceModel (
     val reportTypes: Set<String>,
     var latestReport: DeviceReport?
 ) {
-    companion object{
+    companion object {
         fun from(deviceWithReport: DeviceWithReport): DeviceModel {
             return deviceWithReport.device.run {
                 DeviceModel(

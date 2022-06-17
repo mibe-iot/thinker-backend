@@ -9,7 +9,6 @@ import com.mibe.iot.thinker.service.device.GetDeviceReportUseCase
 import com.mibe.iot.thinker.service.device.exception.DeviceReportNotFoundException
 import kotlinx.coroutines.flow.toList
 import mu.KotlinLogging
-import java.util.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -20,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
+import java.util.*
 import kotlin.math.ceil
 
 @RestController
@@ -40,8 +40,8 @@ internal class DeviceReportController
         @RequestParam(required = false, defaultValue = "10") pageSize: Int
     ): ReportsPageModel {
         val reportsCount = getDeviceReportUseCase.getReportsCountByDeviceId(deviceId)
-        log.debug{"device id = $deviceId, reports count: $reportsCount"}
-        if (page < 1 || page > ceil(reportsCount/pageSize.toDouble())) {
+        log.debug { "device id = $deviceId, reports count: $reportsCount" }
+        if (page < 1 || page > ceil(reportsCount / pageSize.toDouble())) {
             throw DeviceReportIllegalPageException(page, deviceId)
         }
         val reports = getDeviceReportUseCase.getDeviceReportsByDeviceId(deviceId, page, pageSize)

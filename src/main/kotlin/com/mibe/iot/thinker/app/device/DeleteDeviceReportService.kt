@@ -15,7 +15,7 @@ class DeleteDeviceReportService
 ) : DeleteDeviceReportUseCase {
 
     override suspend fun deleteReport(reportId: String, deviceId: String) {
-        if(getDeviceReportPort.existsById(reportId)) {
+        if (getDeviceReportPort.existsById(reportId)) {
             deleteDeviceReportPort.deleteReport(reportId)
         } else {
             throw DeviceReportNotFoundException(

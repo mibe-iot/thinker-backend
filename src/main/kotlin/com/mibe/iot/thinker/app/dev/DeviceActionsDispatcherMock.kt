@@ -1,8 +1,6 @@
 package com.mibe.iot.thinker.app.dev
 
-import com.mibe.iot.thinker.PROFILE_DEFAULT
 import com.mibe.iot.thinker.PROFILE_DEV
-import com.mibe.iot.thinker.PROFILE_PROD
 import com.mibe.iot.thinker.domain.device.DeviceAction
 import com.mibe.iot.thinker.service.device.port.ControlDeviceActionPort
 import mu.KotlinLogging

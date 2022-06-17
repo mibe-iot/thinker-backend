@@ -13,7 +13,7 @@ const val DEVICE_CLASS_MAX_LENGTH = 256
 const val DEVICE_REPORT_TYPES_MIN_LENGTH = 1
 
 val validateDeviceUpdates = Validation<DeviceUpdates> {
-    DeviceUpdates::name ifPresent  {
+    DeviceUpdates::name ifPresent {
         minLength(DEVICE_NAME_MIN_LENGTH) hint "validation.device.name.min.length|||$DEVICE_NAME_MIN_LENGTH"
         maxLength(DEVICE_NAME_LENGTH) hint "validation.device.name.length|||$DEVICE_NAME_LENGTH"
     }

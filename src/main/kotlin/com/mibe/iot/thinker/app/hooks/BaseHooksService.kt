@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service
 @Service
 class BaseHooksService(
     private val hookPort: HookPort
-): BaseHooksUseCase {
+) : BaseHooksUseCase {
 
     override suspend fun createSendEmailHook(sendEmailHook: SendEmailHook) {
         validateEmailAddress(sendEmailHook.emailAddress.address).throwOnInvalid()

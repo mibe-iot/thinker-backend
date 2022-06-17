@@ -5,7 +5,7 @@ import org.springframework.data.mongodb.repository.ReactiveMongoRepository
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 
-interface SpringDataTriggerRepository: ReactiveMongoRepository<TriggerEntity, String> {
+interface SpringDataTriggerRepository : ReactiveMongoRepository<TriggerEntity, String> {
     fun findAllByDeviceIdAndHookIdIn(deviceId: String, hookIds: List<String>): Flux<TriggerEntity>
     fun findByDeviceIdAndReportType(deviceId: String, reportType: String): Mono<TriggerEntity>
 

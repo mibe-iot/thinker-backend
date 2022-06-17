@@ -26,7 +26,7 @@ val jacksonVersion = "2.13.2"
 
 allprojects {
     group = "com.mibe.iot"
-    version = "0.4"
+    version = "1.0.0"
 
     tasks.withType<KotlinCompile> {
         kotlinOptions {
@@ -88,7 +88,6 @@ dependencies {
 
     // Validation
     implementation("io.konform:konform:${findProperty("konformVersion")}")
-    implementation("org.springframework.boot:spring-boot-starter-validation")
 
     // BLE
     implementation("com.github.mibe-iot:blessed-bluez:$blessedVersion")

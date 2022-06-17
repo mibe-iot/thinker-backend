@@ -1,8 +1,8 @@
 package com.mibe.iot.thinker.app.web
 
 import com.fasterxml.jackson.annotation.JsonFormat
-import java.time.LocalDateTime
 import org.springframework.http.HttpStatus
+import java.time.LocalDateTime
 
 data class ErrorData(
     val httpStatus: Int = HttpStatus.INTERNAL_SERVER_ERROR.value(),

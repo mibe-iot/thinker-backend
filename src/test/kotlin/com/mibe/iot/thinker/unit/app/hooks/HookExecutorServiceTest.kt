@@ -4,16 +4,20 @@ import com.mibe.iot.thinker.app.hooks.HookExecutorService
 import com.mibe.iot.thinker.domain.device.DeviceReport
 import com.mibe.iot.thinker.domain.hooks.Hook
 import com.mibe.iot.thinker.service.hooks.HookExecutor
-import com.mibe.iot.thinker.service.hooks.exception.MatchingExecutorNotFoundException
 import com.mibe.iot.thinker.service.hooks.exception.HookNotFoundException
+import com.mibe.iot.thinker.service.hooks.exception.MatchingExecutorNotFoundException
 import com.mibe.iot.thinker.service.hooks.port.HookPort
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
-import io.mockk.*
-import org.junit.jupiter.api.Test
+import io.mockk.clearAllMocks
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
 
-class HookExecutorServiceTest : FreeSpec ({
+class HookExecutorServiceTest : FreeSpec({
 
     "with mocked hook executors list" - {
         val executor1 = mockk<HookExecutor>(relaxed = true)

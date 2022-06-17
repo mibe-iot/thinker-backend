@@ -2,11 +2,11 @@ package com.mibe.iot.thinker.app.message
 
 import com.mibe.iot.thinker.service.resource.GetErrorMessageUseCase
 import com.mibe.iot.thinker.service.resource.GetMessageUseCase
-import java.util.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.MessageSource
 import org.springframework.stereotype.Service
+import java.util.*
 
 /**
  * Implements use case of getting message by it's key (code)

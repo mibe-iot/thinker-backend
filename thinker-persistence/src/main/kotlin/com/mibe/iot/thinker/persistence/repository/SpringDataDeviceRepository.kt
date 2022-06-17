@@ -2,9 +2,7 @@ package com.mibe.iot.thinker.persistence.repository
 
 import com.mibe.iot.thinker.domain.device.DeviceStatus
 import com.mibe.iot.thinker.persistence.entity.DeviceEntity
-import org.springframework.data.mongodb.repository.Query
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository
-import org.springframework.stereotype.Repository
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 

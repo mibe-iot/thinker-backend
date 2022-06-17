@@ -1,6 +1,5 @@
 package com.mibe.iot.thinker.app.hooks.to.web
 
-import com.mibe.iot.thinker.app.validation.validateEmailAddress
 import com.mibe.iot.thinker.domain.hooks.SendEmailHook
 import com.mibe.iot.thinker.service.hooks.BaseHooksUseCase
 import org.springframework.http.HttpStatus
