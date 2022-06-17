@@ -7,6 +7,13 @@ network upon your LAN/WLAN. Devices are communicating via MQTT and configuration
 
 Application is developed for Linux systems, designed to run inside container.
 
+See *main* thinker repository to learn more about project: https://github.com/mibe-iot/thinker
+
+See related mibe iot projects to learn about *devices*:
+
+- **IOT device mirror:** https://github.com/mibe-iot/mirror
+- **IOT Sample device:** https://github.com/mibe-iot/bit
+
 ## Introduction
 
 Thinker is Spring based reactive web server that controls and communicates with smart-home devices.
@@ -204,3 +211,11 @@ By default, application runs on port `8080`.
   communicate with MQTT broker. 
   - HiveMQ MQTT Client repository: https://github.com/hivemq/hivemq-mqtt-client 
   - Smartsquare HiveMQ Mqtt client starter repository: https://github.com/SmartsquareGmbH/mqtt-starter
+
+## Contacts:
+
+Feel free to reach me out in case of any question:
+
+**Linked-in:** https://www.linkedin.com/in/ilya-buhlakou-33860b205/
+
+**Mail:** ilboogl@gmail.com
