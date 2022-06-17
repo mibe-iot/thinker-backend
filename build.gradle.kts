@@ -88,7 +88,6 @@ dependencies {
 
     // Validation
     implementation("io.konform:konform:${findProperty("konformVersion")}")
-    implementation("org.springframework.boot:spring-boot-starter-validation")
 
     // BLE
     implementation("com.github.mibe-iot:blessed-bluez:$blessedVersion")
