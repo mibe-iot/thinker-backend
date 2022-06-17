@@ -2,10 +2,7 @@ FROM openjdk:11.0-jdk-buster
 
 # install bluez related packages
 RUN apt update
-RUN apt-get install -y \
-    bluez \
-    dbus \
-    sudo
+RUN apt-get install -y bluez dbus sudo
 
 # setup bluetooth permissions
 COPY ./bluezuser.conf /etc/dbus-1/system.d/
