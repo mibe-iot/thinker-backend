@@ -102,6 +102,14 @@ env variable to be set. To build application from sources, run:
 
 This will build a ready-to-launch jar, that you can find inside `./build/libs`.
 
+### List of docker image-specific files:
+
+- [bluezuser.conf](./bluezuser.conf) - linux BlueZ user conf that adds user access to bluetooth hardware.
+- [.dockerignore](./.dockerignore) - docker ignore file for all build-unrelated files.
+- [docker-entrypoint.sh](./docker-entrypoint.sh) - docker entrypoint. Manages dbus and bluetooth services on container
+  start, resets hci0 adapter and then runs thinker jar.
+- [Dockerfile](./Dockerfile) - docker file
+
 ## Running application
 
 > *Please notice that application **requires** MQTT broker to be run on port 1883, bluetooth adapter
